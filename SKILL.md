@@ -1,6 +1,6 @@
 ---
 name: design-review
-description: Domain-agnostic design review/improvement pipeline. Runs design skills IN ORDER over a target (component, screen, page, email), accumulates findings, produces a prioritized P1/P2/P3 list, auto-applies P1, and closes with a LIVE visual check (agent-browser). Adapts to the project's capabilities (Storybook? design system? public or private? web or mobile?). Trigger: "improve design", "design review", "run the design skills", "/design-review <target>".
+description: Domain-agnostic design review/improvement pipeline. Runs design skills IN ORDER over a target (component, screen, page, email), accumulates findings from all of them, presents them as a multi-select checklist for the user to choose what to fix, and closes with a LIVE visual check (agent-browser). Adapts to the project's capabilities (Storybook? design system? public or private? web or mobile?). Trigger: "improve design", "design review", "run the design skills", "/design-review <target>".
 ---
 
 # design-review — a portable design pipeline for AI agents
@@ -60,14 +60,31 @@ not installed, say so and link its repo (Attribution) so the user can install it
 
 ---
 
-## Output (required format)
+## Output — collect every finding, then let the user choose (interactive checklist)
 
-One **consolidated, prioritized, plain-language list**, tagging which skill(s) flagged each finding:
-- **P1** (broken / identity / a11y / critical) → **auto-apply** in this pass.
-- **P2 / P3** (improvement / invasive) → **ask before applying**.
+After running the pipeline, **gather ALL findings from every skill** into one deduplicated list.
+Each item: a one-line plain-language description, its **priority** (P1 broken/identity/a11y · P2
+improvement · P3 polish), and the **skill(s)** that flagged it (e.g. `[impeccable, huashu]`).
+
+Then **present them to the user as a multi-select checklist and ask which to fix** — do NOT
+silently auto-apply. Use your assistant's multi-select prompt (in Claude Code: `AskUserQuestion`
+with `multiSelect: true`). Recommended default: pre-select the P1 items. Group by priority so the
+list is scannable. Example shape:
+
+```
+Which findings should I fix?  (multi-select)
+  [x] P1 · Contrast 3.1:1 on primary button label — fails AA        [impeccable, web-accessibility]
+  [x] P1 · No visible focus ring on nav links                        [web-accessibility]
+  [ ] P2 · CTA hierarchy: two competing primary buttons              [impeccable, huashu]
+  [ ] P2 · Card spacing rhythm breaks at the 3rd row                 [taste-skill]
+  [ ] P3 · Hover transition 320ms feels sluggish (→ 150ms)           [emil, review-animations]
+```
+
+Apply **only the selected items**. For large lists, offer "select all P1", "all P1+P2", or per-item.
+If the environment has no interactive prompt, fall back to: apply P1, list P2/P3 for the user to pick later.
 
 Then verify: typecheck (if code), design-token usage (no hardcoded color/spacing/type), brand/identity
-consistency, and the closing screenshots (light/dark/mobile).
+consistency, and the closing screenshots (light/dark/mobile) + Core Web Vitals.
 
 ---
 
