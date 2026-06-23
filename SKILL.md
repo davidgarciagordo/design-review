@@ -30,6 +30,30 @@ State explicitly which steps you skipped and why.
 
 ---
 
+## Step 0.5 — Preflight: detect missing skills and OFFER to install (user decides)
+
+Before running the pipeline, check which orchestrated skills are actually available, and let the
+user choose what to install. **GOLDEN RULE: the user always decides — never install, run, or skip a
+dependency without an explicit pick. No silent install, no auto-run, no blocking.**
+
+Note: a skill is content the agent loads, not a throwaway executable — there is no ephemeral run.
+`npx skills add <source>` *installs* it (persists). "On the fly" just means running that install at
+this moment, only after the user picks it. Optional skills have fallbacks (e.g. `ui-ux-pro-max` →
+`frontend-design`), so declining an install never breaks the pipeline.
+
+1. **Detect** which pipeline skills (see Attribution) are present (skill registry / `~/.claude/skills/` / installed plugins).
+2. **Classify the missing ones:**
+   - **Installable via skills.sh** → `npx skills add <owner/repo>` (e.g. `taste-skill`, `huashu-design`, `web-accessibility`, `seo`).
+   - **Built-in / vendor** (e.g. `frontend-design` by Anthropic) → already available; note it.
+   - **No public / commercial source** (e.g. a paid mobile-design skill) → flag, cannot auto-install.
+3. **Present a multi-select checklist** of the installable missing skills and ask which to install now. Run the install command only for the ones the user picks.
+4. **MCP / tools:** the live check (step 7) needs a browser-automation CLI (e.g. `agent-browser`). If absent, say so and offer the install command; if declined, the pipeline still runs and clearly states the live visual check was NOT run.
+5. Whatever stays missing → the pipeline **degrades gracefully**: skip that step, keep the rest, and say which steps were skipped for lack of a skill/tool.
+
+Same philosophy as the final fix-checklist: dependencies explicit, user in control, nothing fails silently.
+
+---
+
 ## The pipeline (fixed order: structure → audit → polish → a11y → live)
 
 Run each step, **accumulating findings** (don't drop earlier ones). Cite file:line. If a skill is

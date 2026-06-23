@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "version": "1.0.0",
+  "name": "design-review",
+  "description": "Design Review — diseño/rediseño/auditoría integral. Instálala suelta o desde el hub claude-code-setup-optimizer.",
+  "owner": {
+    "name": "David García Gordo",
+    "url": "https://github.com/davidgarciagordo"
+  },
+  "plugins": [
+    {
+      "name": "design-review",
+      "displayName": "Design Review",
+      "description": "Visual hierarchy, IA, cognitive load, accessibility, tokens, motion.",
+      "source": "./"
+    },
+    {
+      "name": "forge-methodology",
+      "displayName": "Forja / Forge",
+      "description": "Repo hermano: metodología human↔AI domain-agnostic.",
+      "source": { "source": "github", "repo": "davidgarciagordo/forge-methodology" }
+    }
+  ]
+}

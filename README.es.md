@@ -1,6 +1,8 @@
 [English](README.md) | **Español**
 
-# design-review
+# 🎨 design-review
+
+[![Claude Code plugin](https://img.shields.io/badge/Claude_Code-plugin-D97757)](https://github.com/davidgarciagordo/claude-code-setup-optimizer) [![skills.sh](https://img.shields.io/badge/skills.sh-skill-111111)](https://skills.sh) ![License MIT](https://img.shields.io/badge/license-MIT-2da44e) ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 
 > Un pipeline ordenado que ejecuta skills de diseño en secuencia, acumula todos los hallazgos y te presenta un checklist para elegir qué corregir.
 
@@ -8,13 +10,29 @@
 
 Es compañero de [Forge Methodology](https://github.com/davidgarciagordo/forge-methodology): **Forge estructura qué construir; design-review pule cómo se ve**.
 
-## Instalación rápida
+### 🧩 Parte de una familia — misma firma, tres repos
+
+| | Repo | Rol |
+|---|---|---|
+| 🛠️ | [**claude-code-setup-optimizer**](https://github.com/davidgarciagordo/claude-code-setup-optimizer) | **El hub** — metodología + automatizaciones (hooks · subagents · comandos) + `/optimize-my-setup` |
+| 🔨 | [**forge-methodology**](https://github.com/davidgarciagordo/forge-methodology) | Estructura *qué construir* — alinear → spec → grill ×3 → plan → verificar |
+| 🎨 | [**design-review**](https://github.com/davidgarciagordo/design-review) · *estás aquí* | Pule *cómo se ve* — estructura → auditoría → anti-slop → a11y → check en vivo |
+
+## 📦 Instalación
 
 ```bash
+# 🟢 Como skill (Claude Code + 20+ agentes vía skills.sh)
 npx skills add davidgarciagordo/design-review
+
+# 🔌 Como plugin de Claude Code (suelto)
+/plugin marketplace add davidgarciagordo/design-review
+/plugin install design-review@design-review
+
+# 🛠️ O todos los repos desde el hub
+/plugin marketplace add davidgarciagordo/claude-code-setup-optimizer
 ```
 
-Funciona con Claude Code y más de 20 agentes vía [skills.sh](https://skills.sh). Para Claude Code también puedes `git clone` en `~/.claude/skills/` — ver [Instalación](#instalación) más abajo.
+También puedes `git clone` en `~/.claude/skills/` — ver [Instalación](#instalación) más abajo.
 
 ---
 
