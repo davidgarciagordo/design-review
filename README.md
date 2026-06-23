@@ -8,6 +8,14 @@
 
 It is a companion to [Forge Methodology](https://github.com/davidgarciagordo/forge-methodology): **Forge structures what to build; design-review polishes how it looks**.
 
+## Quick install
+
+```bash
+npx skills add davidgarciagordo/design-review
+```
+
+Works with Claude Code and 20+ other agents via [skills.sh](https://skills.sh). For Claude Code specifically you can also `git clone` it into `~/.claude/skills/` — see [Install](#install) below.
+
 ---
 
 ## Why design-review?
