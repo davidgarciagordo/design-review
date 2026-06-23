@@ -135,7 +135,7 @@ Full install and attribution details: [references/attribution.md](references/att
 Drop `SKILL.md` into your Claude Code skills directory:
 
 ```bash
-git clone https://github.com/davidgarciagordo/design-review-pipeline ~/.claude/skills/design-review
+git clone https://github.com/davidgarciagordo/design-review ~/.claude/skills/design-review
 ```
 
 Claude Code picks it up automatically.
