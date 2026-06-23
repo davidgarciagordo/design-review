@@ -231,3 +231,6 @@ Ejemplos trabajados con hallazgos y checklists:
 ## Licencia
 
 MIT — ver [LICENSE](./LICENSE).
+
+---
+<sub>Hecho por [David García Gordo](https://github.com/davidgarciagordo) · MIT · parte de la familia [claude-code-setup-optimizer](https://github.com/davidgarciagordo/claude-code-setup-optimizer)</sub>
