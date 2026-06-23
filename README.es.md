@@ -8,6 +8,14 @@
 
 Es compañero de [Forge Methodology](https://github.com/davidgarciagordo/forge-methodology): **Forge estructura qué construir; design-review pule cómo se ve**.
 
+## Instalación rápida
+
+```bash
+npx skills add davidgarciagordo/design-review
+```
+
+Funciona con Claude Code y más de 20 agentes vía [skills.sh](https://skills.sh). Para Claude Code también puedes `git clone` en `~/.claude/skills/` — ver [Instalación](#instalación) más abajo.
+
 ---
 
 ## ¿Por qué design-review?
