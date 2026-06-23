@@ -1,6 +1,6 @@
 ---
 name: design-review
-description: Domain-agnostic design review/improvement pipeline. Runs design skills IN ORDER over a target (component, screen, page, email), accumulates findings from all of them, presents them as a multi-select checklist for the user to choose what to fix, and closes with a LIVE visual check (agent-browser). Adapts to the project's capabilities (Storybook? design system? public or private? web or mobile?). Trigger: "improve design", "design review", "run the design skills", "/design-review <target>".
+description: "Domain-agnostic design review/improvement pipeline. Runs design skills IN ORDER over a target (component, screen, page, email), accumulates findings from all of them, presents them as a multi-select checklist for the user to choose what to fix, and closes with a LIVE visual check (agent-browser). Adapts to the project's capabilities (Storybook? design system? public or private? web or mobile?). Trigger: \"improve design\", \"design review\", \"run the design skills\", \"/design-review <target>\"."
 ---
 
 # design-review — a portable design pipeline for AI agents
