@@ -31,6 +31,30 @@ Both work. The structured form gives the pipeline everything it needs to skip de
 
 ---
 
+## One prompt for all, or one skill standalone
+
+`/design-review` is the **one prompt for all** — it runs every applicable skill in order and merges the findings into a single checklist. But each orchestrated skill is independent and can be invoked on its own when you only want that lens:
+
+| Want only… | Invoke standalone |
+|---|---|
+| Structure / hierarchy / IA | `impeccable` (scored audit) or `ui-ux-pro-max` |
+| Anti-slop / taste pass | `taste-skill` · `huashu-design` |
+| Motion & interaction polish | `emil-design-eng` (+ `review-animations` to critique it) |
+| Accessibility (WCAG AA) | `web-design-guidelines` + `web-accessibility` |
+| SEO (public pages) | `seo` |
+
+```
+# one skill standalone
+Run impeccable on apps/web/app/settings/page.tsx — scored audit only, no other steps.
+
+# everything, orchestrated, one checklist
+/design-review apps/web/app/settings/page.tsx
+```
+
+Each skill is by its original author (see *Attribution* in the main README) and installs from its own source — the pipeline only sequences them. Missing one? Step 0.5 preflight offers to install it (you choose).
+
+---
+
 ## Example 1 — Settings page (authenticated web app)
 
 **Target:** `apps/web/app/settings/page.tsx` — a multi-section settings page (profile, notifications, billing) in an authenticated Next.js app.

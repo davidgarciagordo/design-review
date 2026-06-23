@@ -31,6 +31,30 @@ Ambas formas funcionan. La forma estructurada le da al pipeline todo lo que nece
 
 ---
 
+## Un prompt para todas, o una skill por separado
+
+`/design-review` es el **un prompt para todas** — ejecuta cada skill aplicable en orden y fusiona los hallazgos en un solo checklist. Pero cada skill orquestada es independiente y puedes invocarla sola cuando solo quieres esa lente:
+
+| Si solo quieres… | Invoca por separado |
+|---|---|
+| Estructura / jerarquía / IA | `impeccable` (auditoría puntuada) o `ui-ux-pro-max` |
+| Anti-slop / pasada de gusto | `taste-skill` · `huashu-design` |
+| Pulido de motion e interacción | `emil-design-eng` (+ `review-animations` para criticarlo) |
+| Accesibilidad (WCAG AA) | `web-design-guidelines` + `web-accessibility` |
+| SEO (páginas públicas) | `seo` |
+
+```
+# una skill por separado
+Ejecuta impeccable en apps/web/app/settings/page.tsx — solo auditoría puntuada, sin más pasos.
+
+# todo, orquestado, un solo checklist
+/design-review apps/web/app/settings/page.tsx
+```
+
+Cada skill es de su autor original (ver *Attribution* en el README principal) e instala desde su propia fuente — el pipeline solo las secuencia. ¿Falta alguna? El preflight (Step 0.5) ofrece instalarla (tú eliges).
+
+---
+
 ## Ejemplo 1 — Página de ajustes (aplicación web autenticada)
 
 **Target:** `apps/web/app/settings/page.tsx` — página de ajustes con múltiples secciones (perfil, notificaciones, facturación) en una aplicación Next.js autenticada.
