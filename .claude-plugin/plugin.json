@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "design-review",
+  "displayName": "Design Review",
+  "version": "1.0.0",
+  "description": "Integral design/redesign/audit: visual hierarchy, IA, cognitive load, accessibility, tokens, motion.",
+  "author": {
+    "name": "David García Gordo",
+    "url": "https://github.com/davidgarciagordo"
+  },
+  "homepage": "https://github.com/davidgarciagordo/design-review",
+  "repository": "https://github.com/davidgarciagordo/design-review",
+  "license": "MIT",
+  "keywords": ["design", "review", "audit", "accessibility", "ui", "ux", "tokens", "motion"]
+}

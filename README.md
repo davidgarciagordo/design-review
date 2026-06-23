@@ -1,6 +1,8 @@
 **English** | [Español](README.es.md)
 
-# design-review
+# 🎨 design-review
+
+[![Claude Code plugin](https://img.shields.io/badge/Claude_Code-plugin-D97757)](https://github.com/davidgarciagordo/claude-code-setup-optimizer) [![skills.sh](https://img.shields.io/badge/skills.sh-skill-111111)](https://skills.sh) ![License MIT](https://img.shields.io/badge/license-MIT-2da44e) ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 
 > An ordered pipeline that runs focused design skills in sequence, collects every finding, and gives you a checklist to choose what to fix.
 
@@ -8,13 +10,29 @@
 
 It is a companion to [Forge Methodology](https://github.com/davidgarciagordo/forge-methodology): **Forge structures what to build; design-review polishes how it looks**.
 
-## Quick install
+### 🧩 Part of a family — same signature, three repos
+
+| | Repo | Role |
+|---|---|---|
+| 🛠️ | [**claude-code-setup-optimizer**](https://github.com/davidgarciagordo/claude-code-setup-optimizer) | **The hub** — methodology + automations (hooks · subagents · commands) + `/optimize-my-setup` |
+| 🔨 | [**forge-methodology**](https://github.com/davidgarciagordo/forge-methodology) | Structure *what to build* — align → spec → grill ×3 → plan → verify |
+| 🎨 | [**design-review**](https://github.com/davidgarciagordo/design-review) · *you are here* | Polish *how it looks* — structure → audit → anti-slop → a11y → live check |
+
+## 📦 Install
 
 ```bash
+# 🟢 As a skill (Claude Code + 20+ agents via skills.sh)
 npx skills add davidgarciagordo/design-review
+
+# 🔌 As a standalone Claude Code plugin
+/plugin marketplace add davidgarciagordo/design-review
+/plugin install design-review@design-review
+
+# 🛠️ Or get all three repos from the hub
+/plugin marketplace add davidgarciagordo/claude-code-setup-optimizer
 ```
 
-Works with Claude Code and 20+ other agents via [skills.sh](https://skills.sh). For Claude Code specifically you can also `git clone` it into `~/.claude/skills/` — see [Install](#install) below.
+Or `git clone` it into `~/.claude/skills/` — see [Install](#install) below for details.
 
 ---
 
