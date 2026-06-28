@@ -54,6 +54,24 @@ Same philosophy as the final fix-checklist: dependencies explicit, user in contr
 
 ---
 
+## Step 0.6 — Entry gate: grounded clarifiers before the pipeline runs
+
+Before running the lenses, resolve what only the owner can answer — and **nothing the code can answer
+for you**. Read the target (component/screen/page/email), its design doc, and the brief first; anything
+verifiable by exploration is verified, not asked. Then surface the remaining high-impact decisions as a
+**single multi-select batch**:
+
+- Each question carries 2–4 candidate answers, **your recommended one first and marked "(recommended)"**,
+  with the host's "other" field for the owner to add their own.
+- Ask only what changes the review's direction — scope (which surface/state/breakpoint), intent (light
+  fix vs. full redesign), brand/identity constraints, target audience, what's explicitly out of scope.
+- A handful of questions, one batch — not an interrogation. In Claude Code use `AskUserQuestion`
+  (≤4 questions, 2–4 options each). If no interactive prompt exists, state your assumed answers and proceed.
+
+The answers steer the whole pipeline (which steps apply, how aggressive the changes are, what "good" means).
+
+---
+
 ## The pipeline (fixed order: structure → audit → polish → a11y → live)
 
 Run each step, **accumulating findings** (don't drop earlier ones). Cite file:line. If a skill is
@@ -88,24 +106,37 @@ not installed, say so and link its repo (Attribution) so the user can install it
 
 After running the pipeline, **gather ALL findings from every skill** into one deduplicated list.
 Each item: a one-line plain-language description, its **priority** (P1 broken/identity/a11y · P2
-improvement · P3 polish), and the **skill(s)** that flagged it (e.g. `[impeccable, huashu]`).
+improvement · P3 polish), the **skill(s)** that flagged it (e.g. `[impeccable, huashu]`), and — when
+there's more than one sensible way to resolve it — your **recommended fix first** plus the live
+alternatives (so the choice isn't just fix / don't-fix, it's *how*).
 
-Then **present them to the user as a multi-select checklist and ask which to fix** — do NOT
+Then **present them to the user as a multi-select checklist and ask which to fix, and how** — do NOT
 silently auto-apply. Use your assistant's multi-select prompt (in Claude Code: `AskUserQuestion`
-with `multiSelect: true`). Recommended default: pre-select the P1 items. Group by priority so the
+with `multiSelect: true`; its "Other" field lets the owner **add their own fix or dispute** a finding).
+Recommended default: pre-select the P1 items and the recommended fix for each. Group by priority so the
 list is scannable. Example shape:
 
 ```
-Which findings should I fix?  (multi-select)
-  [x] P1 · Contrast 3.1:1 on primary button label — fails AA        [impeccable, web-accessibility]
+Which findings should I fix? (multi-select · recommended fix pre-selected · "Other" = add yours / dispute)
+  [x] P1 · Contrast 3.1:1 on primary button label — fails AA         [impeccable, web-accessibility]
+        → rec: darken label to token `--fg-on-primary` (4.8:1) · alt: lighten button bg · alt: keep, waive
   [x] P1 · No visible focus ring on nav links                        [web-accessibility]
+        → rec: add 2px token focus ring · alt: underline-on-focus
   [ ] P2 · CTA hierarchy: two competing primary buttons              [impeccable, huashu]
-  [ ] P2 · Card spacing rhythm breaks at the 3rd row                 [taste-skill]
-  [ ] P3 · Hover transition 320ms feels sluggish (→ 150ms)           [emil, review-animations]
+        → rec: demote the second to secondary · alt: merge into one · alt: keep (intentional)
+  [ ] P3 · Hover transition 320ms feels sluggish                     [emil, review-animations]
+        → rec: 150ms · alt: 200ms · alt: remove the transition
 ```
 
-Apply **only the selected items**. For large lists, offer "select all P1", "all P1+P2", or per-item.
-If the environment has no interactive prompt, fall back to: apply P1, list P2/P3 for the user to pick later.
+Apply **only the selected items, with the chosen fix**. For large lists, offer "select all P1",
+"all P1+P2", or per-item. If the environment has no interactive prompt, fall back to: apply P1 with the
+recommended fix, list P2/P3 for the user to pick later.
+
+**Informed re-pass.** After the owner decides, **re-run only the pipeline steps the chosen fixes touch**
+(e.g. a contrast change re-checks a11y + the live visual step; a layout change re-checks structure +
+live). This catches the seams the fixes open — the design counterpart of the grill's informed re-grill —
+without re-running the whole pipeline. Surface any genuinely new finding in a short follow-up batch; don't
+re-litigate settled items.
 
 Then verify: typecheck (if code), design-token usage (no hardcoded color/spacing/type), brand/identity
 consistency, and the closing screenshots (light/dark/mobile) + Core Web Vitals.
