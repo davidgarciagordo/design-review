@@ -14,20 +14,23 @@ Copy this template after running the design-review pipeline. Fill in the finding
 result is a **failed** run.
 
 **Gates run (in order):**
-- [ ] 0 — Frame the target
+- [ ] 0 — **Bootstrap** (referenced skills detected/installed/temp-clone fallback) & frame & context
+  setup (PRODUCT.md/DESIGN.md for impeccable)
 - [ ] 1 — **[GATE]** `audit-first` *(redesigns only)* — `.design-review/audit-first.md`
-- [ ] 2 — **[GATE]** `reference-research` (Dribbble 2026 + competitors) — `.design-review/references.md`
-- [ ] 3 — **[GATE]** 4 core skills, REAL invocation, in order:
-  - [ ] 3a — `impeccable` (structure / audit)
-  - [ ] 3b — `design-taste-frontend` (**anti-templated gate**)
-  - [ ] 3c — `emil-design-eng` (**signature motion**)
-  - [ ] 3d — `web-design-guidelines` (a11y AA)
-- [ ] 4 — Apply fixes (multi-select)
-- [ ] 5 — Informed re-pass
+- [ ] 2 — **[GATE]** `reference-research` (Dribbble 2026 + competitors + `ui-ux-pro-max` vocabulary) —
+  `.design-review/references.md`
+- [ ] 3 — **[GATE]** DIAGNOSIS: CORE skills ROUTED, in order, accumulating into a single `[skill]`-tagged list:
+  - [ ] 3a — `impeccable audit` + `critique` (structure / scored audit)
+  - [ ] 3b — `design-taste-frontend` §11 redesign-audit + §14 (**anti-templated gate**)
+  - [ ] 3c — `emil-design-eng` review, concrete question inline (**signature motion**)
+  - [ ] 3d — WebFetch guidelines → cache → `web-design-guidelines` (a11y AA)
+  - [ ] 3e — `ui-ux-pro-max` UX guidelines lens (+ opt-in add-ons)
+- [ ] 4 — **ASK** — multi-select checklist (P1 + anti-templated + signature-motion PRE-MARKED)
+- [ ] 5 — **APPLY (FIX)** — routing to owning fix command per suite→phase mapping + informed re-pass
 - [ ] 6 — **[GATE]** `vitality-verdict` (alive / templated / flat) — `.design-review/verdict.json`
 - [ ] 7 — **[GATE]** Vitality loop *(until verdict is `alive`, max N rounds)*
 
-**Add-ons (opt-in):** `huashu-design` · `review-animations` · `seo` *(public only)* ·
+**Add-ons (opt-in):** `huashu-design` · `review-animations` *(only if installed)* · `seo` *(public only)* ·
 `web-accessibility` · mobile-design skill.
 
 **Steps skipped:** <!-- list each skipped step and reason, e.g. "seo — private/authenticated target" -->
@@ -36,15 +39,18 @@ result is a **failed** run.
 
 ## Findings (multi-select)
 
-Present this list to the user. Pre-select P1 items. Apply only what the user selects.
+Present this list to the user. Pre-select P1 items **and** anti-templated + signature-motion vitality
+items. Apply only what the user selects.
 
 ### P1 — Broken / identity / accessibility
 
-Items that fail a published standard (WCAG AA, heading structure, keyboard access) or break visual identity. Fix these first.
+Items that fail a published standard (WCAG AA, heading structure, keyboard access) or break visual
+identity, or that are the reason the target was flat (anti-templated gate fail, missing signature motion).
+Fix these first.
 
-- [ ] <!-- one-line plain-language description -->  `[skill]`
-- [ ] <!-- one-line plain-language description -->  `[skill, skill]`
-- [ ] <!-- one-line plain-language description -->  `[skill]`
+- [ ] <!-- one-line plain-language description -->  `[skill]`  *(owning fix command: <!-- e.g. impeccable harden -->)*
+- [ ] <!-- one-line plain-language description -->  `[skill, skill]`  *(owning fix command: <!-- ... -->)*
+- [ ] <!-- one-line plain-language description -->  `[skill]`  *(owning fix command: <!-- ... -->)*
 
 ### P2 — Improvements
 
@@ -77,18 +83,18 @@ Refinements that elevate the experience: timing, copy tone, subtle spacing corre
 
 Record what was selected and applied here, for closing verification.
 
-| Finding | Priority | Skills | Status |
-|---------|----------|--------|--------|
-| <!-- description --> | P1 | <!-- skill --> | Applied |
-| <!-- description --> | P2 | <!-- skill --> | Applied |
+| Finding | Priority | Skills | Owning fix command | Status |
+|---------|----------|--------|--------------------|--------|
+| <!-- description --> | P1 | <!-- skill --> | <!-- e.g. impeccable harden --> | Applied |
+| <!-- description --> | P2 | <!-- skill --> | <!-- e.g. taste §11.D --> | Applied |
 
 ---
 
 ## Closing verification
 
 - [ ] Typecheck passes (`tsc --noEmit` or equivalent)
-- [ ] No hardcoded color / spacing / typography values introduced by the fixes
-- [ ] Brand and identity consistency confirmed
+- [ ] No hardcoded color / spacing / typography values introduced by the fixes (token variables only)
+- [ ] Brand and identity consistency confirmed (house layer present)
 - [ ] Screenshot — light mode
 - [ ] Screenshot — dark mode
 - [ ] Screenshot — mobile (375px)
@@ -102,11 +108,11 @@ Record what was selected and applied here, for closing verification.
 
 ---
 
-## Skills not installed
+## Skills not installed / skipped
 
-| Skill | Step | Install |
-|-------|------|---------|
-| <!-- skill name --> | <!-- step # --> | See references/attribution.md |
+| Skill | Step | Install | Impact if skipped |
+|-------|------|---------|-------------------|
+| <!-- skill name --> | <!-- step # --> | See references/attribution.md | <!-- e.g. motion critique not run --> |
 
 ---
 
