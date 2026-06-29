@@ -2,13 +2,39 @@
 
 # 🎨 design-review
 
-[![Claude Code plugin](https://img.shields.io/badge/Claude_Code-plugin-D97757)](https://github.com/davidgarciagordo/claude-code-setup-optimizer) [![skills.sh](https://img.shields.io/badge/skills.sh-skill-111111)](https://skills.sh) ![License MIT](https://img.shields.io/badge/license-MIT-2da44e) ![Version](https://img.shields.io/badge/version-1.0.0-blue)
+[![Claude Code plugin](https://img.shields.io/badge/Claude_Code-plugin-D97757)](https://github.com/davidgarciagordo/claude-code-setup-optimizer) [![skills.sh](https://img.shields.io/badge/skills.sh-skill-111111)](https://skills.sh) ![License MIT](https://img.shields.io/badge/license-MIT-2da44e) ![Version](https://img.shields.io/badge/version-2.0.0-blue)
 
-> An ordered pipeline that runs focused design skills in sequence, collects every finding, and gives you a checklist to choose what to fix.
+> An executable, gated pipeline that cures **flat, lifeless, templated UI** — and ends with an explicit verdict: **alive / templated / flat**.
 
-**design-review** is a named workflow for polishing any visual target — a component, screen, page, email, or dashboard — with an AI assistant. It sequences established design skills (most authored by third parties — see [Attribution](#attribution)) into one disciplined pass: structure → audit → anti-slop → polish → accessibility → live reality-check. You pick the fixes; it applies only what you select.
+**design-review** turns a visual target — a component, screen, page, email, or dashboard — from *correct*
+into *alive*. It is not a checklist you read; it is a set of **agents + a `/design-review` command + a
+hook** that run an imperative pipeline: study real 2026 references, invoke the right design skills in
+order, and refuse to call the result done while it still looks like a template.
 
-It is a companion to [Forge Methodology](https://github.com/davidgarciagordo/forge-methodology): **Forge structures what to build; design-review polishes how it looks**.
+It is a companion to [Forge Methodology](https://github.com/davidgarciagordo/forge-methodology): **Forge
+structures what to build; design-review makes how it looks come alive**.
+
+## The telos: alive, not just correct
+
+Most design reviews optimise one question — *"does this have defects?"* — and hit a ceiling:
+**correct-but-flat**. You can pass every contrast, spacing, and a11y check and still ship a 2024 template
+with the life sanded off. Removing defects never adds vitality.
+
+design-review asks a different question:
+
+> ### Is this design ALIVE and unmistakably 2026 **against these specific references**?
+
+- **Correctness is the floor, not the bar.** A target that passes everything and still reads as generic has **failed**.
+- **The verdict is explicit:** every run ends with **`alive` / `templated` / `flat`**, judged against real references pulled live — not against the model's memory of "good design".
+- **Vitality is built, not inspected** — via reference research and signature motion, added in, not filtered out.
+
+**Three root causes of "flat", and how the pipeline fixes each:**
+
+| Root cause | Fix |
+|---|---|
+| **Wrong telos** — a defect-removal loop converges on "correct flat" | An explicit **vitality verdict** + a **vitality loop** that won't stop until it's `alive` |
+| **No reference research** — designing from memory reproduces the training-data average (a template) | A non-skippable **reference-research gate**: Dribbble 2026 + 2–3 competitors, live, via agent-browser. *The #1 lever against flat.* |
+| **Skills paraphrased, not invoked** — bulleting "what impeccable would say" is a lossy echo | **Real invocation**: each lens agent **loads the actual skill** via the Skill tool. The pipeline only says what input to pass it. |
 
 ### 🧩 Part of a family — same signature, three repos
 
@@ -16,7 +42,7 @@ It is a companion to [Forge Methodology](https://github.com/davidgarciagordo/for
 |---|---|---|
 | 🛠️ | [**claude-code-setup-optimizer**](https://github.com/davidgarciagordo/claude-code-setup-optimizer) | **The hub** — methodology + automations (hooks · subagents · commands) + `/optimize-my-setup` |
 | 🔨 | [**forge-methodology**](https://github.com/davidgarciagordo/forge-methodology) | Structure *what to build* — align → spec → grill ×3 → plan → verify |
-| 🎨 | [**design-review**](https://github.com/davidgarciagordo/design-review) · *you are here* | Polish *how it looks* — structure → audit → anti-slop → a11y → live check |
+| 🎨 | [**design-review**](https://github.com/davidgarciagordo/design-review) · *you are here* | Make *how it looks* come alive — references → core skills → vitality verdict |
 
 ## 📦 Install
 
@@ -24,7 +50,7 @@ It is a companion to [Forge Methodology](https://github.com/davidgarciagordo/for
 # 🟢 As a skill (Claude Code + 20+ agents via skills.sh)
 npx skills add davidgarciagordo/design-review
 
-# 🔌 As a standalone Claude Code plugin
+# 🔌 As a standalone Claude Code plugin (agents + /design-review command + gate hook)
 /plugin marketplace add davidgarciagordo/design-review
 /plugin install design-review@design-review
 
@@ -32,125 +58,108 @@ npx skills add davidgarciagordo/design-review
 /plugin marketplace add davidgarciagordo/claude-code-setup-optimizer
 ```
 
-Or `git clone` it into `~/.claude/skills/` — see [Install](#install) below for details.
+Or `git clone` it into `~/.claude/skills/` (skill only) — see [Install](#install) below.
 
 ---
 
-## Why design-review?
+## What's in the box (executable, not advisory)
 
-Running design skills ad hoc means running them in the wrong order, dropping findings between steps, and applying changes without a checkpoint. The result is an audit that feels thorough but misses the interaction between layers — contrast issues that only appear after the layout is tightened, motion that looks fine in isolation but distracts on the real screen.
+| Piece | File | Role |
+|---|---|---|
+| Command | `commands/design-review.md` | `/design-review <target>` — orchestrates the gates in order |
+| Agent · audit-first | `agents/design-audit-first.md` | **[GATE]** redesigns only: screenshot current + "what to keep" |
+| Agent · reference-research | `agents/design-reference-research.md` | **[GATE]** Dribbble 2026 + competitors → 3–5 patterns → copy+combine+house |
+| Agent · lens impeccable | `agents/design-lens-impeccable.md` | **loads** `impeccable` — structure / audit |
+| Agent · lens taste | `agents/design-lens-taste.md` | **loads** `design-taste-frontend` — **anti-templated gate** |
+| Agent · lens motion | `agents/design-lens-motion.md` | **loads** `emil-design-eng` — **signature motion** |
+| Agent · lens a11y | `agents/design-lens-a11y.md` | **loads** `web-design-guidelines` — accessibility AA |
+| Agent · vitality verdict | `agents/design-vitality-verdict.md` | **[GATE]** live check + diff vs references → `alive/templated/flat` |
+| Hook | `hooks/design-review-gate.js` | PostToolUse on UI writes — warn/block unless the verdict is `alive` |
 
-design-review solves this by:
+---
 
-- **Fixing the order** — structure before audit, audit before polish, polish before accessibility, always live check last
-- **Accumulating findings** across all skills into one deduplicated list (nothing dropped)
-- **Giving you control** — presents findings as a multi-select checklist; applies only what you approve
-- **Adapting to your project** — skips steps that don't apply (no design system, private target, mobile context)
+## The pipeline (imperative · gated · in order)
+
+| Step | What happens | Skill / agent |
+|------|-------------|--------|
+| **0. Frame** | Detect design system, Storybook, platform, public/private, live browser. One batch of owner-only questions. | — |
+| **1. audit-first** **[GATE · redesigns]** | Screenshot the current state; write "what to keep". | `design-audit-first` |
+| **2. reference-research** **[GATE · always]** | Dribbble 2026 + 2–3 competitors → 3–5 stealable patterns → copy + combine + house layer. **The #1 lever against flat.** | `design-reference-research` + `agent-browser` |
+| **3a. structure / audit** **[GATE]** | Hierarchy, IA, cognitive load, tokens, scored audit. | **loads** `impeccable` |
+| **3b. anti-templated** **[GATE]** | Anti-slop **+ a gate that FAILS generic output**. Exit criterion: "this could only be THIS product." | **loads** `design-taste-frontend` |
+| **3c. signature motion** **[GATE]** | At least one memorable motion moment (staggered entrance, reveal, depth, delight) — not just hover hygiene. | **loads** `emil-design-eng` |
+| **3d. accessibility** **[GATE]** | AA contrast, keyboard, visible focus, roles/labels, reduced-motion. Vitality never costs a11y. | **loads** `web-design-guidelines` |
+| **4. Apply fixes** | One deduplicated P1/P2/P3 list; multi-select; anti-templated + motion items pre-selected. | — |
+| **5. Informed re-pass** | Re-run only the lenses the chosen fixes touch. | — |
+| **6. vitality-verdict** **[GATE]** | Render live (light/dark/mobile), **diff vs the references**, Core Web Vitals → explicit `alive`/`templated`/`flat`. | `design-vitality-verdict` + `agent-browser` |
+| **7. Vitality loop** **[GATE]** | If not `alive`, iterate 3–6 (sharper reference, stronger house layer, real motion moment) up to N rounds. | — |
+
+**Add-ons (opt-in, not gates):** `huashu-design` (2nd anti-slop) · `review-animations` (motion critique) ·
+`seo` (**public targets only**) · `web-accessibility` (deeper WCAG) · a mobile-design skill (RN/Expo).
 
 ---
 
 ## Why design-review — with vs. without
 
-| | Without design-review | With design-review |
+| | Without | With design-review |
 |---|---|---|
-| **Skill ordering** | Skills run in whatever order they are invoked; structure problems are layered on top of a bad layout | Fixed pipeline: layout and hierarchy first, scored audit second, polish only after the structure is right |
-| **Finding loss** | Each skill reports independently; earlier findings get lost by the time the next skill runs | Single accumulated list — every finding from every skill, deduplicated, prioritised |
-| **User control** | Fixes applied silently or in bulk; no checkpoint between "what was found" and "what was changed" | Multi-select checklist: you see every finding and choose what to apply before anything changes |
-| **Coverage gaps** | Skills run in isolation miss interactions (contrast after layout tightening, motion after dark-mode fix) | Ordered pipeline catches cross-skill interactions; live check at the end catches what static analysis never sees |
-| **Wasted effort** | SEO run on an admin panel; Storybook step run on a project without stories | Capability detection at step 0 skips inapplicable steps explicitly and tells you which were skipped |
-| **No ground truth** | Review happens against the code, not the rendered artifact | Closing visual check (light/dark/mobile screenshots + Core Web Vitals) gives objective evidence |
-
-**The practical difference:** fewer overlooked interactions, no silent bulk changes, findings that survive the full pipeline, and a final screenshot that proves the result is what you think it is.
+| **Telos** | "Remove defects" → ceiling at correct-but-flat | "Make it alive vs 2026 references" → an explicit verdict that won't pass `flat` |
+| **References** | Design from memory → the training-data average → a template | A live Dribbble-2026 + competitor study before any pixel; patterns chosen, combined, reskinned |
+| **Skill fidelity** | Skills paraphrased into bullets → lossy echo | Each skill **loaded** via the Skill tool — real reasoning, not a summary |
+| **Motion** | Hover hygiene at best | A required **signature motion moment** |
+| **Anti-slop** | A copy-tone pass | An **anti-templated gate** that fails generic output |
+| **Done?** | "Looks fine, ship it" | Not done until the verdict reads `alive` — enforced by a hook on UI writes |
 
 ---
 
-## The pipeline
+## Output: a checklist, then a verdict
 
-The pipeline runs in fixed order. Each step accumulates findings; nothing is dropped.
-
-| Step | What happens | Skills |
-|------|-------------|--------|
-| **0. Detect capabilities** | Detect design system, Storybook, platform (web/mobile), live browser, and whether the target is public. Skip inapplicable steps and state which were skipped. | — |
-| **0b. Reuse-first** | Consult existing components before designing. New reusable pieces go into the design system with a story. *(Skip if no design system.)* | — |
-| **1. Baseline structure** | Visual hierarchy, information architecture, layout, cognitive load. | `ui-ux-pro-max` (primary) or `frontend-design` (fallback) |
-| **2. Scored audit + anti-slop** | 5-dimension scored audit with live iteration. Lead skill. | `impeccable` |
-| **3. Second anti-slop lens** | Independent 5-dimension critique; catches what step 2 missed. | `huashu-design` |
-| **4. Taste / transversal anti-slop** | Em-dash ban, eyebrow restraint, fake numbers, consistency locks. On dashboards: transversal rules only. | `taste-skill` |
-| **5. Motion & polish** | Purposeful animation, press feedback, transitions, skeletons, reduced-motion. Then a dedicated animation review (timing, easing, jank). | `emil-design-eng` + `review-animations` |
-| **6. Accessibility** | WCAG AA (contrast ≥ 4.5:1), keyboard, visible focus rings, roles, labels, reduced-motion. | `web-design-guidelines` + `web-accessibility` / `accessibility` |
-| **6b. SEO** | Semantic headings, meta/OG tags, structured data. **Public targets only — skip for private/internal UI.** | `seo` |
-| **7. Live visual check** | Render the real target (Storybook and/or app route) in light, dark, and mobile. Screenshot. Core Web Vitals (LCP/CLS/INP/TTFB). Visual regression diff on redesigns. Run sequentially. *(Skip if no live browser; state it.)* | `agent-browser` |
-
-The live check is always last. It is the reality test that static analysis cannot provide.
-
----
-
-## Adapts to your project
-
-Before running, the pipeline checks four things:
-
-| If your project has… | The pipeline… |
-|---|---|
-| No design system or tokens file | Skips the reuse-first step; flags color/spacing inconsistencies ad hoc |
-| No Storybook | Skips the Storybook-first step; renders in the app route instead |
-| A private/internal target (admin, dashboard, authenticated app) | **Skips the SEO step entirely** |
-| Mobile (React Native / Expo) instead of web | Uses a mobile-design skill; skips DOM-only skills |
-| No live browser or dev server | Does a static review; explicitly states the live visual check was not run |
-
-Every skipped step is stated explicitly with the reason.
-
----
-
-## Output: a checklist you choose from
-
-After the pipeline runs, all findings from every skill are gathered into one deduplicated list, grouped by priority, and presented as a **multi-select checklist**. P1 items are pre-selected. You choose what to fix; the pipeline applies only the selected items.
+All findings from every skill are gathered into one deduplicated list, grouped by priority, presented as a
+**multi-select checklist** (P1 + the anti-templated and signature-motion items pre-selected). You choose
+what to fix; the pipeline applies only that. Then it renders the result live, diffs it against the
+references, and emits the verdict.
 
 ```
-Which findings should I fix?  (multi-select)
+Which findings should I fix?  (multi-select · vitality items pre-selected)
 
-P1 — Broken / identity / accessibility
-  [x] Contrast 3.1:1 on primary button label — fails WCAG AA                [impeccable, web-accessibility]
-  [x] No visible focus ring on nav links — keyboard users cannot orient      [web-design-guidelines]
-  [x] Icon-only action in mobile nav has no accessible label                 [web-accessibility]
+P1 — Broken / identity / vitality
+  [x] Templated: default card grid + hero/3-cards — no house layer (anti-templated gate FAILED) [design-taste-frontend]
+  [x] No signature motion — only hover hygiene; reference called for a staggered card entrance   [emil-design-eng]
+  [x] Secondary text contrast 2.85:1 — fails WCAG AA                                              [impeccable, web-design-guidelines]
 
 P2 — Improvements
-  [ ] CTA hierarchy: two competing primary buttons on the same screen        [impeccable, huashu-design]
-  [ ] Card spacing rhythm breaks at the 3rd row (8px gap inconsistency)      [taste-skill]
-  [ ] LCP 3.8s — hero image not preloaded                                    [agent-browser]
+  [ ] Even, flat density — adopt the asymmetric bento from reference #2                            [impeccable]
+  [ ] LCP 3.8s — hero image not preloaded                                                          [agent-browser]
 
 P3 — Polish
-  [ ] Hover transition 320ms feels sluggish → target 150ms                   [emil-design-eng, review-animations]
-  [ ] Section eyebrow "FEATURES" in all-caps adds no meaning                 [taste-skill]
-  [ ] Dark mode card border barely visible (1px solid rgba(255,255,255,0.06)) [impeccable]
+  [ ] Hover transition 320ms feels sluggish → 150ms                                                [emil-design-eng]
+
+────────────────────────────────────────────────────────────────────
+Vitality verdict:  templated → (loop) → alive
+  judged against .design-review/references.md — bento + display numerals + staggered entrance landed
 ```
-
-For large lists, shortcuts are offered: "select all P1", "all P1+P2", or per-item selection.
-
-After applying: typecheck (if code), design-token usage (no hardcoded color/spacing/type), brand/identity consistency, and closing screenshots (light/dark/mobile) + Core Web Vitals.
 
 ---
 
 ## Attribution
 
-This pipeline orchestrates skills authored by others. **Verify URLs before installing.**
+This pipeline orchestrates skills authored by others — it **loads** them, never paraphrases them.
+**The 4 core skills are mandatory; the rest are opt-in add-ons.** Verify URLs before installing.
 
-| Skill | Purpose | Source |
+| Skill | Role | Source |
 |---|---|---|
-| `ui-ux-pro-max` | Baseline UX / structure (step 1) | https://ui-ux-pro-max-skill.nextlevelbuilder.io/ |
-| `frontend-design` | Distinctive, non-generic baseline UI (step 1 fallback) | Anthropic |
-| `impeccable` | Scored audit + anti-slop + live iteration | https://github.com/pbakaus/impeccable |
-| `huashu-design` | Hi-fi prototypes + anti-slop + 5-dimension review | https://github.com/alchaincyf/huashu-design |
-| `taste-skill` | Anti-slop / design taste | https://github.com/Leonxlnx/taste-skill |
-| `emil-design-eng` | Motion and interaction polish | https://github.com/emilkowalski/skills |
-| `review-animations` | Dedicated animation review (timing / easing / jank) | https://github.com/emilkowalski/skills |
-| `web-design-guidelines` | Web Interface Guidelines (AA, keyboard, contrast) | Anthropic — Web Interface Guidelines |
-| `web-accessibility` / `accessibility` | WCAG 2.2 audit | https://github.com/addyosmani/web-quality-skills |
-| `seo` | Search visibility (public targets only) | https://github.com/addyosmani/web-quality-skills |
-| mobile design skill | Mobile / RN screens | pick your own (e.g. Sleek — sleek.design) |
+| **`impeccable`** *(core)* | Structure, hierarchy, IA, tokens, scored audit | https://github.com/pbakaus/impeccable |
+| **`design-taste-frontend`** *(core)* (a.k.a. `taste-skill`) | Anti-slop + anti-templated gate | https://github.com/Leonxlnx/taste-skill |
+| **`emil-design-eng`** *(core)* | Polish + signature motion | https://github.com/emilkowalski/skills |
+| **`web-design-guidelines`** *(core)* | Accessibility AA, keyboard, contrast | Anthropic — Web Interface Guidelines |
+| `agent-browser` | Live browser: reference research + the vitality verdict | Claude Code built-in / project-configured |
+| `huashu-design` *(add-on)* | Independent 2nd anti-slop lens | https://github.com/alchaincyf/huashu-design |
+| `review-animations` *(add-on)* | Animation timing/easing/jank critique | https://github.com/emilkowalski/skills |
+| `web-accessibility` / `accessibility` *(add-on)* | Deeper WCAG 2.2 audit | https://github.com/addyosmani/web-quality-skills |
+| `seo` *(add-on, public only)* | Search visibility | https://github.com/addyosmani/web-quality-skills |
+| mobile design skill *(add-on)* | Mobile / RN screens | pick your own (e.g. Sleek — sleek.design) |
 
-If a skill is missing and has no public source, the pipeline degrades gracefully: run the available steps and note which lenses were skipped.
-
-Full install and attribution details: [references/attribution.md](references/attribution.md)
+Full detail: [references/attribution.md](references/attribution.md).
 
 ---
 
@@ -158,20 +167,18 @@ Full install and attribution details: [references/attribution.md](references/att
 
 ### Install
 
-Drop `SKILL.md` into your Claude Code skills directory:
+As a plugin (agents + command + hook), use the marketplace commands above. As a skill only:
 
 ```bash
 git clone https://github.com/davidgarciagordo/design-review ~/.claude/skills/design-review
 ```
 
-Claude Code picks it up automatically.
-
 ### Triggers
 
 ```
 improve design
+make this alive / less flat
 design review
-run the design skills
 /design-review <target>
 ```
 
@@ -180,34 +187,21 @@ run the design skills
 ```
 /design-review apps/web/app/settings/page.tsx
 
-Target: settings page (authenticated — skip SEO)
+Target: settings page (authenticated — private; SEO add-on off)
 Stack: Next.js App Router, Tailwind, design-system tokens
 Live browser: available (dev server on port 3000)
 ```
 
+### The enforcement hook
+
+When a write/edit touches a UI file, the PostToolUse hook checks for an `alive` verdict in
+`.design-review/verdict.json`. Modes via `DESIGN_REVIEW_GATE`: `warn` (default, advisory), `block` (exit 2
+— the agent must run `/design-review` to `alive`), `off` (disabled).
+
 ### Without Claude Code
 
-Read `SKILL.md` directly. The pipeline works with any AI assistant. Run each step manually in order, accumulate findings in a shared document, and present the checklist before applying changes.
-
----
-
-## Companion: Forge
-
-design-review is a companion to [Forge Methodology](https://github.com/davidgarciagordo/forge-methodology).
-
-**Forge** structures the work: align intent → spec → adversarial grill → global plan → optimal execution → verified done → owner sign-off. It answers "are we building the right thing, in the right way?"
-
-**design-review** polishes the result: once the screen or component exists, run it through the pipeline to make it visually right — correct hierarchy, zero a11y regressions, purposeful motion, real performance numbers.
-
-They compose naturally: use Forge to plan and execute a feature, then run design-review on the UI deliverable before the owner sign-off gate.
-
----
-
-## Examples
-
-Real worked examples with findings and checklists:
-
-→ [examples/](examples/README.md)
+Read `SKILL.md` and `references/pipeline.md`. The pipeline works with any AI assistant — run each gate in
+order, load each skill rather than summarising it, accumulate findings, and end with the explicit verdict.
 
 ---
 
@@ -215,16 +209,11 @@ Real worked examples with findings and checklists:
 
 | Reference | Contents |
 |-----------|----------|
-| [references/pipeline.md](references/pipeline.md) | Step-by-step pipeline detail: what each skill does, what to look for, how to chain findings |
-| [references/attribution.md](references/attribution.md) | Full attribution table with install instructions and fallback notes |
-
----
-
-## Templates
-
-| Template | Use for |
-|----------|---------|
-| [templates/findings-checklist.md](templates/findings-checklist.md) | Copy-paste checklist template for recording findings from the pipeline |
+| [SKILL.md](SKILL.md) | The telos + the imperative, gated pipeline |
+| [references/pipeline.md](references/pipeline.md) | Step-by-step detail: what to do, what input to pass each skill, how findings chain |
+| [references/attribution.md](references/attribution.md) | Core-vs-add-on skills, install, fallbacks |
+| [templates/vitality-verdict.md](templates/vitality-verdict.md) | Verdict shape + references diff |
+| [templates/findings-checklist.md](templates/findings-checklist.md) | Findings checklist |
 
 ---
 
@@ -234,3 +223,4 @@ MIT — see [LICENSE](./LICENSE).
 
 ---
 <sub>Made by [David García Gordo](https://github.com/davidgarciagordo) · MIT · part of the [claude-code-setup-optimizer](https://github.com/davidgarciagordo/claude-code-setup-optimizer) family</sub>
+</content>

@@ -1,71 +1,73 @@
-# Attribution — full table
+# Attribution & skills — what's mandatory, what's an add-on
 
-> Every skill this pipeline orchestrates, what it contributes, who authored it, where to get it, and what to do if it is missing.
+> The pipeline ORCHESTRATES skills authored by others. It does not replace them — it **loads** them via
+> the Skill tool (never paraphrases them) and sequences them around two new gates of its own
+> (reference-research and the vitality verdict).
 
-design-review does not replace these skills. It sequences them. The quality of the output depends on installing the skills you need for your project.
-
-**Verify all URLs before installing.** Entries marked ⚠️ are best-effort and should be confirmed.
+**Verify every URL before installing.** Entries marked ⚠️ are best-effort.
 
 ---
 
-## Full attribution table
+## The 4 CORE skills — mandatory · non-skippable · invoked in this exact order
 
-| Skill | Step | What it contributes | Author / source | Install command | If missing |
+If a core skill is missing, **offer to install it — do not silently skip a core lens**. The pipeline's
+vitality telos depends on all four.
+
+| # | Skill | Lens / agent | What it contributes | Author / source | Install |
 |---|---|---|---|---|---|
-| `ui-ux-pro-max` | 1 (primary) | Baseline UX audit: visual hierarchy, IA, layout structure, cognitive load, accessibility scaffolding | nextlevelbuilder.io | See https://ui-ux-pro-max-skill.nextlevelbuilder.io/ for install instructions | Fall back to `frontend-design` (step 1 fallback) |
-| `frontend-design` | 1 (fallback) | Distinctive, non-generic baseline UI; anti-templated layout and structure | Anthropic | Available in Claude Code's default skill library | Run step 1 with reduced coverage — note it in findings |
-| `impeccable` | 2 (lead) | 5-dimension scored audit (typography, spacing, contrast, CTAs, layout); live iteration; anti-slop fixes | Paul Bakaus (pbakaus) | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` | Step 2 SKIPPED — note it; the pipeline loses its lead scoring layer |
-| `huashu-design` (花叔Design) | 3 | Hi-fi prototype thinking; independent 5-dimension critique (clarity, balance, consistency, hierarchy, completeness); catches what impeccable missed | alchaincyf | `git clone https://github.com/alchaincyf/huashu-design ~/.claude/skills/huashu-design` | Step 3 SKIPPED — note it; second-opinion coverage is lost |
-| `taste-skill` | 4 | Anti-slop / design taste: em-dash ban, eyebrow restraint, fake numbers, redundant labels, consistency locks | Leonxlnx | `git clone https://github.com/Leonxlnx/taste-skill ~/.claude/skills/taste-skill` | Step 4 SKIPPED — note it; surface copy and consistency checks are not run |
-| `emil-design-eng` | 5 (application) | Motion and interaction polish: hover transitions, press/active states, loading states, skeleton screens, reduced-motion | Emil Kowalski | `git clone https://github.com/emilkowalski/skills ~/.claude/skills/emil-skills` then symlink or copy `emil-design-eng` | Step 5a SKIPPED — motion gaps are not fixed |
-| `review-animations` | 5 (critique) | Dedicated animation review: timing correctness, easing function appropriateness, purpose (communicative vs. decorative), jank detection | Emil Kowalski | Same repo as `emil-design-eng` — see https://github.com/emilkowalski/skills | Step 5b SKIPPED — animation timing/easing critique is not run |
-| `web-design-guidelines` | 6 (structure) | Web Interface Guidelines: keyboard navigability, visible focus rings, ARIA roles, accessible form patterns, color contrast | Anthropic — Web Interface Guidelines | Available in Claude Code's default skill library | Step 6 runs with reduced coverage — note missing structural checks |
-| `web-accessibility` / `accessibility` | 6 (WCAG audit) | WCAG 2.2 full audit: all A and AA success criteria, screen reader patterns, keyboard interaction, color / motion / cognitive accessibility | Addy Osmani | `git clone https://github.com/addyosmani/web-quality-skills ~/.claude/skills/web-quality-skills` then use `web-accessibility` or `accessibility` | Step 6 runs with reduced coverage — note WCAG audit was not run |
-| `seo` | 6b (public only) | Search visibility: semantic headings, meta/OG tags, canonical URLs, structured data, indexability | Addy Osmani | Same repo as `web-accessibility` — see https://github.com/addyosmani/web-quality-skills | Step 6b SKIPPED (or not applicable for private targets) |
-| mobile design skill | 1 (mobile) | Mobile-specific layout, touch target sizes, safe areas, platform conventions (iOS/Android) | pick your own | e.g. Sleek — see https://sleek.design (⚠️ commercial; verify availability) | Step 1 runs with `frontend-design` as a partial fallback — note mobile-specific rules were not applied |
-| `agent-browser` | 7 | Live browser automation: screenshots in light/dark/mobile, Core Web Vitals (LCP/CLS/INP/TTFB), visual regression diff | Claude Code built-in (or project-configured) | Available when Claude Code has browser access configured | Step 7 SKIPPED — state explicitly: "Live visual check: SKIPPED — no dev server / browser available" |
+| 1 | `impeccable` | `design-lens-impeccable` | Structure, visual hierarchy, IA, cognitive load, tokens, scored audit | Paul Bakaus (pbakaus) | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` |
+| 2 | `design-taste-frontend` (a.k.a. `taste-skill`) | `design-lens-taste` | Anti-slop **and anti-templated** — the lens that refuses generic; carries the gate that FAILS the run | Leonxlnx | `git clone https://github.com/Leonxlnx/taste-skill ~/.claude/skills/taste-skill` |
+| 3 | `emil-design-eng` | `design-lens-motion` | Polish **and signature motion** — staggered entrances, reveals, depth, a memorable moment | Emil Kowalski | `git clone https://github.com/emilkowalski/skills ~/.claude/skills/emil-skills` (use the `emil-design-eng` dir) |
+| 4 | `web-design-guidelines` | `design-lens-a11y` | Accessibility AA, keyboard, visible focus, contrast, roles/labels | Anthropic — Web Interface Guidelines | Available in Claude Code's default skill library |
+
+`agent-browser` is also effectively required for the two browser gates (reference-research and the vitality
+verdict). It is the browser-automation CLI — Claude Code built-in or project-configured. Without it, those
+steps degrade: the verdict can only be **provisional** (you cannot claim `alive` for a design no one
+rendered).
 
 ---
 
-## Notes on installation
+## Add-ons — skippable · opt-in · sharpen but don't gate
+
+| Skill | When | What it adds | Source | If missing |
+|---|---|---|---|---|
+| `huashu-design` (花叔Design) | optional 2nd anti-slop lens | Independent 5-dim critique; catches what impeccable + taste missed | https://github.com/alchaincyf/huashu-design | Skipped — note it; one extra lens lost |
+| `review-animations` | after `emil-design-eng` | Dedicated animation critique: timing, easing, purpose, jank | Same repo as `emil-design-eng` — https://github.com/emilkowalski/skills | Skipped — motion critique not run |
+| `seo` | **public targets only** | Semantic headings, meta/OG, canonical, structured data, indexability | https://github.com/addyosmani/web-quality-skills | Skipped (or N/A for private targets) |
+| `web-accessibility` / `accessibility` | deeper WCAG 2.2 audit | Full A/AA success criteria beyond the core a11y lens | https://github.com/addyosmani/web-quality-skills | Core lens (`web-design-guidelines`) still covers AA essentials |
+| `ui-ux-pro-max` / `frontend-design` | optional baseline before lens 1 | Extra structure/baseline pass | nextlevelbuilder.io ⚠️ / Anthropic | Skipped — `impeccable` covers structure |
+| mobile design skill | RN / Expo targets | Touch targets, safe areas, platform conventions | pick your own (e.g. Sleek — sleek.design ⚠️ commercial) | Web lenses still apply; note mobile rules not run |
+
+---
+
+## The two NEW gates this repo adds (no external skill)
+
+These are the levers against "flat", implemented as agents in this repo:
+
+| Gate | Agent | Role |
+|---|---|---|
+| **reference-research** | `design-reference-research` | The #1 lever: Dribbble 2026 + competitors → 3–5 patterns → copy+combine+house. Writes `.design-review/references.md`. |
+| **vitality verdict** | `design-vitality-verdict` | Live check + diff vs references → explicit `alive`/`templated`/`flat`. Writes `.design-review/verdict.json` (the hook reads it). |
+
+---
+
+## Installation notes
 
 ### Claude Code skills directory
+Skills load from `~/.claude/skills/`, each in its own subdir with a `SKILL.md`. Project-level skills in
+`.claude/skills/` override global ones of the same name. Claude Code detects them on session start.
 
-By default, Claude Code loads skills from `~/.claude/skills/`. Each skill should be in its own subdirectory with a `SKILL.md` file:
+### Loaded, never paraphrased
+A skill is content the agent **loads** (via the Skill tool), not prose the pipeline restates. If a lens
+agent is summarising a skill instead of invoking it, that's the bug — invoke the Skill tool.
 
-```
-~/.claude/skills/
-  impeccable/
-    SKILL.md
-  huashu-design/
-    SKILL.md
-  taste-skill/
-    SKILL.md
-  ...
-```
-
-Claude Code detects skills automatically when you start or restart a session.
-
-### Project-level skills
-
-You can also install skills per-project by placing them in `.claude/skills/` at the project root. Project-level skills override global ones with the same name.
-
-### When a skill is not installed
-
-The pipeline degrades gracefully. When a step's skill is missing:
-
-1. The pipeline states which step was skipped and why (skill not found).
-2. The pipeline continues with the remaining steps.
-3. The final checklist is marked with a note: "Note: step N was skipped (skill `<name>` not installed — see references/attribution.md for install instructions)."
-
-No finding is silently dropped because a skill was unavailable. The gap is always visible.
+### When a core skill is missing
+Offer to install it. The pipeline can degrade (skip an add-on), but skipping a **core** lens means the
+vitality telos isn't fully tested — say so explicitly in the verdict.
 
 ### Verifying URLs
-
-Skill repositories move or become unavailable. Before installing any skill from this table:
-
-1. Open the URL in a browser and confirm the repo exists and is active.
-2. Check the repo's README for the current recommended install method.
-3. For skills from multi-skill repos (e.g. `emilkowalski/skills` contains multiple skills), read the repo README to understand which directory contains each skill.
+Repos move. Before installing: open the URL, confirm the repo is active, read its README for the current
+install method and (for multi-skill repos like `emilkowalski/skills`) which directory holds the skill.
 
 → Back to [design-review](../README.md)
+</content>
