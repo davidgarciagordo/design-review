@@ -1,266 +1,172 @@
-# Pipeline — step-by-step reference
+# Pipeline — step-by-step reference (executable, gated, vitality-first)
 
-> What each step does, what to look for, and how to chain findings forward.
+> The telos is **vitality**, not correctness. Each step says *what to do* and *what input to pass the
+> skill* — it never paraphrases a skill's content. Skills are reasoning an agent **loads** via the Skill
+> tool; restating them in bullets is the bug this rewrite fixes.
 
-This document expands on the summary table in the README. Use it when running the pipeline manually, when adapting it to a new project, or when deciding which steps to include or skip.
-
----
-
-## Before you start: define the target clearly
-
-State the target explicitly before running step 0:
-
-- **What**: a specific file, route, component, or page (not "the app")
-- **Stack**: framework, CSS method, design system (if any), Storybook (if any)
-- **Platform**: web, mobile (React Native / Expo), or both
-- **Visibility**: public (indexable) or private/internal (authenticated, admin, dashboard)
-- **Live browser**: available (dev server / Storybook) or not
-
-A clear target prevents the pipeline from making assumptions that cause the wrong steps to run.
+This document expands the imperative pipeline in `SKILL.md` and the `/design-review` command. Use it when
+running the pipeline manually or adapting it to a new project.
 
 ---
 
-## Step 0 — Detect project capabilities
+## The telos (why the steps are shaped this way)
 
-**Purpose:** adapt the pipeline to the project before running a single skill.
+The old pipeline optimised *"does this have defects?"* and converged on **correct-but-flat**. This one
+optimises:
 
-**What to detect:**
+> **Is this design ALIVE and unmistakably 2026 against these specific references?**
 
-| Signal | How | Effect |
-|--------|-----|--------|
-| Design system / tokens | `packages/*design-system*`, `tokens.ts`, `tailwind.config.*` with custom colors, `theme.ts` | Enables reuse-first step (0b); flags deviations from tokens in later steps |
-| Storybook | `.storybook/`, `*.stories.tsx`, `*.stories.mdx` | Enables Storybook-first rendering in step 7; adds a "story exists?" check |
-| Public target | Landing page, marketing route, static export, no auth guard | Enables SEO step (6b) |
-| Platform | `package.json` for `react-native`, `expo`; `android/`, `ios/` directories | Switches step 1 to a mobile-design skill; skips DOM-only skills |
-| Live browser | Dev server running (`pnpm dev`, `next dev`), Storybook running, or a browser-automation CLI (`agent-browser`) available | Enables step 7; without it, step 7 is skipped and stated |
+Three structural fixes, mapped to steps:
 
-**Output of step 0:** a short list of what was found and what will be skipped. Example:
-
-```
-Design system: yes (packages/design-system)
-Storybook: yes (localhost:6006)
-Platform: web
-Public target: no (authenticated app) → SEO step SKIPPED
-Live browser: yes (localhost:3000)
-```
-
-State skipped steps immediately. Do not silently run them.
+| Root cause of "flat" | Fix | Step |
+|---|---|---|
+| Wrong telos (defect-removal ceiling) | Explicit **vitality verdict** + **loop** | 6, 7 |
+| No reference research (designing from memory = template) | **reference-research GATE** | 2 |
+| Skills paraphrased, not invoked | **REAL invocation** via the Skill tool | 3 |
 
 ---
 
-## Step 0b — Reuse-first
+## Before you start: define the target
 
-**Purpose:** prevent duplicate components and hardcoded values before designing anything new.
-
-**What to do:**
-1. Open Storybook (or browse the design system source) and look for an existing component that solves the problem.
-2. If one exists: use it, or compose it with other existing atoms/molecules.
-3. If none exists and the new piece is reusable (used in ≥2 places or likely to be): design it in the design system with a `.stories.tsx` file, not inline in the app.
-4. If the piece is specific to a single screen: compose it from design system atoms inside the app.
-
-**Skip if:** no design system in the project.
-
-**Finding format:** `[reuse-first] Existing <ComponentName> at <path> — use instead of implementing new`.
+State explicitly: **what** (file/route/component/story/email), **stack** (framework, CSS method, design
+system, Storybook), **platform** (web / RN-Expo), **visibility** (public/indexable vs private), **live
+browser** (available or not). A vague target makes the wrong steps run.
 
 ---
 
-## Step 1 — Baseline structure
+## Step 0 — Frame the target
 
-**Purpose:** establish the structural foundation — layout, visual hierarchy, information architecture, and cognitive load — before auditing any details.
-
-**Primary skill:** `ui-ux-pro-max`
-**Fallback (if not installed):** `frontend-design`
-
-**What to look for:**
-- Visual hierarchy: does the most important element command the most visual weight? Are there competing primaries?
-- Layout: is the grid or column structure consistent? Does content overflow at any standard breakpoint?
-- Information architecture: are related items grouped? Is the page scannable (F-pattern, Z-pattern)?
-- Cognitive load: how many decisions does the user face at once? Are there too many options, toggles, or actions in one view?
-- Heading structure: does the heading hierarchy (`h1` → `h2` → `h3`) reflect the visual hierarchy?
-
-**Findings:** structural issues are usually P1 or P2. A broken heading structure is always P1 (accessibility). Competing CTAs are P2.
-
-**Chain to step 2:** pass the layout and hierarchy issues forward so the audit in step 2 can confirm whether the scoring reflects structural problems or purely visual ones.
+Read the target, its design doc, and the brief. Detect design-system/tokens, Storybook, platform,
+public-vs-private (private → `seo` add-on off), live browser. Resolve only owner-only decisions (scope,
+light-fix vs full redesign, brand constraints) in one `AskUserQuestion` batch. State what you skip and
+why. **Do not ask anything the code can answer.**
 
 ---
 
-## Step 2 — Scored audit + anti-slop (lead skill)
+## Step 1 — `audit-first` **[GATE · redesigns only]**
 
-**Purpose:** a systematic, scored audit across the five visual dimensions. This is the lead skill — it sets the baseline score that subsequent steps improve.
+**Agent:** `design-audit-first`. **Purpose:** record equity before destroying it.
 
-**Skill:** `impeccable`
-
-**Five dimensions:**
-1. **Typography** — size scale, line height, weight contrast, readability at small sizes
-2. **Spacing** — rhythm consistency, padding/margin scale, density vs. breathing room
-3. **Contrast** — text/background ratios (WCAG AA: 4.5:1 normal, 3:1 large text/UI components), icon legibility
-4. **CTAs** — clarity of primary action, visual weight hierarchy, number of competing primaries
-5. **Layout** — alignment, grid consistency, overflow, responsiveness
-
-**What to do:**
-- Score each dimension 1–10.
-- Flag deviations from the design system tokens (hardcoded colors, one-off spacing values).
-- Apply live fixes for issues where the fix is obvious and small (impeccable's strength).
-
-**Findings:** contrast below AA is always P1. Hardcoded tokens are P2. Score < 6 in any dimension is P2.
-
-**Chain to step 3:** pass scores and findings forward. Step 3 operates independently to catch what this step missed — do not filter findings between steps.
+Render the existing surface, screenshot it (light/dark/mobile via `agent-browser`), and write
+`.design-review/audit-first.md` with **Keep** (what already works, `file:line`) and **Attack** (first-read
+flatness hypotheses). Skip only for greenfield — and say so.
 
 ---
 
-## Step 3 — Second anti-slop lens
+## Step 2 — `reference-research` **[GATE · ALWAYS · the #1 lever against flat]**
 
-**Purpose:** an independent second opinion. Runs after step 2 so it has context, but does not see step 2's scores until it has formed its own assessment.
+**Agent:** `design-reference-research`. **Purpose:** ground the design in live 2026 references so it can't
+regress to the training-data average.
 
-**Skill:** `huashu-design`
+1. Load `agent-browser`; open `https://dribbble.com/shots/popular/web-design` (2026 popular) and **2–3
+   real domain competitors**; screenshot relevant surfaces.
+2. Extract **3–5 concrete, reproducible patterns** — each tagged `[layout|type|color|density|motion]`,
+   named specifically (a move you can implement, not a vibe).
+3. Decide **copy + combine + house layer (≈5-in-1)**: what to take from each, how they combine, how the
+   project's identity/tokens reskin them so the result could only be *this* product.
+4. Write `.design-review/references.md` (sources, patterns, combined direction, and a one-line "bar" for
+   what alive-vs-flat means *for this target*).
 
-**Five dimensions (same structure, independent eye):**
-1. **Clarity** — is the purpose of each element immediately obvious?
-2. **Visual balance** — whitespace distribution, element weight distribution
-3. **Consistency** — do like elements look alike? Do unlike elements look different?
-4. **Information hierarchy** — what does the user see first, second, third?
-5. **Completeness** — is any piece of information the user needs missing from the surface?
-
-**What to do:**
-- Run independently of step 2's findings.
-- After running, merge with step 2's findings: deduplicate items flagged by both (mark them `[impeccable, huashu-design]`), keep items found by only one.
-
-**Findings:** items found by both skills are higher confidence. Items found by only one are worth including but flagged with a single skill.
+**Without this artifact, stop.** There is nothing for the verdict to judge "alive" against.
 
 ---
 
-## Step 4 — Taste / transversal anti-slop
+## Step 3 — The 4 core skills, REAL invocation **[GATE · in order]**
 
-**Purpose:** catch surface-level design slop that scored audits often miss — copy choices, all-caps, redundant labels, fake precision numbers, decorative elements that add noise.
+Each lens is an agent that **loads the real SKILL.md via the Skill tool** and is passed *the target +
+`.design-review/references.md` + the project tokens*. The orchestrator never summarises the skill. Findings
+accumulate (drop nothing) and cite `file:line`.
 
-**Skill:** `taste-skill`
+### 3a — `design-lens-impeccable` (loads `impeccable`)
+Structure, visual hierarchy, IA, cognitive load, spacing/typography, token deviations, the scored audit.
+Apply the small obvious fixes the skill owns. **Flag correct-but-generic structure** as a vitality finding
+(it feeds 3b).
 
-**What to look for:**
-- **Em-dash ban** — em-dashes in UI labels or callouts (use a comma, colon, or rewrite the sentence)
-- **Eyebrow restraint** — all-caps section labels ("FEATURES", "ABOUT US") that read as shouting; use title case or remove
-- **Fake/round numbers** — "5000+ happy customers" (unverifiable); "99.9% uptime" without a source
-- **Redundant labels** — placeholder text that repeats the label ("Enter your email address" when the label already says "Email")
-- **State text redundancy** — "Enabled / Disabled" next to a toggle (the visual state communicates this)
-- **Consistency locks** — ensure all headings use the same case style, all CTAs use the same verb tense, all empty states follow the same pattern
+### 3b — `design-lens-taste` (loads `design-taste-frontend` / `taste-skill`) — **anti-templated GATE**
+Run the skill's anti-slop/taste rules **and** apply the **anti-templated gate**: if the output could be any
+SaaS template (default card grid, hero + 3 feature cards, untouched shadcn radii/shadows, no house layer,
+evenly-flat density, decorative/absent motion), the gate **FAILS** — return verdict `TEMPLATED` with the
+2–3 specific moves (from step 2) that make it singular. **Exit criterion: "this could only be THIS
+product."** Anti-templated items are **P1 vitality findings**, pre-selected.
 
-**For dashboards:** apply transversal rules (consistency locks, eyebrow restraint) only. Skip copy-specific rules that do not apply to data surfaces.
+### 3c — `design-lens-motion` (loads `emil-design-eng`) — **signature motion**
+Two tiers. **Hygiene (necessary):** press/active feedback, hover transitions, loading/skeleton,
+view/state transitions, `prefers-reduced-motion`. **Signature (the bar):** land **at least one memorable
+motion moment** tied to a step-2 reference (staggered entrance, scroll reveal, depth/parallax, count-up,
+delight on the key action). Hover-only is a fail. The signature moment is a **P1 vitality finding**.
 
-**Findings:** em-dash and redundant labels are P3. All-caps headings are P2. Fake numbers are P2 (trust and legal risk).
+### 3d — `design-lens-a11y` (loads `web-design-guidelines`)
+AA contrast (≥4.5:1, ≥3:1 large/UI), visible focus, full keyboard reach, correct roles/labels, logical
+headings, meaningful `alt`, reduced-motion honored by the new signature motion. **Every WCAG A/AA failure
+is P1.** Watch the seams the vitality work opened (bold colors dropping contrast, motion ignoring
+reduced-motion). a11y is never traded for "alive".
 
----
-
-## Step 5 — Motion & polish
-
-**Purpose:** add purposeful interaction feedback; remove motion that distracts or performs.
-
-**Skills:** `emil-design-eng` (application) + `review-animations` (critique)
-
-**What to look for (emil-design-eng):**
-- **Hover transitions** — interactive elements should have a `transition-colors` or `transition-all` (typically 100–200ms ease-out)
-- **Press/active state** — buttons and interactive cards need a subtle scale (e.g. `active:scale-[0.97]`) or color shift to confirm the press moment
-- **Loading states** — any async action needs a loading indicator; the UI must not go silent for >300ms
-- **Skeleton screens** — data-heavy components should show a skeleton on first load, not a blank state
-- **Reduced motion** — all motion must respect `prefers-reduced-motion: reduce`
-- **Transitions between views/states** — page transitions, modal open/close, and list item add/remove should have a transition
-
-**What to look for (review-animations — critique pass):**
-- **Timing** — is each transition at the right speed for its purpose? (Micro: 100–150ms; page-level: 200–300ms; decorative: 300–500ms)
-- **Easing** — is the easing function appropriate? (Entrances: ease-out; exits: ease-in; cross-fades: ease-in-out)
-- **Purpose** — does each animation communicate something (state change, direction, hierarchy) or is it decorative?
-- **Jank** — are there dropped frames? Does the animation use GPU-composited properties (transform, opacity) or layout-triggering ones (width, margin)?
-
-**Findings:** missing loading state is P1 if it would leave users waiting >500ms without feedback. Missing hover state is P2. Jank on a layout property is P2. Easing mismatch is P3. Timing slightly off is P3.
+> **Add-ons (skippable, opt-in), run here if installed/relevant:** `huashu-design` (independent second
+> anti-slop lens), `review-animations` (motion timing/easing/jank critique), `seo` (**public targets
+> only**), a mobile-design skill (RN/Expo). These sharpen the result but are not gates.
 
 ---
 
-## Step 6 — Accessibility
+## Step 4 — Apply fixes (multi-select)
 
-**Purpose:** verify the target meets WCAG AA and is fully usable by keyboard and screen reader users.
-
-**Skills:** `web-design-guidelines` (structure and Web Interface Guidelines) + `web-accessibility` or `accessibility` (WCAG 2.2 audit)
-
-**What to check:**
-
-| Check | Standard | Failure level |
-|-------|----------|---------------|
-| Text contrast ≥ 4.5:1 (normal), ≥ 3:1 (large / UI) | WCAG 1.4.3 AA | P1 |
-| Visible focus ring on all interactive elements | WCAG 2.4.7 AA | P1 |
-| All interactive elements reachable by Tab | WCAG 2.1.1 A | P1 |
-| Correct ARIA roles (buttons are `<button>`, switches are `role="switch"`) | WCAG 4.1.2 A | P1 |
-| Images have meaningful `alt` text | WCAG 1.1.1 A | P1 |
-| Form inputs have `<label>` or `aria-label` | WCAG 1.3.1 A | P1 |
-| Heading structure (`h1` → `h2` → `h3`) is logical | WCAG 1.3.1 A | P1 |
-| Motion respects `prefers-reduced-motion` | WCAG 2.3.3 AAA (best practice) | P2 |
-| Color is not the only means of conveying information | WCAG 1.4.1 A | P2 |
-| Error messages are accessible (not only color) | WCAG 3.3.1 A | P2 |
-
-**Note:** contrast from step 2 is carried forward here — no need to re-check values already caught by impeccable. Mark them with `[impeccable, web-accessibility]` to show both skills agree.
-
-**Findings:** all WCAG A and AA failures are P1. AAA items are P2 or P3 depending on user impact.
+Merge all findings into one deduplicated list: **P1** broken/identity/a11y · **P2** improvement · **P3**
+polish. Each item: one-line description, skill tag(s) (`[impeccable, web-design-guidelines]`), `file:line`,
+**recommended fix first** + live alternatives. Present a multi-select checklist (`AskUserQuestion`,
+`multiSelect: true`) with **P1 + the anti-templated and signature-motion items pre-selected** — those are
+why the target was flat; they are not optional polish. Apply only what's chosen.
 
 ---
 
-## Step 6b — SEO (public targets only)
+## Step 5 — Informed re-pass
 
-**Purpose:** ensure the target is discoverable and correctly indexed.
-
-**Skill:** `seo`
-
-**Skip:** authenticated apps, admin panels, dashboards — any target that is not publicly indexable.
-
-**What to check:**
-- `<title>` and `<meta name="description">` present and unique per page
-- `<h1>` exactly one per page, descriptive
-- Open Graph tags (`og:title`, `og:description`, `og:image`) for shareable pages
-- Canonical URL set
-- Structured data (`schema.org`) where relevant (articles, products, FAQs, events)
-- No `noindex` on pages that should be indexed
-- Image `alt` attributes (also required for accessibility — double credit)
-
-**Findings:** missing `<title>` or duplicate headings are P1. Missing OG tags are P2. Missing structured data is P3.
+Re-run only the lenses the chosen fixes touch (layout → 3a + live; motion → 3c + verdict; contrast → 3d +
+verdict). Catch the new seams. Surface genuinely new findings in a short follow-up batch; don't re-litigate
+settled items.
 
 ---
 
-## Step 7 — Live visual reality-check
+## Step 6 — `vitality-verdict` **[GATE]**
 
-**Purpose:** verify the target as it actually renders — not as the code suggests it should render. Screenshots are the ground truth.
+**Agent:** `design-vitality-verdict`. **Purpose:** decide alive vs flat against the render and the
+references — the only place vitality is actually settled.
 
-**Tool:** `agent-browser` (or equivalent browser-automation CLI)
-
-**What to do:**
-1. Render the target in **light mode** — screenshot.
-2. Render in **dark mode** — screenshot.
-3. Render at **mobile viewport** (375px width) — screenshot.
-4. Visually inspect each screenshot: spacing, overflow, contrast on real colors (not computed values), dark mode correctness.
-5. Run **Core Web Vitals**: LCP, CLS, INP, TTFB. Flag any metric outside the "Good" threshold (LCP > 2.5s, CLS > 0.1, INP > 200ms).
-6. For redesigns / audits: run a **visual regression diff** against the baseline screenshot to confirm only intended changes were made.
-
-**Run sequentially** — never parallel (browser threads share state; parallel runs produce unreliable screenshots).
-
-**Skip if:** no live browser available. State explicitly: "Live visual check: SKIPPED — no dev server running."
-
-**Findings:** visible overflow at mobile is P1. Dark mode showing white text on white background is P1. LCP > 4s is P2. Minor spacing discrepancy is P3.
+1. Render the real target live (light/dark/mobile) via `agent-browser`. Screenshots are ground truth.
+2. **Diff against `.design-review/references.md`:** for each pattern that was meant to land, did it land or
+   regress to the mean during build?
+3. Check the bar: **house layer** present? **density/bento** (no scroll for the key content)? **signature
+   motion moment fires** (verify live, not from code)? **typography with a point of view**?
+4. Core Web Vitals (LCP/CLS/INP/TTFB) — perf is a UX gate.
+5. Emit an explicit **`alive` / `templated` / `flat`** verdict → `.design-review/verdict.json` (the hook
+   reads it). If no live browser, the verdict is provisional and conservatively `templated` (you can't claim
+   "alive" for a design no one looked at).
 
 ---
 
-## Chaining findings: the rule
+## Step 7 — Vitality loop **[GATE · until the bar is met]**
 
-Every finding flows forward. Steps do not discard findings from earlier steps. The final list is a union of all steps, deduplicated by description.
+If the verdict is not `alive`, **iterate steps 3–6** — pull a sharper reference, push the house layer, raise
+density, land the motion moment — up to **N rounds (default 3)**. Each loop must move the verdict toward
+`alive` or explain why the bar can't be met (then the owner decides). **Never report done on a
+`templated`/`flat` verdict.**
 
-When two steps flag the same issue (e.g. contrast caught by both `impeccable` and `web-accessibility`), merge them into one item and list both skills: `[impeccable, web-accessibility]`. The merged item carries higher confidence and should be pre-selected in the checklist.
+---
 
-When merging, keep the more specific description (the one with the actual ratio, file path, or component name).
+## Chaining findings
+
+Every finding flows forward; nothing is discarded between steps. When two skills flag the same issue, merge
+into one item and list both (`[impeccable, web-design-guidelines]`) — higher confidence, pre-selected. Keep
+the most specific description (actual ratio, path, component).
 
 ---
 
 ## After the checklist: verification
 
-After applying the selected fixes:
-
-1. **Typecheck** (if code was changed) — `tsc --noEmit` or equivalent.
-2. **Design token audit** — no hardcoded color, spacing, or typography values introduced by the fixes.
-3. **Brand / identity consistency** — the fixed target still looks like it belongs to the product family.
-4. **Closing screenshots** — light, dark, and mobile. The screenshots are the evidence that the fixes were applied and did not break anything.
-5. **Core Web Vitals** — re-run after any performance-related fix to confirm improvement.
+1. **Typecheck** (if code changed).
+2. **Token audit** — no hardcoded color/spacing/type introduced.
+3. **Identity consistency** — still reads as this product's family.
+4. **Closing screenshots** — light/dark/mobile (the evidence).
+5. **Core Web Vitals** — re-run after any perf-related fix.
+6. **The verdict reads `alive`** — otherwise the run failed; surface it as such.
 
 → Back to [design-review](../README.md)
+</content>
