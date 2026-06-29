@@ -21,8 +21,9 @@ Three structural fixes, mapped to steps:
 | Root cause of "flat" | Fix | Step |
 |---|---|---|
 | Wrong telos (defect-removal ceiling) | Explicit **vitality verdict** + **loop** | 6, 7 |
-| No reference research (designing from memory = template) | **reference-research GATE** | 2 |
-| Skills paraphrased, not invoked | **REAL invocation** via the Skill tool | 3 |
+| No reference research (designing from memory = template) | **reference-research GATE** + `ui-ux-pro-max` vocabulary | 2 |
+| Skills paraphrased or invoked bare (stalls in router/setup) | **REAL and ROUTED invocation** via the Skill tool | 3 |
+| Skills assumed "not installed" | **Bootstrap (step 0)**: detect → install → temp-clone fallback | 0 |
 
 ---
 
@@ -34,12 +35,21 @@ browser** (available or not). A vague target makes the wrong steps run.
 
 ---
 
-## Step 0 — Frame the target
+## Step 0 — Bootstrap & Frame the target
 
-Read the target, its design doc, and the brief. Detect design-system/tokens, Storybook, platform,
-public-vs-private (private → `seo` add-on off), live browser. Resolve only owner-only decisions (scope,
-light-fix vs full redesign, brand constraints) in one `AskUserQuestion` batch. State what you skip and
-why. **Do not ask anything the code can answer.**
+**Bootstrap (first, non-negotiable):** detect the skills the pipeline references and ensure they are
+installed. Mechanism: (a) available in `~/.claude/skills` or marketplace → use; (b) missing → install
+(`npx skills add <author/repo>` or `claude plugin install <plugin>@<marketplace>`); (c) fallback → clone
+to a temp dir and read the `SKILL.md` directly. No referenced skill is ever silently skipped.
+
+Also run `node .claude/skills/impeccable/scripts/context.mjs`; if it reports `NO_PRODUCT_MD`, generate
+a minimal `PRODUCT.md`/`DESIGN.md` from the project's design doc to prevent impeccable from stalling in
+its `init` flow.
+
+**Frame:** Read the target, its design doc, and the brief. Detect design-system/tokens, Storybook,
+platform, public-vs-private (private → `seo` add-on off), live browser. Resolve only owner-only decisions
+(scope, light-fix vs full redesign, brand constraints) in one `AskUserQuestion` batch. State what you skip
+and why. **Do not ask anything the code can answer.**
 
 ---
 
@@ -60,68 +70,96 @@ regress to the training-data average.
 
 1. Load `agent-browser`; open `https://dribbble.com/shots/popular/web-design` (2026 popular) and **2–3
    real domain competitors**; screenshot relevant surfaces.
-2. Extract **3–5 concrete, reproducible patterns** — each tagged `[layout|type|color|density|motion]`,
-   named specifically (a move you can implement, not a vibe).
-3. Decide **copy + combine + house layer (≈5-in-1)**: what to take from each, how they combine, how the
-   project's identity/tokens reskin them so the result could only be *this* product.
-4. Write `.design-review/references.md` (sources, patterns, combined direction, and a one-line "bar" for
-   what alive-vs-flat means *for this target*).
+2. Load `ui-ux-pro-max` (via Skill tool) as **vocabulary**: use its catalogue of 50+ styles, 161 palettes,
+   and 57 font-pairings to name precisely what you see (style, palette, font-pair) instead of vague
+   adjectives like "clean and modern".
+3. Extract **3–5 concrete, reproducible patterns** — each tagged `[layout|type|color|density|motion]`,
+   named specifically (a move you can implement, not a vibe) and vocabulary-named where applicable.
+4. Decide **copy + combine + house layer (≈5-in-1)**: what to take from each, how they combine, how the
+   project's identity/tokens reskin them so the result could only be *this* product. Note the **dials**
+   (density / contrast / `MOTION_INTENSITY`) for the taste lens.
+5. Write `.design-review/references.md` (sources, patterns, combined direction, dials, and a one-line "bar"
+   for what alive-vs-flat means *for this target*).
 
 **Without this artifact, stop.** There is nothing for the verdict to judge "alive" against.
 
 ---
 
-## Step 3 — The 4 core skills, REAL invocation **[GATE · in order]**
+## Step 3 — DIAGNOSIS: CORE skills, REAL and ROUTED invocation **[GATE · in order]**
 
-Each lens is an agent that **loads the real SKILL.md via the Skill tool** and is passed *the target +
-`.design-review/references.md` + the project tokens*. The orchestrator never summarises the skill. Findings
+Each lens is an agent that **loads the real SKILL.md via the Skill tool ROUTED to its command/mode** and
+is passed *the target + `.design-review/references.md` + the project tokens*. Invoking bare (no args)
+stalls the skill in its router/setup — always route. The orchestrator never summarises a skill. Findings
 accumulate (drop nothing) and cite `file:line`.
 
-### 3a — `design-lens-impeccable` (loads `impeccable`)
+### 3a — `design-lens-impeccable` (routes `impeccable audit` + `critique`)
 Structure, visual hierarchy, IA, cognitive load, spacing/typography, token deviations, the scored audit.
 Apply the small obvious fixes the skill owns. **Flag correct-but-generic structure** as a vitality finding
-(it feeds 3b).
+(it feeds 3b). For fix routing: use `polish`/`layout`/`colorize`/`animate`/`typeset`/`harden`/
+`bolder`/`quieter`/`distill`/`delight`/`clarify`/`adapt`/`optimize` — each has its own command.
 
-### 3b — `design-lens-taste` (loads `design-taste-frontend` / `taste-skill`) — **anti-templated GATE**
-Run the skill's anti-slop/taste rules **and** apply the **anti-templated gate**: if the output could be any
-SaaS template (default card grid, hero + 3 feature cards, untouched shadcn radii/shadows, no house layer,
-evenly-flat density, decorative/absent motion), the gate **FAILS** — return verdict `TEMPLATED` with the
-2–3 specific moves (from step 2) that make it singular. **Exit criterion: "this could only be THIS
-product."** Anti-templated items are **P1 vitality findings**, pre-selected.
+### 3b — `design-lens-taste` (routes `design-taste-frontend` §11 redesign-audit + §14) — **anti-templated GATE**
+Routes to **§11 REDESIGN PROTOCOL** (§11.A detect mode = redesign, §11.B audit-before-touching) and closes
+with **§14 FINAL PRE-FLIGHT CHECK**. The **3 dials** (density / contrast / `MOTION_INTENSITY`) are
+**pre-set from `references.md`** — do NOT ask the user. The **anti-templated gate** is emitted by the
+skill's §11/§14 — do not hand-rewrite it. FAILS if the output could be any SaaS template. Exit criterion:
+"this could only be THIS product." Anti-templated items are **P1 vitality findings**, pre-selected.
+Landing-specific rules (hero/eyebrow/marquee/images) are ADVISORY on dashboards/product-UI; cross-cutting
+rules (em-dash, fake numbers, consistency, anti-templated) always apply. Fix routing: §11.D modernisation
+levers + §14 pre-flight.
 
-### 3c — `design-lens-motion` (loads `emil-design-eng`) — **signature motion**
-Two tiers. **Hygiene (necessary):** press/active feedback, hover transitions, loading/skeleton,
-view/state transitions, `prefers-reduced-motion`. **Signature (the bar):** land **at least one memorable
-motion moment** tied to a step-2 reference (staggered entrance, scroll reveal, depth/parallax, count-up,
-delight on the key action). Hover-only is a fail. The signature moment is a **P1 vitality finding**.
+### 3c — `design-lens-motion` (routes `emil-design-eng`) — **signature motion**
+Pass the **concrete question in the same Skill invocation** (*"review the motion of `<target>` vs the
+signature motion moment in `references.md` (`<ref>`); return concrete Before/After"*) — this bypasses the
+skill's "Initial Response wait". Two tiers. **Hygiene (necessary):** press/active feedback, hover
+transitions, loading/skeleton, view/state transitions, `prefers-reduced-motion`. **Signature (the bar):**
+at least one memorable motion moment tied to a step-2 reference. Hover-only is a fail. The Before/After
+output translates to pipeline items: missing signature → P1; broken hygiene → P1/P2; timing refinement →
+P3. `review-animations` is **optional — only if installed** (graceful, does not break the pipeline).
 
-### 3d — `design-lens-a11y` (loads `web-design-guidelines`)
-AA contrast (≥4.5:1, ≥3:1 large/UI), visible focus, full keyboard reach, correct roles/labels, logical
-headings, meaningful `alt`, reduced-motion honored by the new signature motion. **Every WCAG A/AA failure
-is P1.** Watch the seams the vitality work opened (bold colors dropping contrast, motion ignoring
-reduced-motion). a11y is never traded for "alive".
+### 3d — `design-lens-a11y` (routes `web-design-guidelines` with guidelines pre-fetched)
+**First: WebFetch** the Web Interface Guidelines and cache to `.design-review/web-guidelines.md` (avoids
+the skill's "which files?" prompt). Pass `target` + cached guidelines + prior-lens changes in the same
+invocation. AA contrast (≥4.5:1, ≥3:1 large/UI), visible focus, full keyboard reach, correct roles/labels,
+logical headings, meaningful `alt`, reduced-motion honored by the new signature motion. **Every WCAG A/AA
+failure is P1.** Fix routing: `impeccable harden`/`clarify` or direct corrections.
+
+### 3e — `ui-ux-pro-max` UX guidelines (wired intelligence)
+Run `ui-ux-pro-max` as an extra UX lens — its 99 UX guidelines catch structural/interaction issues the
+other lenses may have missed. Tag findings `[ui-ux-pro-max]`. Fix routing: `:design` / `:ui-styling` /
+`:design-system` namespaces.
 
 > **Add-ons (skippable, opt-in), run here if installed/relevant:** `huashu-design` (independent second
-> anti-slop lens), `review-animations` (motion timing/easing/jank critique), `seo` (**public targets
-> only**), a mobile-design skill (RN/Expo). These sharpen the result but are not gates.
+> anti-slop lens — if used, force review mode and grant `WebSearch`), `review-animations` (**only if
+> installed** — graceful), `seo` (**public targets only**), a mobile-design skill (RN/Expo). These
+> sharpen the result but are not gates.
 
 ---
 
-## Step 4 — Apply fixes (multi-select)
+## Step 4 — ASK (multi-select)
 
 Merge all findings into one deduplicated list: **P1** broken/identity/a11y · **P2** improvement · **P3**
 polish. Each item: one-line description, skill tag(s) (`[impeccable, web-design-guidelines]`), `file:line`,
-**recommended fix first** + live alternatives. Present a multi-select checklist (`AskUserQuestion`,
-`multiSelect: true`) with **P1 + the anti-templated and signature-motion items pre-selected** — those are
-why the target was flat; they are not optional polish. Apply only what's chosen.
+**owning fix command** (from the suite→phase mapping), and recommended fix. Present a multi-select
+checklist (`AskUserQuestion`, `multiSelect: true`) with **P1 + the anti-templated and signature-motion
+items pre-marked** — those are why the target was flat; they are not optional polish. Apply only what's
+chosen.
 
 ---
 
-## Step 5 — Informed re-pass
+## Step 5 — APPLY (FIX) + informed re-pass
 
-Re-run only the lenses the chosen fixes touch (layout → 3a + live; motion → 3c + verdict; contrast → 3d +
-verdict). Catch the new seams. Surface genuinely new findings in a short follow-up batch; don't re-litigate
-settled items.
+Route each chosen item to its **owning fix command** (suite→phase mapping):
+- `impeccable` items → `polish`/`layout`/`colorize`/`animate`/`typeset`/`harden`/`bolder`/`quieter`/
+  `distill`/`delight`/`clarify`/`adapt`/`optimize`
+- `design-taste-frontend` items → §11.D modernisation levers + §14 pre-flight as the close
+- `emil-design-eng` items → motion framework (staggered entrance / reveal / depth / delight)
+- `web-design-guidelines` items → `impeccable harden`/`clarify` or direct corrections
+- `ui-ux-pro-max` items → `:design` / `:ui-styling` / `:design-system`
+
+Then re-run only the lenses touched by the chosen fixes (layout → 3a + live; motion → 3c + verdict;
+contrast → 3d + verdict). Catch the new seams. Surface genuinely new findings in a short follow-up batch;
+don't re-litigate settled items.
 
 ---
 
