@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "design-review",
   "displayName": "Design Review",
-  "version": "1.0.0",
-  "description": "Integral design/redesign/audit: visual hierarchy, IA, cognitive load, accessibility, tokens, motion.",
+  "version": "2.0.0",
+  "description": "Executable design-VITALITY pipeline: cures flat, templated UI. audit-first → reference-research (Dribbble 2026 + competitors) → 4 core design skills invoked in order → fixes → vitality verdict (alive/templated/flat) → loop. Agents + /design-review command + PostToolUse gate hook.",
   "author": {
     "name": "David García Gordo",
     "url": "https://github.com/davidgarciagordo"
@@ -11,5 +11,8 @@
   "homepage": "https://github.com/davidgarciagordo/design-review",
   "repository": "https://github.com/davidgarciagordo/design-review",
   "license": "MIT",
-  "keywords": ["design", "review", "audit", "accessibility", "ui", "ux", "tokens", "motion"]
+  "keywords": ["design", "review", "vitality", "anti-templated", "audit", "accessibility", "motion", "tokens", "ui", "ux"],
+  "commands": "./commands",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json"
 }
