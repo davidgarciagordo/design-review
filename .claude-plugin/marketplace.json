@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "name": "design-review",
-  "description": "Design Review — diseño/rediseño/auditoría integral. Instálala suelta o desde el hub claude-code-setup-optimizer.",
+  "description": "Design Review — pipeline de VITALIDAD de diseño (cura el 'plano y sin vida'). Agentes + comando /design-review + hook. Instálala suelta o desde el hub claude-code-setup-optimizer.",
   "owner": {
     "name": "David García Gordo",
     "url": "https://github.com/davidgarciagordo"
@@ -11,7 +11,7 @@
     {
       "name": "design-review",
       "displayName": "Design Review",
-      "description": "Visual hierarchy, IA, cognitive load, accessibility, tokens, motion.",
+      "description": "Vitality pipeline: reference-research + 4 core skills + vitality verdict (alive/templated/flat). Agents + command + gate hook.",
       "source": "./"
     },
     {

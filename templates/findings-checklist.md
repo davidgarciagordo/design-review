@@ -10,19 +10,27 @@ Copy this template after running the design-review pipeline. Fill in the finding
 **Date:** <!-- YYYY-MM-DD -->
 **Stack:** <!-- framework, CSS method, design system -->
 
-**Steps run:**
-- [ ] 0 — Capability detection
-- [ ] 0b — Reuse-first *(skip if no design system)*
-- [ ] 1 — Baseline structure (`ui-ux-pro-max` / `frontend-design`)
-- [ ] 2 — Scored audit (`impeccable`)
-- [ ] 3 — Second anti-slop lens (`huashu-design`)
-- [ ] 4 — Taste / transversal (`taste-skill`)
-- [ ] 5 — Motion & polish (`emil-design-eng` + `review-animations`)
-- [ ] 6 — Accessibility (`web-design-guidelines` + `web-accessibility`)
-- [ ] 6b — SEO (`seo`) *(public targets only)*
-- [ ] 7 — Live visual check (`agent-browser`)
+**Telos:** not "does it have defects?" but **"is it ALIVE and 2026 vs the references?"** A correct-but-flat
+result is a **failed** run.
 
-**Steps skipped:** <!-- list each skipped step and reason, e.g. "6b SEO — private/authenticated target" -->
+**Gates run (in order):**
+- [ ] 0 — Frame the target
+- [ ] 1 — **[GATE]** `audit-first` *(redesigns only)* — `.design-review/audit-first.md`
+- [ ] 2 — **[GATE]** `reference-research` (Dribbble 2026 + competitors) — `.design-review/references.md`
+- [ ] 3 — **[GATE]** 4 core skills, REAL invocation, in order:
+  - [ ] 3a — `impeccable` (structure / audit)
+  - [ ] 3b — `design-taste-frontend` (**anti-templated gate**)
+  - [ ] 3c — `emil-design-eng` (**signature motion**)
+  - [ ] 3d — `web-design-guidelines` (a11y AA)
+- [ ] 4 — Apply fixes (multi-select)
+- [ ] 5 — Informed re-pass
+- [ ] 6 — **[GATE]** `vitality-verdict` (alive / templated / flat) — `.design-review/verdict.json`
+- [ ] 7 — **[GATE]** Vitality loop *(until verdict is `alive`, max N rounds)*
+
+**Add-ons (opt-in):** `huashu-design` · `review-animations` · `seo` *(public only)* ·
+`web-accessibility` · mobile-design skill.
+
+**Steps skipped:** <!-- list each skipped step and reason, e.g. "seo — private/authenticated target" -->
 
 ---
 
@@ -86,6 +94,9 @@ Record what was selected and applied here, for closing verification.
 - [ ] Screenshot — mobile (375px)
 - [ ] Core Web Vitals: LCP <= 2.5s / CLS <= 0.1 / INP <= 200ms
 - [ ] Visual regression diff against baseline *(redesigns and audits only)*
+- [ ] **Vitality verdict reads `alive`** (see `templates/vitality-verdict.md` / `.design-review/verdict.json`) — otherwise the run **failed**
+
+**Final verdict:** <!-- alive / templated / flat --> · **judged against:** <!-- reference -->
 
 **Notes:** <!-- deferred items, follow-up tasks, blockers -->
 
