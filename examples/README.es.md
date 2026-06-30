@@ -2,9 +2,9 @@
 
 # design-review — Ejemplos de uso
 
-> Ejemplos trabajados de forma concreta que muestran el pipeline con gates en acción: investigación de referencias, las 4 lentes core cargadas con la herramienta Skill, el gate anti-plantilla fallando y recuperándose, y un veredicto de vitalidad explícito.
+> Ejemplos trabajados de forma concreta que muestran el pipeline con gates en acción: preflight, investigación de referencias, context-pack (discover-once), las 4 lentes core cargadas en modo READ-ONLY con la herramienta Skill, el gate anti-plantilla fallando y recuperándose, y un veredicto de vitalidad explícito.
 
-Estos son ejemplos realistas, no sintéticos. Cada uno muestra el target, qué pasos se ejecutaron (y cuáles se omitieron), qué encontró cada lente, el checklist presentado, qué se aplicó y el veredicto de vitalidad final juzgado contra las referencias en vivo.
+Estos son ejemplos realistas, no sintéticos. Cada uno muestra el target, qué pasos se ejecutaron (y cuáles se omitieron), qué encontró cada lente (terse), el checklist presentado, qué se aplicó y el veredicto de vitalidad final juzgado contra las referencias en vivo.
 
 ---
 
@@ -89,6 +89,8 @@ Cada lente core es de su autor original (ver *Atribución* en el README principa
 SKIPPED `refero` → reference-research degrada a agent-browser sobre refero.design (sin token specs de DESIGN.md).
 SKIPPED `huashu-design` → asset-integrity brand-spec + verificación Playwright no disponibles; el veredicto usa capturas de agent-browser.
 
+**Memory adapter:** ninguno detectado — usando `.design-review/*.md` como memoria de sesión; sin caché entre ejecuciones.
+
 **Encuadre:**
 
 ```
@@ -110,7 +112,7 @@ El agente `design-audit-first` renderiza la página de ajustes actual (claro/osc
 
 ### Paso 2 — reference-research [GATE · siempre · la palanca #1 contra lo plano]
 
-El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (2026 popular), tres páginas de ajustes de competidores (Linear, dashboard Vercel, ajustes Notion) con `agent-browser`, **`refero`** (galería vía agent-browser sobre refero.design — MCP OMITIDO; productos reales publicados: Mercury, Vercel, Linear listados allí), y usa el **vocabulario de `ui-ux-pro-max`** para nombrar estilos/paletas/combinaciones tipográficas con precisión. Extrae 5 patrones concretos y escribe `.design-review/references.md`:
+El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (2026 popular), tres páginas de ajustes de competidores (Linear, dashboard Vercel, ajustes Notion) con `agent-browser`, **`refero`** (galería vía agent-browser sobre refero.design — MCP OMITIDO; productos reales publicados: Mercury, Vercel, Linear), y usa el **vocabulario de `ui-ux-pro-max`** para nombrar estilos/paletas/combinaciones tipográficas con precisión. Extrae 5 patrones concretos → escribe `.design-review/references.md`:
 
 1. **[layout]** Dos columnas: nav lateral fijo + panel de contenido — Linear. Elimina los headings de sección repetitivos.
 2. **[densidad]** Bento asimétrico dentro de cada sección — filas de datos más compactas, headings más aireados — dashboard Vercel.
@@ -118,7 +120,7 @@ El agente `design-reference-research` abre `dribbble.com/shots/popular/web-desig
 4. **[tipo]** Numerales display para las estadísticas de uso de facturación (% de plan usado, seats usados) — facturación de Notion.
 5. **[color]** El borde izquierdo teal en el ítem de nav activo se gradúa a un fondo de sección con tinte teal — exclusivo de este producto.
 
-**Listón para este target:** *"La página se lee como una superficie de ajustes de producto Plexum, no como una plantilla shadcn genérica — densidad bento, secciones escalonadas y el marcador de identidad teal aterrizan."*
+**Listón:** *"La página se lee como una superficie de ajustes de producto Plexum, no como una plantilla shadcn genérica — densidad bento, secciones escalonadas y el marcador de identidad teal aterrizan."*
 
 ### Paso 2b — Plan (autoría · integra `frontend-design`)
 
@@ -132,62 +134,80 @@ Añadido a `.design-review/references.md`:
 
 **Roles tipográficos (2+):** numerales display para estadísticas de facturación (`font-variant-numeric: tabular-nums`); cuerpo legible (14px / 1.5 — corrige el hallazgo de 3a).
 
-**Elemento de firma:** fondo de sección activa con tinte teal que se gradúa desde el marcador de borde izquierdo del nav — el único detalle que solo podría ser de este producto.
+**Elemento de firma:** fondo de sección activa con tinte teal que se gradúa desde el marcador de borde izquierdo del nav.
 
-**3 looks AI-por-defecto a evitar:** (1) rejilla uniforme de tarjetas con sombra/radio idéntico en cada sección; (2) formulario centrado de ancho completo con exceso de espacio en blanco; (3) paleta gris atenuada + acento azul (aspecto genérico de SaaS).
+**3 looks AI-por-defecto a evitar:** (1) rejilla uniforme de tarjetas con sombra/radio idéntico; (2) formulario centrado de ancho completo con exceso de espacio en blanco; (3) paleta gris atenuada + acento azul.
 
-**Checklist de UX-writing:** ✓ sin texto de placeholder redundante · ✓ el estado del toggle se autoexplica (sin etiqueta "Activado/Desactivado") · ✓ CTA único por vista · ✓ headings de sección en capitalización de oración.
+**Checklist de UX-writing:** ✓ sin placeholder redundante · ✓ el toggle se autoexplica · ✓ CTA único por vista · ✓ headings de sección en capitalización de oración.
+
+### Paso 2c — Context-pack [discover ONCE · palanca de tokens]
+
+El agente `design-context-pack` construye `.design-review/context-pack.md` en un solo pase: árbol de componentes, props, tokens en uso, anclas **fichero:línea** para cada punto de interés, capturas de referencia del audit-first, guías de accesibilidad cacheadas y la lista de ataque del audit-first como hallazgos pre-conocidos compartidos. Todas las lentes siguientes reciben este pack — juzgan un mapa preparado, no el código fuente en bruto. Ninguna lente vuelve a leer el código ni re-deriva lo que una lente anterior ya encontró.
+
+### Paso 3 — DIAGNOSIS — CORE skills, ENRUTADAS, en orden [GATE]
+
+Cada lente recibe `.design-review/context-pack.md` + `references.md`. **READ-ONLY** — sin ediciones durante el diagnóstico; toda mutación ocurre en el paso 5, en un único pase de aplicación, tras la multi-selección del usuario. Output TERSE: línea 1 `OK`/`KO` + motivo ≤8 palabras; luego un hallazgo por línea `P# [skill] fichero:línea — problema → solución`.
 
 ### Paso 3a — lente: impeccable [GATE]
 
-El agente `design-lens-impeccable` **carga el skill `impeccable` con la herramienta Skill** y le pasa el target + las referencias del paso 2.
+El agente `design-lens-impeccable` **carga el skill `impeccable` con la herramienta Skill**, enrutado a `audit` + `critique`. READ-ONLY.
 
-Hallazgos:
-- Puntuación tipografía 6/10. Texto de cuerpo a 13px sobre blanco — por debajo del umbral de lectura cómoda.
-- Puntuación espaciado 5/10. Las secciones comparten 24px de padding uniforme, solo 8px entre ellas — ritmo comprimido e indiferenciado.
-- Puntuación contraste 4/10. Texto secundario `#9ca3af` sobre blanco = 2,85:1 — falla WCAG AA para texto normal.
-- Puntuación CTA 5/10. Tres "Guardar cambios" primarios idénticos en la misma vista. (También marcado: estructura correcta pero genérica — alimenta 3b.)
-- Puntuación layout 7/10. Una columna adecuada; sin overflow en los anchos probados.
+```
+KO — auditoría puntuada: tipografía 6/10, contraste 4/10, espaciado 5/10
+P1 [impeccable] settings/page.tsx:156 — texto secundario #9ca3af = 2,85:1 → subir a #6b7280 (4,5:1)
+P2 [impeccable] settings/page.tsx:24 — cuerpo 13px → 14–16px
+P2 [impeccable] settings/page.tsx:67 — secciones con 24px padding uniforme, 8px entre ellas → ritmo bento
+P2 [impeccable] settings/page.tsx:89 — 3 primarios "Guardar" idénticos en la misma vista (también alimenta 3b)
+P3 [impeccable] settings/page.tsx:12 — una columna adecuado; sin overflow en anchos probados
+```
 
 ### Paso 3b — lente: design-taste-frontend [GATE — anti-plantilla]
 
-El agente `design-lens-taste` **carga el skill `design-taste-frontend` con la herramienta Skill** y le pasa el target + las referencias del paso 2.
+El agente `design-lens-taste` **carga el skill `design-taste-frontend` con la herramienta Skill**, enrutado a §11 redesign-audit + §14. READ-ONLY.
 
-**Gate anti-plantilla: FALLADO.** La superficie actual es un layout de secciones apiladas por defecto — secciones de igual peso, un botón de guardar por sección, sin capa propia, sin punto de vista. Podría ser la página de ajustes de cualquier SaaS. El gate la rechaza con veredicto `TEMPLATED` y nombra los 2 movimientos de las referencias del paso 2 que la harían singular:
+```
+KO — gate anti-plantilla FALLADO
+P1 [design-taste-frontend] settings/page.tsx:1 — secciones apiladas, sin capa propia → sidebar+bento+fondo teal (refs #1 #2 #5) [VITALIDAD · preseleccionado]
+P3 [design-taste-frontend] settings/page.tsx:42 — "INFORMACIÓN DE FACTURACIÓN" en mayúsculas → capitalización de título
+P3 [design-taste-frontend] settings/page.tsx:78 — placeholder "Introduce aquí tu nombre completo" → "Ana García"
+P3 [design-taste-frontend] settings/page.tsx:94 — etiqueta "Activado/Desactivado" en toggles → eliminar (estado se autoexplica)
+```
 
-- Aplicar el sidebar de dos columnas + densidad bento (referencias #1 y #2).
-- Graduar el borde izquierdo teal a un fondo de sección con tinte teal (referencia #5).
-
-Estos son **hallazgos de vitalidad P1**, preseleccionados. La ejecución no continúa sin ellos.
-
-Hallazgos adicionales:
-- Heading de sección "INFORMACIÓN DE FACTURACIÓN" en mayúsculas — parece un grito; usar capitalización de título.
-- Placeholder "Introduce aquí tu nombre completo" — redundante con el label; acortar a "Ana García".
-- Texto "Activado / Desactivado" junto a cada toggle — el estado del toggle ya lo comunica; eliminar.
+El gate nombra los 2 movimientos estructurales del paso 2 que lo harían singular: sidebar+bento (refs #1 #2) + fondo teal (ref #5). Hallazgos de vitalidad P1 preseleccionados. La ejecución no continúa sin ellos.
 
 ### Paso 3c — lente: emil-design-eng + gate `review-animations` [GATE — motion de firma]
 
-El agente `design-lens-motion` **carga el skill `emil-design-eng` con la herramienta Skill** y le pasa el target + las referencias del paso 2.
+El agente `design-lens-motion` **carga el skill `emil-design-eng` con la herramienta Skill** con la pregunta concreta inline. READ-ONLY.
 
-**Motion de firma (hallazgo de vitalidad P1):** la referencia #3 pide una entrada escalonada de las tres secciones de contenido en la primera carga — stagger de 100ms, `ease-out`, el contenido sube 12px y hace fade-in. Es un **momento memorable vinculado a la referencia**; solo la higiene de hover no es suficiente. Preseleccionado.
+```
+KO — sin momento de motion de firma
+P1 [emil-design-eng] settings/page.tsx:1 — sin entrada escalonada → stagger 100ms, ease-out, slide-up 12px (ref #3) [VITALIDAD · preseleccionado]
+P2 [emil-design-eng] settings/page.tsx:89 — botón guardar sin estado de carga/confirmación → 800ms de silencio
+P2 [emil-design-eng] settings/page.tsx:94 — toggles cambian de estado al instante → transición 200ms ease
+P1 [emil-design-eng, web-design-guidelines] settings/page.tsx:1 — sin guard de prefers-reduced-motion en entrada → añadir
+```
 
-Hallazgos de higiene:
-- El botón de guardar no tiene estado de carga/confirmación — 800ms de silencio tras el clic.
-- Los toggles cambian de estado de forma instantánea — añadir transición de 200ms `ease`.
-- Sin guard de `prefers-reduced-motion` en la entrada escalonada.
+**Gate `review-animations`:** entrada escalonada dentro de STANDARDS.md (100ms, ease-out, ≤400ms); guard ausente → hallazgo P1 de a11y (se añadirá en el paso 5). Gate: **APPROVE** (provisional). Alimenta el veredicto en el paso 6.
 
-**Gate `review-animations`** (se ejecuta aquí — Block/Approve contra `STANDARDS.md`): se evalúa la entrada escalonada — duración máx. 400ms, easing `ease-out`, guard de `prefers-reduced-motion` ausente. Gate: **APPROVE** (stagger de 100ms dentro de los estándares; el guard se añadirá en el paso 5 — la ausencia ya es un hallazgo P1 de a11y). Alimenta el veredicto en el paso 6.
+### Paso 3d — lente: web-design-guidelines [GATE — accesibilidad · última lente]
 
-### Paso 3d — lente: web-design-guidelines [GATE — accesibilidad]
+El agente `design-lens-a11y` WebFetch guías → caché → **carga el skill `web-design-guidelines` con la herramienta Skill** (AA). READ-ONLY.
 
-El agente `design-lens-a11y` **carga el skill `web-design-guidelines` con la herramienta Skill** y le pasa el target + las referencias del paso 2.
+```
+KO — 4 fallos WCAG A/AA
+P1 [web-design-guidelines] settings/page.tsx:156 — #9ca3af sobre blanco 2,85:1 → fallo AA confirmado (fusionado con 3a)
+P1 [web-design-guidelines] settings/page.tsx:31 — títulos de sección <div class=bold> → <h2> (estructura de headings rota)
+P1 [web-design-guidelines] settings/page.tsx:94 — toggles <div onClick> → <button role="switch"> (no accesible por teclado)
+P1 [emil-design-eng, web-design-guidelines] settings/page.tsx:1 — prefers-reduced-motion no respetado (fusionado con 3c)
+P2 [web-design-guidelines] settings/page.tsx:78 — inputs sin aria-describedby → añadir para texto de ayuda
+```
 
-Hallazgos (cada fallo WCAG A/AA es P1):
-- Contraste texto secundario 2,85:1 — falla AA (confirmado en 3a).
-- Los títulos de sección son `<div>` con clase bold, no `<h2>` — estructura de headings rota; los lectores de pantalla no pueden navegar por encabezados.
-- Los toggles de notificaciones son `<div>` con handlers de clic, no `<button role="switch">` — no accesibles por teclado.
-- `prefers-reduced-motion` no respetado por la entrada escalonada (la lente de motion ya lo marcó — ítem fusionado, ambas etiquetas).
-- Sin `aria-describedby` en los inputs — los lectores de pantalla anuncian solo el label, no el texto de ayuda.
+### Paso 3e — guías UX de `ui-ux-pro-max` (lente extra wired)
+
+```
+OK — sin bloqueadores UX más allá de los ya encontrados
+P2 [ui-ux-pro-max] settings/page.tsx:89 — sin feedback de confirmación tras guardar → cubierto por hallazgo de estado de carga en 3c
+```
 
 ### Paso 4 — Checklist presentado al usuario
 
@@ -195,44 +215,44 @@ Hallazgos (cada fallo WCAG A/AA es P1):
 ¿Qué hallazgos debo corregir?  (multi-select · ítems de vitalidad preseleccionados)
 
 P1 — Roto / identidad / vitalidad
-  [x] Gate anti-plantilla FALLADO: layout de secciones apiladas por defecto — aplicar sidebar+bento+fondo teal  [design-taste-frontend]
-  [x] Sin motion de firma: entrada escalonada de secciones (stagger 100ms, ease-out, slide 12px) de ref #3      [emil-design-eng]
-  [x] Contraste texto secundario 2,85:1 — falla WCAG AA (#9ca3af sobre blanco)                                 [impeccable, web-design-guidelines]
-  [x] Títulos de sección son <div>, no <h2> — estructura de headings rota                                       [impeccable, web-design-guidelines]
-  [x] Toggles de notificaciones no accesibles por teclado (falta role="switch")                                 [web-design-guidelines]
-  [x] prefers-reduced-motion no respetado por la entrada escalonada                                             [emil-design-eng, web-design-guidelines]
+  [x] Gate anti-plantilla FALLADO: layout de secciones apiladas — aplicar sidebar+bento+fondo teal  [design-taste-frontend]
+  [x] Sin motion de firma: entrada escalonada (stagger 100ms, ease-out, slide 12px) de ref #3       [emil-design-eng]
+  [x] Contraste texto secundario 2,85:1 — falla WCAG AA (#9ca3af sobre blanco)                     [impeccable, web-design-guidelines]
+  [x] Títulos de sección son <div>, no <h2> — estructura de headings rota                           [impeccable, web-design-guidelines]
+  [x] Toggles de notificaciones no accesibles por teclado (falta role="switch")                     [web-design-guidelines]
+  [x] prefers-reduced-motion no respetado por la entrada escalonada                                 [emil-design-eng, web-design-guidelines]
 
 P2 — Mejoras
-  [ ] Tres "Guardar cambios" primarios en competencia en la misma página                                        [impeccable]
-  [ ] Texto de cuerpo a 13px — por debajo del umbral de lectura cómoda (objetivo: 14–16px)                     [impeccable]
-  [ ] Botón de guardar necesita estado de carga/confirmación (800ms de silencio)                                [emil-design-eng]
-  [ ] Toggles cambian de estado sin transición — añadir 200ms ease                                             [emil-design-eng]
+  [ ] Tres "Guardar cambios" primarios en competencia en la misma página                            [impeccable]
+  [ ] Texto de cuerpo a 13px — por debajo del umbral de lectura cómoda (objetivo: 14–16px)          [impeccable]
+  [ ] Botón de guardar necesita estado de carga/confirmación (800ms de silencio)                    [emil-design-eng]
+  [ ] Toggles cambian de estado sin transición — añadir 200ms ease                                  [emil-design-eng]
 
 P3 — Pulido
-  [ ] Heading "INFORMACIÓN DE FACTURACIÓN" — usar capitalización de título                                      [design-taste-frontend]
-  [ ] Placeholder "Introduce aquí tu nombre completo" — redundante; acortar                                     [design-taste-frontend]
-  [ ] Texto "Activado/Desactivado" en toggles es ruido — eliminar                                              [design-taste-frontend]
+  [ ] Heading "INFORMACIÓN DE FACTURACIÓN" — usar capitalización de título                          [design-taste-frontend]
+  [ ] Placeholder "Introduce aquí tu nombre completo" — redundante; acortar                         [design-taste-frontend]
+  [ ] Texto "Activado/Desactivado" en toggles es ruido — eliminar                                   [design-taste-frontend]
 ```
 
 **El usuario seleccionó:** todos los P1 + "Tres botones Guardar en competencia" (P2) + "Estado de carga del botón guardar" (P2).
 
 ### Paso 5 — Re-pasada informada
 
-Layout modificado (re-ejecución de 3a) + motion añadido (re-ejecución de 3c) + a11y re-comprobada para la nueva estructura (re-ejecución de 3d). Guard de `prefers-reduced-motion` añadido a la entrada escalonada (corrige el hallazgo P1 de a11y; el gate `review-animations` permanece APPROVE). Nuevo hallazgo: el fondo de sección con tinte teal introduce un color sin token DS — sustituido por `surface-brand-subtle` (token existente, 6% de tinte teal).
+Layout modificado (re-ejecución de 3a) + motion añadido (re-ejecución de 3c) + a11y re-comprobada para la nueva estructura (re-ejecución de 3d). Guard de `prefers-reduced-motion` añadido a la entrada escalonada (corrige el hallazgo P1 de a11y; el gate `review-animations` permanece APPROVE). Nuevo hallazgo: el fondo de sección con tinte teal no referencia ningún token DS → sustituido por `surface-brand-subtle` (token existente, 6% de tinte teal).
 
 ### Paso 6 — vitality-verdict [GATE]
 
 El agente `design-vitality-verdict` renderiza la página actualizada en vivo en claro, oscuro y móvil con `agent-browser`. Hace diff del resultado contra `.design-review/references.md`:
 
-- Sidebar nav + densidad bento: **implantado** — patrones de referencias #1 y #2 presentes.
-- Fondo de sección activa con tinte teal: **implantado** — referencia #5 aplicada con token DS.
-- Entrada escalonada de secciones: **implantada** — las secciones entran con stagger de 100ms; `prefers-reduced-motion` la desactiva.
-- Numerales display para estadísticas de facturación: **no aplicado aún** (no estaba en los arreglos seleccionados) — anotado, no bloqueante.
-- ¿El momento de motion se dispara? **Sí** — la entrada se dispara en la primera carga, queda inerte en la segunda (caché).
+- Sidebar nav + densidad bento: **implantado** — patrones de referencias #1 #2 presentes.
+- Fondo de sección activa con tinte teal: **implantado** — ref #5 aplicada con token DS.
+- Entrada escalonada de secciones: **implantada** — `prefers-reduced-motion` la desactiva.
+- Numerales display para estadísticas de facturación: no aplicado aún (no seleccionado) — anotado, no bloqueante.
+- ¿El momento de motion se dispara? **Sí** — en la primera carga, inerte en la segunda (caché).
 
 Core Web Vitals: LCP 1,3s / CLS 0,02 / INP 58ms — todo verde.
 
-Reforzado por: **taste §14 pre-flight** (comprobaciones mecánicas binarias — todas superadas: sin headings en mayúsculas, sin placeholders redundantes, el toggle se autoexplica); **`review-animations`** Block/Approve: **APPROVE** (entrada escalonada dentro de STANDARDS.md, guard de reduced-motion aplicado); **verificación Playwright de `huashu-design`**: OMITIDO (no instalado) — se usan capturas de agent-browser en su lugar.
+Reforzado por: **taste §14 pre-flight** (todas superadas: sin headings en mayúsculas, sin placeholders redundantes, el toggle se autoexplica); **`review-animations`** APPROVE (guard aplicado); **verificación Playwright de `huashu-design`** OMITIDO — se usan capturas de agent-browser.
 
 **Veredicto escrito en `.design-review/verdict.json`:**
 
@@ -264,6 +284,8 @@ Capturas (claro/oscuro/móvil) confirmaron: sidebar nav renderizado; ritmo bento
 
 **Preflight** (`node scripts/preflight.mjs --write`): todos los componentes core están presentes (impeccable, design-taste-frontend, emil-design-eng, web-design-guidelines, review-animations, frontend-design, agent-browser, ui-ux-pro-max). MCP de `refero` no configurado → SKIPPED `refero` → reference-research solo vía agent-browser sobre refero.design (sin token specs de DESIGN.md). `huashu-design`: OMITIDO — verificación Playwright no disponible. No se necesita batch de `AskUserQuestion` (ninguna instalación elegida).
 
+**Memory adapter:** ninguno detectado — usando `.design-review/*.md` como memoria de sesión; sin caché entre ejecuciones.
+
 **Encuadre:**
 
 ```
@@ -285,79 +307,96 @@ El agente `design-audit-first` renderiza las stories del Button (por defecto / h
 
 ### Paso 2 — reference-research [GATE · siempre · la palanca #1 contra lo plano]
 
-El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (2026 popular), tres botones primarios de competidores (Stripe Checkout, Linear, Vercel Deploy) con `agent-browser`, **`refero`** (galería vía agent-browser sobre refero.design — MCP OMITIDO; componentes de botón reales publicados de Stripe, Linear, Vercel listados allí), y usa el **vocabulario de `ui-ux-pro-max`** para nombrar estilos de motion y semántica de color con precisión. Extrae 4 patrones y escribe `.design-review/references.md`:
+El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (2026 popular), tres botones primarios de competidores (Stripe Checkout, Linear, Vercel Deploy) con `agent-browser`, **`refero`** (galería vía agent-browser sobre refero.design — MCP OMITIDO; componentes reales publicados de Stripe, Linear, Vercel), y usa el **vocabulario de `ui-ux-pro-max`** para nombrar estilos de motion y semántica de color con precisión. Extrae 4 patrones → escribe `.design-review/references.md`:
 
 1. **[motion]** Pulsación micro-spring: `scale(0.96)` + colapso de sombra en 80ms `cubic-bezier(0.34, 1.56, 0.64, 1)` — Stripe.
 2. **[motion]** Ripple de marca al clic: una onda circular teal se expande desde el punto de clic y se desvanece en 350ms — shot de Dribbble #2.
 3. **[tipo/color]** El estado de carga sustituye el texto del label por un spinner + "Cargando…" que hereda el color del botón — Linear.
 4. **[color]** Focus ring blanco con un gap de 2px (offset) independientemente del fondo del botón — Vercel.
 
-**Listón para este target:** *"Los momentos de pulsación y carga del botón se sienten inconfundiblemente Plexum — el ripple teal al clic es el de firma; solo la higiene de hover no es alive."*
+**Listón:** *"Los momentos de pulsación y carga del botón se sienten inconfundiblemente Plexum — el ripple teal al clic es el de firma; solo la higiene de hover no es alive."*
 
 ### Paso 2b — Plan (autoría · integra `frontend-design`)
 
 Añadido a `.design-review/references.md`:
 
 **Token-plan (3 hex, subordinado a los tokens de `packages/design-system` — estos tienen prioridad):**
-- Relleno de marca: `#0f7e74` (teal-700 — DS `color-brand-primary`)
+- Relleno de marca: `#0f7e74` (DS `color-brand-primary`)
 - Marca-oscuro (hover): `#0a5e56` (DS `color-brand-primary-dark`)
-- Focus ring: `#ffffff` (blanco — universal, funciona sobre cualquier variante de color del botón)
+- Focus ring: `#ffffff` (universal sobre cualquier variante de color del botón)
 
-**Roles tipográficos (2+):** label del botón (14px / medium / ligero letter-spacing para CTAs); texto de carga (visualmente oculto, SR-only vía `sr-only`).
+**Roles tipográficos (2+):** label del botón (14px / medium / ligero letter-spacing para CTAs); texto de carga (SR-only vía `sr-only`).
 
-**Elemento de firma:** ripple radial teal desde la posición del puntero al hacer clic — el único momento de motion que hace que este sea inconfundiblemente un botón Plexum y no un default de React.
+**Elemento de firma:** ripple radial teal desde la posición del puntero al hacer clic.
 
-**3 looks AI-por-defecto a evitar:** (1) relleno sólido + texto blanco con solo oscurecimiento en hover (default genérico shadcn); (2) variante solo-contorno como primario (peso insuficiente); (3) border-radius tan grande que se convierte en píldora en labels cortos (tendencia sin identidad de marca).
+**3 looks AI-por-defecto a evitar:** (1) relleno sólido + texto blanco con solo oscurecimiento en hover; (2) variante solo-contorno como primario; (3) border-radius tan grande que se convierte en píldora en labels cortos.
 
-**Checklist de UX-writing:** ✓ el label del botón es un verbo ("Guardar", "Desplegar") · ✓ texto de carga anunciado por lectores de pantalla · ✓ sin tooltip necesario en disabled (la acción se explica sola).
+**Checklist de UX-writing:** ✓ el label del botón es un verbo · ✓ texto de carga anunciado por SR · ✓ sin tooltip necesario en disabled.
+
+### Paso 2c — Context-pack [discover ONCE · palanca de tokens]
+
+El agente `design-context-pack` construye `.design-review/context-pack.md` en un solo pase: árbol de componentes, interfaz de props, tokens en uso, anclas **fichero:línea** para cada variante y estado, nombres de stories de Storybook y la lista de ataque del audit-first como hallazgos pre-conocidos compartidos. Todas las lentes siguientes reciben este pack.
+
+### Paso 3 — DIAGNOSIS — CORE skills, ENRUTADAS, en orden [GATE]
+
+Cada lente recibe `.design-review/context-pack.md` + `references.md`. **READ-ONLY** — sin ediciones durante el diagnóstico; toda mutación ocurre en el paso 5, en un único pase de aplicación, tras la multi-selección del usuario. Output TERSE.
 
 ### Paso 3a — lente: impeccable [GATE]
 
-El agente `design-lens-impeccable` **carga el skill `impeccable` con la herramienta Skill** y le pasa el target + las referencias del paso 2.
+El agente `design-lens-impeccable` **carga el skill `impeccable` con la herramienta Skill**, enrutado a `audit` + `critique`. READ-ONLY.
 
-Hallazgos:
-- Contraste (primario): fondo teal `#0f7e74` con label blanco = 4,61:1 — pasa AA (por los pelos).
-- Estado hover: el fondo se oscurece a `#0a5e56` — correcto, pero la transición es de 0ms (instantánea).
-- Estado active/pressed: sin cambio visual más allá del estado hover — el momento de pulsación es invisible.
-- Focus ring: `outline: 2px solid #0f7e74` sobre fondo teal — casi invisible (también marcado: correcto pero genérico, alimenta 3b).
-- Sin variante `disabled` en las stories — estado no probado.
+```
+KO — problemas de contraste/estado
+P2 [impeccable] Button.tsx:23 — contraste 4,61:1, pasa AA (por los pelos); transición hover 0ms
+P1 [impeccable] Button.tsx:31 — sin estado active/pressed → el momento de pulsación es invisible
+P1 [impeccable] Button.tsx:41 — focus ring #0f7e74 sobre teal → casi invisible (también alimenta 3b)
+P2 [impeccable] Button.tsx:1 — sin variante disabled en stories → estado no probado
+```
 
 ### Paso 3b — lente: design-taste-frontend [GATE — anti-plantilla]
 
-El agente `design-lens-taste` **carga el skill `design-taste-frontend` con la herramienta Skill** y le pasa el target + las referencias del paso 2.
+El agente `design-lens-taste` **carga el skill `design-taste-frontend` con la herramienta Skill**, enrutado a §11 redesign-audit + §14. READ-ONLY.
 
-**Gate anti-plantilla: FALLADO.** El botón actual es una implementación por defecto sin modificar — `rounded-md`, `px-4 py-2`, 0ms de hover, sin momento de motion de marca, sin feedback de pulsación. Es un botón shadcn/Tailwind genérico con un hex teal. El gate lo rechaza con veredicto `TEMPLATED` y nombra el 1 movimiento que lo haría singular:
+```
+KO — gate anti-plantilla FALLADO
+P1 [design-taste-frontend] Button.tsx:1 — shadcn/Tailwind genérico con hex teal, sin motion de marca → añadir ripple teal (ref #2) [VITALIDAD · preseleccionado]
+P2 [design-taste-frontend] Button.tsx:1 — sin variantes de size → consumidores hardcodeando sobreescrituras, alejándose del DS
+```
 
-- Añadir el ripple teal al clic (referencia #2) — este es el único motion que solo podría ser un botón Plexum.
-
-Este es un **hallazgo de vitalidad P1**, preseleccionado.
-
-Hallazgos adicionales (sin contenido de texto fijo en un botón, las reglas de copia no aplican):
-- Riesgo de coherencia: sin variantes de `size` más allá de la por defecto — los consumidores probablemente están hardcodeando sobreescrituras, alejándose del design system.
+El gate nombra el 1 movimiento del paso 2 que lo haría singular: ripple teal al clic (ref #2). Hallazgo de vitalidad P1 preseleccionado.
 
 ### Paso 3c — lente: emil-design-eng + gate `review-animations` [GATE — motion de firma]
 
-El agente `design-lens-motion` **carga el skill `emil-design-eng` con la herramienta Skill** y le pasa el target + las referencias del paso 2.
+El agente `design-lens-motion` **carga el skill `emil-design-eng` con la herramienta Skill** con la pregunta concreta inline. READ-ONLY.
 
-**Motion de firma (hallazgo de vitalidad P1):** el ripple teal al clic (referencia #2) — un `radial-gradient` o `clip-path circle` que se expande desde la posición del puntero y se desvanece en 350ms. Este es el **momento memorable**; es lo que hace que el botón se sienta como un botón Plexum y no como un componente React genérico. Preseleccionado.
+```
+KO — sin motion de firma, lagunas de higiene
+P1 [emil-design-eng] Button.tsx:1 — sin ripple al clic → ripple radial teal desde el puntero, fade 350ms (ref #2) [VITALIDAD · preseleccionado]
+P2 [emil-design-eng] Button.tsx:23 — transición hover 0ms → transition-colors duration-150 ease-out
+P2 [emil-design-eng] Button.tsx:31 — sin micro-spring press → scale(0.97) 80ms cubic-bezier(0.34,1.56,0.64,1) (ref #1)
+P2 [emil-design-eng] Button.tsx:1 — sin estado de carga → botón en silencio durante acciones asíncronas (ref #3)
+P1 [emil-design-eng, web-design-guidelines] Button.tsx:1 — sin guard de prefers-reduced-motion en ripple → añadir
+```
 
-Hallazgos de higiene:
-- Transición de hover a 0ms — añadir `transition-colors duration-150 ease-out`.
-- Active/press: añadir micro-spring `scale(0.97)` a 80ms (`cubic-bezier(0.34, 1.56, 0.64, 1)`) — referencia #1.
-- Sin estado de carga — el botón queda en silencio durante acciones asíncronas.
-- Sin guard de `prefers-reduced-motion` en el ripple.
+**Gate `review-animations`:** ripple fade 350ms, easing aceptable, guard de `prefers-reduced-motion` ausente. Gate: **BLOCK** — el guard debe añadirse antes de que el veredicto pueda alcanzar `alive`. Alimenta el veredicto en el paso 6.
 
-**Gate `review-animations`** (se ejecuta aquí — Block/Approve contra `STANDARDS.md`): se evalúa el ripple teal — fade de 350ms, easing aceptable, pero guard de `prefers-reduced-motion` ausente. Gate: **BLOCK** (guard de reduced-motion ausente). Debe añadirse el guard antes de que el veredicto pueda alcanzar `alive`. Alimenta el veredicto en el paso 6.
+### Paso 3d — lente: web-design-guidelines [GATE — accesibilidad · última lente]
 
-### Paso 3d — lente: web-design-guidelines [GATE — accesibilidad]
+El agente `design-lens-a11y` WebFetch guías → caché → **carga el skill `web-design-guidelines` con la herramienta Skill** (AA). READ-ONLY.
 
-El agente `design-lens-a11y` **carga el skill `web-design-guidelines` con la herramienta Skill** y le pasa el target + las referencias del paso 2.
+```
+KO — 2 fallos WCAG A/AA
+P1 [web-design-guidelines] Button.tsx:41 — focus ring casi invisible sobre teal → outline: 2px solid white; outline-offset: 2px (ref #4)
+P2 [web-design-guidelines] Button.tsx:1 — sin variante disabled → necesita aria-disabled + estado visual atenuado
+P2 [web-design-guidelines] Button.tsx:1 — estado de carga (futuro) → aria-busy="true" + texto SR-only "Cargando…"
+P1 [emil-design-eng, web-design-guidelines] Button.tsx:1 — guard de prefers-reduced-motion ausente (fusionado con 3c)
+```
 
-Hallazgos (cada fallo WCAG A/AA es P1):
-- Focus ring casi invisible sobre fondo teal — cambiar a `outline: 2px solid white; outline-offset: 2px` (referencia #4). P1.
-- Variante `disabled` ausente — los consumidores no pueden renderizar un botón primario desactivado correctamente; necesita `aria-disabled` + estado visual atenuado.
-- El estado de carga (al añadirlo) debe anunciarse a los lectores de pantalla: `aria-busy="true"` + texto visualmente oculto "Cargando…".
-- La animación del ripple debe respetar `prefers-reduced-motion` — colapsar a un fade de opacidad instantáneo si está activo (la lente de motion ya lo marcó; ítem fusionado).
+### Paso 3e — guías UX de `ui-ux-pro-max` (lente extra wired)
+
+```
+OK — sin bloqueadores UX más allá de los ya encontrados
+```
 
 ### Paso 4 — Checklist presentado al usuario
 
@@ -365,42 +404,43 @@ Hallazgos (cada fallo WCAG A/AA es P1):
 ¿Qué hallazgos debo corregir?  (multi-select · ítems de vitalidad preseleccionados)
 
 P1 — Roto / identidad / vitalidad
-  [x] Gate anti-plantilla FALLADO: botón genérico por defecto — añadir ripple teal al clic (ref #2)           [design-taste-frontend]
-  [x] Sin motion de firma: ripple radial teal desde el punto de clic, fade de 350ms (referencia #2)           [emil-design-eng]
-  [x] Focus ring casi invisible sobre fondo teal — outline: 2px solid white; outline-offset: 2px (ref #4)     [impeccable, web-design-guidelines]
-  [x] Sin variante disabled — los consumidores no pueden renderizar un botón primario desactivado              [impeccable, web-design-guidelines]
-  [x] prefers-reduced-motion no respetado por el ripple                                                        [emil-design-eng, web-design-guidelines]
+  [x] Gate anti-plantilla FALLADO: botón genérico sin motion de marca → añadir ripple teal (ref #2)  [design-taste-frontend]
+  [x] Sin motion de firma: ripple radial teal desde el punto de clic, fade 350ms (ref #2)            [emil-design-eng]
+  [x] Sin estado active/pressed — el momento de pulsación es invisible                               [impeccable]
+  [x] Focus ring casi invisible sobre teal → outline: 2px solid white; outline-offset: 2px (ref #4) [impeccable, web-design-guidelines]
+  [x] prefers-reduced-motion no respetado por el ripple                                              [emil-design-eng, web-design-guidelines]
 
 P2 — Mejoras
-  [ ] Transición de hover a 0ms — añadir duration-150 ease-out                                                [emil-design-eng]
-  [ ] Sin estado active/pressed — añadir scale(0.97) micro-spring a 80ms (referencia #1)                      [impeccable, emil-design-eng]
-  [ ] Sin estado de carga — el botón queda en silencio durante acciones asíncronas (referencia #3)             [emil-design-eng]
-  [ ] Sin variantes de size — consumidores hardcodeando sobreescrituras; añadir sm/md/lg                       [design-taste-frontend]
+  [ ] Transición de hover a 0ms — añadir duration-150 ease-out                                      [emil-design-eng]
+  [ ] Sin estado micro-spring press — añadir scale(0.97) a 80ms (ref #1)                            [impeccable, emil-design-eng]
+  [ ] Sin estado de carga — botón en silencio durante acciones asíncronas (ref #3)                   [emil-design-eng]
+  [ ] Sin variante disabled — consumidores no pueden renderizar un botón desactivado correctamente   [impeccable, web-design-guidelines]
+  [ ] Sin variantes de size — consumidores hardcodeando sobreescrituras; añadir sm/md/lg             [design-taste-frontend]
 
 P3 — Pulido
-  [ ] Border-radius: rounded-md → rounded-lg para un CTA primario ligeramente más suave                        [impeccable]
+  [ ] Border-radius: rounded-md → rounded-lg para un CTA primario ligeramente más suave             [impeccable]
 ```
 
 **El usuario seleccionó:** todos los P1 + transición de hover (P2) + estado de pulsación (P2) + estado de carga (P2).
 
 ### Paso 5 — Re-pasada informada
 
-Motion añadido (re-ejecución de 3c) + a11y re-comprobada para el ripple + estado de carga (re-ejecución de 3d). Guard de `prefers-reduced-motion` añadido al ripple (colapsa a fade de opacidad instantáneo) — gate `review-animations` liberado (BLOCK → APPROVE). Nuevo hallazgo: el SVG del spinner de carga usa `stroke="#ffffff"` hardcodeado — sustituido por `currentColor` para que herede el color del label, lo que en una futura `variant="secondary"` funcionará correctamente de forma automática.
+Motion añadido (re-ejecución de 3c) + a11y re-comprobada para el ripple + estado de carga (re-ejecución de 3d). Guard de `prefers-reduced-motion` añadido al ripple (colapsa a fade de opacidad instantáneo) — gate `review-animations` liberado (BLOCK → APPROVE). Nuevo hallazgo: el SVG del spinner de carga usa `stroke="#ffffff"` hardcodeado → sustituido por `currentColor` para que herede el color del label correctamente en futuras variantes.
 
 ### Paso 6 — vitality-verdict [GATE]
 
 El agente `design-vitality-verdict` renderiza las stories del Button en vivo con `agent-browser` — todos los estados: por defecto / hover / active / focused / disabled / cargando — en modo claro y oscuro.
 
 Diff contra `.design-review/references.md`:
-- Ripple teal al clic: **implantado** — se dispara desde la posición del puntero, fade de 350ms, `prefers-reduced-motion` lo colapsa a opacidad instantánea.
+- Ripple teal al clic: **implantado** — se dispara desde la posición del puntero, fade 350ms, `prefers-reduced-motion` lo colapsa a opacidad instantánea.
 - Pulsación micro-spring: **implantada** — `scale(0.97)` con easing spring a 80ms.
-- Focus ring blanco con offset: **implantado** — referencia #4 aplicada; visible sobre teal y sobre cualquier futura variante de color.
-- Estado de carga: **implantado** — spinner + texto visualmente oculto "Cargando" + `aria-busy`.
-- Variante disabled: **implantada** — fondo atenuado, `cursor-not-allowed`, `aria-disabled="true"`, story añadida.
+- Focus ring blanco con offset: **implantado** — visible sobre teal y sobre cualquier futura variante de color (ref #4).
+- Estado de carga: **implantado** — spinner + texto SR-only "Cargando" + `aria-busy`.
+- Variante disabled: **diferido** (no seleccionado) — anotado, no bloqueante.
 
-Core Web Vitals: N/A — componente, no página. Tiempo de render en Storybook: 110ms.
+Tiempo de render en Storybook: 110ms.
 
-Reforzado por: **taste §14 pre-flight** (comprobaciones mecánicas binarias — superadas: el label es un verbo, sin copia redundante); **`review-animations`** Block/Approve: **APPROVE** (guard de reduced-motion aplicado en el paso 5; el ripple colapsa a fade de opacidad instantáneo — dentro de STANDARDS.md); **verificación Playwright de `huashu-design`**: OMITIDO (no instalado) — se usan renders de stories de Storybook en su lugar.
+Reforzado por: **taste §14 pre-flight** (superado: el label es un verbo, sin copia redundante); **`review-animations`** APPROVE (guard de reduced-motion aplicado; el ripple colapsa a opacidad instantánea — dentro de STANDARDS.md); **verificación Playwright de `huashu-design`** OMITIDO — se usan renders de stories de Storybook.
 
 **Veredicto escrito en `.design-review/verdict.json`:**
 
@@ -416,7 +456,7 @@ No necesario — el veredicto es `alive` en el primer bucle.
 
 ### Verificación de cierre (Storybook)
 
-Capturas de: por defecto / hover / active / focused / disabled / cargando — en modo claro y oscuro. Todos los estados se renderizan correctamente. Navegación por teclado confirmada: Tab para enfocar → anillo blanco visible → Enter activa la acción → estado de carga visible → `aria-busy` anunciado.
+Capturas: por defecto / hover / active / focused / disabled / cargando — en modo claro y oscuro. Todos los estados se renderizan correctamente. Teclado: Tab → anillo blanco visible → Enter → estado de carga visible → `aria-busy` anunciado.
 
 ---
 
@@ -424,7 +464,7 @@ Capturas de: por defecto / hover / active / focused / disabled / cargando — en
 
 | # | Target | Tipo | Pasos omitidos | Veredicto |
 |---|--------|------|----------------|-----------|
-| 1 | Página de ajustes | Página autenticada | SEO | `templated` → `alive` (1 bucle) |
-| 2 | Componente Button primario | Componente DS | SEO | `templated` → `alive` (1 bucle) |
+| 1 | Página de ajustes | Página autenticada | SEO, huashu-design, refero (MCP) | `templated` → `alive` (1 bucle) |
+| 2 | Componente Button primario | Componente DS | SEO, huashu-design, refero (MCP) | `templated` → `alive` (1 bucle) |
 
 → Volver a [design-review](../README.es.md)
