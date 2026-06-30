@@ -80,7 +80,8 @@ This is a set of **agents + a `/design-review` command + a hook**:
 | Orchestrator command | `commands/design-review.md` | `/design-review <target>` — runs the unified flow IN ORDER |
 | Audit-first gate | `agents/design-audit-first.md` | Redesigns only: screenshot current + "what to keep" |
 | **Reference-research gate** | `agents/design-reference-research.md` | **[GATE]** Dribbble 2026 + competitors + `ui-ux-pro-max` vocabulary; 3–5 patterns; copy+combine+house |
-| Lens: structure/audit | `agents/design-lens-impeccable.md` | **routes** `impeccable audit` + `critique` |
+| **Context-pack** | `agents/design-context-pack.md` | **discover ONCE** — source map + file:line + shared-found; lenses judge this, not re-scan (token lever) |
+| Lens: structure/audit | `agents/design-lens-impeccable.md` | **routes** `impeccable audit` + `critique` (READ-ONLY) |
 | Lens: anti-templated | `agents/design-lens-taste.md` | **routes** `design-taste-frontend` §11 redesign-audit + §14; gate that FAILS generic output |
 | Lens: signature motion | `agents/design-lens-motion.md` | **routes** `emil-design-eng` (concrete question inline) |
 | Lens: accessibility | `agents/design-lens-a11y.md` | **WebFetch** guidelines → cache → `web-design-guidelines` |
@@ -236,10 +237,28 @@ project design-system tokens — those win), **2+ typographic roles**, **one sig
 embodies the brief, and the explicit **"3 AI-default looks to avoid"** + UX-writing checklist (from
 `frontend-design`). This is authoring criterion, not a lens.
 
+### 2c. Context-pack — discover ONCE (token lever · the fix for "every agent rediscovers")
+
+Build **`.design-review/context-pack.md`** with ONE agent (`design-context-pack`): the source map
+(component tree, props, tokens-in-use, **file:line** of every point of interest), the relevant source
+excerpts, the cached baseline screenshots (from audit-first), the cached a11y guidelines, and the
+**already-known shared findings** (the audit-first attack list). This is the unified working memory.
+Without it, each of the 4+ lenses re-reads the whole surface and independently re-derives the same bugs
+(measured: ~80% overlap, ~100k tokens each). With it, lenses **judge a prepared map**, not re-scan.
+
 ### 3. DIAGNOSIS — CORE skills, ROUTED, in order **[GATE]**
 
-Dispatch each lens in turn, passing it the target + `.design-review/references.md` (+ audit-first).
-Each one **loads its skill ROUTED to its command/mode** and returns findings (cite `file:line`).
+Dispatch each lens in turn, passing it **`.design-review/context-pack.md` + `references.md`**. Each
+**loads its skill ROUTED to its command/mode** and returns findings (cite `file:line`).
+Three hard rules (the fixes for the token-waste + control bugs):
+1. **Lenses are READ-ONLY** — they have NO Edit/Write; they return findings, NEVER mutate source. (A lens
+   that edits during diagnosis bypasses the step-4 ASK gate — the bug this fixes.) All edits happen in
+   step 5, in ONE apply pass, after the user's multi-select.
+2. **Do NOT re-read source** — everything is in the context-pack. Read source only to confirm a specific
+   line the pack lacks.
+3. **Do NOT re-report shared findings** — the context-pack lists what audit-first + earlier lenses already
+   found; add only YOUR lens's unique angle. Terse output (see Rules).
+
 **Accumulate into ONE single prioritized list, each item tagged `[skill]`.** Drop nothing.
 
 - **3a · `design-lens-impeccable`** → `impeccable audit` + `critique`.
@@ -303,6 +322,15 @@ for skills and install commands.
 
 - **Skills loaded and ROUTED, never paraphrased or invoked bare.** If you find yourself writing
   "impeccable would say…" or invoking a skill with no `args`, stop and route it to a command.
+- **Lenses are READ-ONLY (diagnosis ≠ apply).** The 4 lens agents carry NO Edit/Write — they return
+  findings only. ALL mutation happens in step 5, in ONE apply pass, after the user's multi-select. A lens
+  that edits source during diagnosis silently bypasses the ASK gate.
+- **Terse output (token-frugal) — enforce on EVERY dispatched agent.** When dispatching any lens/agent,
+  append this to its prompt: *"Output TERSE: line 1 = `OK` (clean) or `KO` + ≤8-word why; then findings
+  one line each `P# [skill] file:line — problem → fix`. NO prose, no preamble, no restating the skill, no
+  summary tables, no Before/After essays."* Verbose agent reports are the #1 output-token waste.
+- **Discover once, judge many.** Build the context-pack (step 2c) before the lenses; pass it to each; tell
+  each "don't re-read source, don't re-report shared findings." This is the #1 input-token lever.
 - Project-specific design law (brand tokens, product identity, density rules) lives in the project's own
   design doc — reference it, don't duplicate it here.
 - Work in an isolated branch/worktree. Run all live/browser steps sequentially (one browser thread),
@@ -310,3 +338,21 @@ for skills and install commands.
 - The live visual check + reference diff is always last. It is the reality test static skills cannot
   give — and the only place "alive vs flat" is actually decided.
 - When delegating to a sub-agent that touches UI: pass it "apply this pipeline + the project's design doc".
+
+## Memory adapter (pluggable · optional accelerator · NEVER required)
+
+The pipeline works with **no memory tool at all** — the context-pack (a file artifact) is the within-run
+memory. A persistent memory tool only *accelerates cross-run* (skip rediscovery on re-runs and the
+vitality loop). It is detected, never assumed:
+
+1. **Detect** (orchestrator, step 0): is `claude-mem` present? else any other memory MCP/skill
+   (`mem-search`/`get_observations`-style)? else **none**.
+2. **Use if present** — step 0: `mem-search "design-review <target|domain>"` → seed the context-pack +
+   skip rediscovery of confirmed prior findings + reuse cached domain references (Dribbble/competitors).
+   Close: the **orchestrator** (not each agent — avoids write races) writes confirmed findings + verdict
+   + domain references to memory.
+3. **None → degrade gracefully** — rely on `.design-review/*.md` artifacts only; announce "no persistent
+   memory — cross-run rediscovery not cached." Never block, never error.
+
+The interface is generic (search-before / write-after); the orchestrator owns memory I/O so agents stay
+stateless and don't repeat each other.
