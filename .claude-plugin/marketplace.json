@@ -10,8 +10,8 @@
   "plugins": [
     {
       "name": "design-review",
-      "displayName": "Design Review",
-      "description": "Vitality pipeline: reference-research + 4 core skills + vitality verdict (alive/templated/flat). Agents + command + gate hook.",
+      "displayName": "Design Review — Orchestrator",
+      "description": "Orchestrator of design skills: preflight (declare+ask+install) → reference-research → 4 core skills routed → vitality verdict (alive/templated/flat) → loop. Agents + command + gate hook.",
       "source": "./"
     },
     {
