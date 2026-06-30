@@ -29,6 +29,15 @@ verdict to judge "alive" against → stop and say so.
    - Time-tracking → SesameHR / Factorial
    - CRM → Twenty / Attio
    - Payments → Stripe Dashboard
+2b. **Real shipped products via `refero`:** complement Dribbble (trend, sometimes unreal) with products
+   actually **in production**. If the Refero MCP is configured, query it for the target's category and
+   read the `DESIGN.md` token spec of 1–2 references (Vercel, Mercury, Linear…). Otherwise open
+   `refero.design` / `styles.refero.design` with agent-browser and screenshot. **Refero tokens are
+   reference only** — never copy their hex into code; re-translate to the house layer. (If refero is
+   absent, say so and lean on the domain competitors above.)
+2c. **Asset-integrity (if a brand/product is named):** before any generation, verify facts and pull
+   **real** assets — `huashu-design` §1.a brand-spec protocol (or the project's own client assets) +
+   WebSearch for facts. Never invent logos, screenshots, or data. Skip explicitly if no brand is named.
 3. **Vocabulary via `ui-ux-pro-max`:** load it via the Skill tool (`skill: "ui-ux-pro-max"` — installed
    at marketplace `ui-ux-pro-max-skill`; namespaces `ui-ux-pro-max:design`, `:design-system`,
    `:ui-styling`). Use its catalogue of **50+ styles, 161 palettes, 57 font-pairings** to name
@@ -55,6 +64,10 @@ Structure:
 - **The bar** — one sentence defining what "alive vs flat" means *for this target* (the verdict step
   diffs against this).
 - **Dials** — density / contrast / MOTION_INTENSITY values for the taste-skill lens (§1 Dial Inference).
+- **Plan (authoring — folds in `frontend-design`)** — a **4–6 hex token-plan** (subordinate to the
+  project design-system tokens; those win), **2+ typographic roles**, **one signature element** that
+  embodies the brief, the explicit **"3 AI-default looks to avoid"**, and a short **UX-writing**
+  checklist. This is the authoring criterion the fix step builds against.
 
 Return a short summary + the 3–5 patterns.
 
