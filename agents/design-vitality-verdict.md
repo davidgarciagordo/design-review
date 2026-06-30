@@ -25,6 +25,12 @@ Correctness is assumed by now — you judge **vitality**.
      live, not from code)?
    - **Typography with a point of view** — not stock system defaults?
 4. **Core Web Vitals** — LCP/CLS/INP/TTFB; flag anything outside "Good" (perf is a UX gate).
+5. **Reinforcement gates (run each if present; skip EXPLICITLY if not):**
+   - **`review-animations`** — load via the Skill tool; get its **Block/Approve** on the motion. A
+     `Block` holds the overall verdict **below `alive`**.
+   - **`taste-skill` §14 pre-flight** — the mechanical binary checklist (eyebrow/zigzag/single-accent/
+     contrast). Any failed box holds the verdict below `alive`.
+   - **`huashu-design` Playwright verify** — screenshots light/dark + **console errors** as evidence.
 
 ## The verdict (explicit, required)
 Emit exactly one:
@@ -44,6 +50,11 @@ Emit exactly one:
   "patterns_landed": ["<pattern>", "..."],
   "patterns_missing": ["<pattern>", "..."],
   "motion_moment_fires": true,
+  "gates": {
+    "review_animations": "approve | block | absent",
+    "taste_preflight_14": "pass | fail | absent",
+    "huashu_playwright": "pass | fail | absent"
+  },
   "core_web_vitals": { "lcp": "", "cls": "", "inp": "", "ttfb": "" },
   "screenshots": { "light": "", "dark": "", "mobile": "" },
   "timestamp": "<ISO8601>"

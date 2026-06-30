@@ -32,7 +32,12 @@ rendered).
 
 | Skill | Role in the pipeline | Source / Install |
 |---|---|---|
-| **`ui-ux-pro-max`** | **Wired across all phases** — reference-research (style/palette/font-pair vocabulary: 50+ styles, 161 palettes, 57 font-pairings), diagnosis (UX guidelines as an extra UX lens in step 3e), fix (generation/style reference via `:design` / `:ui-styling` / `:design-system` namespaces) | `claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
+| **`ui-ux-pro-max`** | **Wired across phases** — 3a-pre baseline (`search.py --design-system`), reference-research vocabulary (84 styles, 161 palettes, font-pairings), UX-guidelines lens (3e), fix (`:design`/`:ui-styling`/`:design-system`). Raw palettes/fonts = reference only; project tokens win. Needs `python3` | `claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
+| **`refero`** | **Reference-research (step 2)** — real products **in production** (gallery via agent-browser; `DESIGN.md` token specs via MCP). Complements Dribbble (trend) with shipped-product references. Tokens = reference only | Refero MCP (opt-in) ⚠️; default = agent-browser over `refero.design` |
+| **`frontend-design`** | **Plan (2b) + fix (5)** — authoring criterion **folded into taste/plan**, not a 5th lens (overlaps taste): 4–6 hex token-plan + one signature element + "3 AI-default looks to avoid" + UX-writing | Anthropic agent-skills marketplace |
+| **`review-animations`** | **Motion gate (3c + verdict 6)** — Block/Approve on animation vs `STANDARDS.md`. `disable-model-invocation=true` → invoke explicitly; degrades gracefully if absent | `npx -y skills@latest add emilkowalski/skills --skill review-animations` |
+
+> Single source of truth for the full manifest (detect + install per component) is **`scripts/preflight.mjs`**.
 
 ---
 

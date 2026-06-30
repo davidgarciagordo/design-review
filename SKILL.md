@@ -3,7 +3,13 @@ name: design-review
 description: "UNIFIED ORCHESTRATOR for design skills — groups ALL design skills and runs them in recommended order, ROUTING each to its correct command/mode, ACCUMULATES all suggestions into one prioritized list, ASKS the user (multi-select, P1 pre-marked) what to apply, and APPLIES the chosen ones by routing to the owning fix command. On top: vitality telos — audit-first (redesigns) → reference-research GATE (Dribbble 2026 + competitors + ui-ux-pro-max vocabulary) → 4 CORE skills REALLY invoked and ROUTED (impeccable→design-taste-frontend→emil-design-eng→web-design-guidelines) → explicit vitality-verdict (alive/templated/flat) → loop. Bootstrap: detects and INSTALLS referenced skills (never assumes 'not installed'). Trigger: 'improve design', 'make this alive / less flat', 'design review', '/design-review <target>'."
 ---
 
-# design-review — UNIFIED ORCHESTRATOR (v2.1, 2026-06-29)
+# design-review — UNIFIED ORCHESTRATOR (v2.2, 2026-06-30)
+
+> v2.2 adds: a **preflight** that declares every component it uses, ASKS before installing, and records
+> skips EXPLICITLY (`scripts/preflight.mjs`); wires **refero** (real-product references), **frontend-design**
+> (authoring, folded into the plan), **review-animations** (motion Block/Approve gate), and **huashu-design**
+> (asset-integrity + Playwright verify + non-landing builder); and adds **surface routing** (landing vs
+> dashboard vs non-web) to resolve the density conflict.
 
 The canonical domain-agnostic methodology lives as the public repo
 [`davidgarciagordo/design-review`](https://github.com/davidgarciagordo/design-review). Project-specific
@@ -86,30 +92,39 @@ references, return its findings.* **Never** summarise the skill or invoke it bar
 
 ---
 
-## Step 0 — Bootstrap of external skills (FIRST · non-negotiable)
+## Step 0 — Preflight: declare what it uses, ASK, install-or-skip-EXPLICITLY (FIRST · non-negotiable)
 
-Before running, **detect** the skills the pipeline references and **ensure they are installed**. Never
-assume "not installed" and never skip silently. Mechanism in priority order:
+The orchestrator **declares every component it uses and how to install it** — single source of truth is
+**`scripts/preflight.mjs`** (the MANIFEST). It NEVER installs silently and NEVER assumes "not installed".
 
-1. **Available as plugin/skill** (in `~/.claude/skills`, marketplace, or `.claude/skills`) → use it.
-2. **Missing → install it** (`npx skills add <author/repo>` or `claude plugin install <plugin>@<marketplace>`).
-3. **Fallback if it cannot be installed formally** → **clone the repo to a temp dir and read/use its
-   `SKILL.md` directly** ("at a minimum, know how to use it by installing it in a temp location or
-   similar"). Document the exact command per skill:
+1. **Detect** — run `node scripts/preflight.mjs --write`: prints present/missing + writes
+   `.design-review/preflight.md`. Read-only (filesystem globs + MCP-config content + `which`).
+2. **Ask** — for MISSING components, present **one** `AskUserQuestion` batch: per item *install now* or
+   *skip*, showing the manifest's exact install command. Never decide for the user.
+3. **Install chosen** → run the command, then **`/reload-plugins` + `/reload-skills`** (if the build lacks
+   them, tell the user to restart — skills/plugins/MCP load at session start).
+4. **Skip = EXPLICIT** → recorded in `.design-review/preflight.md` AND announced in the run output
+   ("SKIPPED `<id>` → lens/phase `<x>` degraded"). No silent skips, ever.
+5. **Fallback** → if a chosen component can't be installed formally, clone its repo to a temp dir and read
+   its `SKILL.md` directly so the pipeline still knows how to use it.
 
-| Skill | Role | Detect / install |
-|---|---|---|
-| `impeccable` *(core)* | structure / audit | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` |
-| `design-taste-frontend` / `taste-skill` *(core)* | anti-templated | `git clone https://github.com/Leonxlnx/taste-skill ~/.claude/skills/taste-skill` |
-| `emil-design-eng` *(core)* | signature motion | `git clone https://github.com/emilkowalski/skills` (use `emil-design-eng` dir) |
-| `web-design-guidelines` *(core)* | a11y AA | Claude Code default skill library |
-| `ui-ux-pro-max` *(wired intelligence)* | styles/palettes/font-pairings/UX guidelines | `claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
-| `agent-browser` | reference + verdict live | Claude Code built-in / project-configured |
-| `huashu-design` *(add-on)* | 2nd anti-slop | `git clone https://github.com/alchaincyf/huashu-design` |
+Manifest summary (`tier`: **core** gate · **wired** integrated · **addon** optional):
 
-> **`review-animations` does NOT exist as a standalone skill/command** — it is **optional, only if
-> installed** (lives in the `emilkowalski/skills` repo). Treat it gracefully — never break the pipeline
-> on its absence.
+| Component | tier | Role | Install |
+|---|---|---|---|
+| `impeccable` | core | structure / audit / scored critique | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` |
+| `taste-skill` (`design-taste-frontend`) | core | anti-templated / composition | `npx -y skills@latest add Leonxlnx/taste-skill --skill design-taste-frontend` |
+| `emil-design-eng` | core | signature motion / polish | `npx -y skills@latest add emilkowalski/skills --skill emil-design-eng` |
+| `web-design-guidelines` | core | a11y AA (file:line) | Claude Code default skill library |
+| `ui-ux-pro-max` | wired | styles/palettes/font-pairings/UX/charts DB | `claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` (needs `python3`) |
+| `review-animations` | wired | motion Block/Approve gate (STANDARDS.md) | `npx -y skills@latest add emilkowalski/skills --skill review-animations` |
+| `frontend-design` (Anthropic) | wired | authoring: token-plan + signature + UX-writing (**folded into taste/plan**) | Anthropic agent-skills marketplace |
+| `refero` | wired | real-product reference (gallery + DESIGN.md tokens) | Refero MCP (opt-in); default = agent-browser over refero.design |
+| `huashu-design` | addon | asset-integrity + Playwright verify + non-landing builder | `git clone https://github.com/alchaincyf/huashu-design ~/.claude/skills/huashu-design` |
+| `agent-browser` | wired | live reference + live verdict | Claude Code built-in |
+
+> `review-animations` and `refero` raw tokens **degrade gracefully** — never break the pipeline on their
+> absence; announce the degraded lens and continue.
 
 ---
 
@@ -126,20 +141,38 @@ assume "not installed" and never skip silently. Mechanism in priority order:
 4. **`web-design-guidelines`** → guidelines fetched via WebFetch + cached + passed as input → a11y AA,
    keyboard, focus, contrast.
 
-### Design intelligence (wired, not an add-on)
+### Design intelligence (wired, not add-ons)
 
-- **`ui-ux-pro-max`** — 50+ styles, 161 palettes, 57 font-pairings, 99 UX guidelines, 25 chart types.
-  Wired across three phases:
+- **`ui-ux-pro-max`** — 84 styles, 161 palettes, font-pairings, 99 UX guidelines, charts. Wired in:
+  - **3a-pre baseline:** `search.py --design-system/--domain/--stack` → style archetype + UX rules +
+    anti-patterns for this product type. Its raw palettes/fonts are **reference only** (project tokens win).
   - **Reference-research (step 2):** vocabulary to name styles/palettes/font-pairings precisely.
   - **Diagnosis (step 3e):** UX guidelines as an extra UX lens.
-  - **Fix (step 5):** generation/style reference — namespaces `ui-ux-pro-max:design` / `:design-system`
-    / `:ui-styling`.
+  - **Fix (step 5):** generation/style reference (`:design` / `:design-system` / `:ui-styling`).
+- **`refero`** — real products **in production** (Vercel, Mercury, Linear…). Wired in **step 2** beside
+  Dribbble: gallery via agent-browser (domain competitors that actually shipped) + `DESIGN.md` token specs
+  (MCP, opt-in). Tokens are **reference only** → re-translate to the house layer. Default without MCP =
+  agent-browser over refero.design.
+- **`frontend-design`** (Anthropic) — authoring criterion, **folded into the plan / taste**, not a 5th
+  lens (it overlaps taste): a 4–6 hex token-plan + **one signature element** + the explicit "3 AI-default
+  looks to avoid" + the UX-writing checklist. Feeds step 2b (plan) and step 5 (fix).
+- **`review-animations`** (in `emilkowalski/skills`) — the **motion Block/Approve gate** (`STANDARDS.md`).
+  When present, runs in **3c** and feeds the **verdict (6)** as a binary motion gate. `disable-model-
+  invocation=true` → invoke explicitly. Degrades gracefully if absent.
+
+### Surface routing (resolves the density conflict — decide in step 0)
+
+The lenses disagree on density by design; **route by surface**:
+- **landing / portfolio / marketing** → taste discipline ("cut ruthlessly"); taste is the primary lens.
+- **dashboard / app / copilot / data-dense** → huashu **density exception** (≥3 dense elements) + house
+  bento; taste's landing-only rules relax.
+- **non-web (slides / narrated video / app mockup)** → **`huashu-design` is the primary builder** (taste
+  declares these out of scope); the lenses become a review pass over its output.
 
 ### Add-ons (optional · opt-in · not gates)
 
-`huashu-design` (2nd anti-slop — if used, **force review mode** and grant `WebSearch`) ·
-`review-animations` (**only if installed**) · `seo` (public targets only) ·
-`design-mobile-apps` (RN/Expo) · `web-accessibility` (WCAG 2.2 extra alongside step 3d).
+`huashu-design` *(also: asset-integrity pre-build + Playwright verify — see steps 2 & 6)* ·
+`seo` (public targets only) · `design-mobile-apps` (RN/Expo) · `web-accessibility` (WCAG 2.2 extra).
 
 ---
 
@@ -168,14 +201,16 @@ reusable components. Reuse > reinvent. If a reusable piece is missing → create
 > Every step accumulates findings (never drop earlier ones) and cites `file:line`. Gates marked
 > **[GATE]** cannot be skipped; the run does not proceed past a failed gate.
 
-### 0. Bootstrap & frame
+### 0. Preflight & frame
 
-**Bootstrap** (above): detect + install referenced skills (temp-clone fallback if needed). **Context
-setup:** ensure `PRODUCT.md`/`DESIGN.md` for impeccable (run `scripts/context.mjs`; if `NO_PRODUCT_MD`,
-generate minimal docs from the project's design doc — do NOT let impeccable fall into its `init` flow).
-**Frame:** read the target, its design doc, and brief; detect design system/tokens, Storybook, platform,
-public vs private (private → SEO off), live browser. Resolve only owner-only decisions in **one**
-`AskUserQuestion` batch (≤4). State what is skipped and why.
+**Preflight** (above): `node scripts/preflight.mjs --write` → ASK to install missing (one batch) →
+install chosen + reload → record skips EXPLICITLY. **Context setup:** ensure `PRODUCT.md`/`DESIGN.md` for
+impeccable (run its `scripts/context.mjs`; if `NO_PRODUCT_MD`, generate minimal docs from the project's
+design doc — do NOT let impeccable fall into its `init` flow). **Frame:** read the target, its design doc,
+and brief; detect design system/tokens, Storybook, platform, public vs private (private → SEO off), live
+browser. **Surface routing:** classify the target (landing/portfolio · dashboard/dense · non-web) and set
+the density regime + primary lens/builder accordingly (see "Surface routing"). Resolve only owner-only
+decisions in **one** `AskUserQuestion` batch (≤4). State what is skipped and why.
 
 ### 1. `audit-first` **[GATE — redesigns only]**
 
@@ -185,11 +220,21 @@ greenfield — say so explicitly.
 
 ### 2. `reference-research` **[GATE — ALWAYS · the #1 lever against flat]**
 
-Dispatch **`design-reference-research`**: agent-browser over `dribbble.com/shots/popular/web-design` + 2–3
-domain competitors, **+ `ui-ux-pro-max` as vocabulary** (styles/palettes/font-pairings). Extract **3–5
-patterns** and write the **copy+combine+house-layer** decision in `.design-review/references.md` (includes
-the "alive vs flat" bar for this target, and the **dials** the taste lens will use). Without that artifact,
-**stop**.
+Dispatch **`design-reference-research`**: agent-browser over `dribbble.com/shots/popular/web-design`
+(2026 trend) **+ `refero`** (real products in production — domain competitors that shipped: gallery via
+agent-browser, or `DESIGN.md` token specs via MCP if present) **+ `ui-ux-pro-max` as vocabulary**
+(styles/palettes/font-pairings). Extract **3–5 patterns** → write the **copy+combine+house-layer** decision
+in `.design-review/references.md` (includes the "alive vs flat" bar and the **dials** the taste lens uses).
+Without that artifact, **stop**. **Asset-integrity (if a brand/product is named):** before generating,
+verify facts and pull REAL assets (`huashu-design` §1.a brand-spec + WebSearch / the project's own client
+assets) — never invent logos/screenshots/data.
+
+### 2b. Plan (authoring) — folds in `frontend-design`
+
+Write the design plan into `.design-review/references.md`: a **4–6 hex token-plan** (subordinate to the
+project design-system tokens — those win), **2+ typographic roles**, **one signature element** that
+embodies the brief, and the explicit **"3 AI-default looks to avoid"** + UX-writing checklist (from
+`frontend-design`). This is authoring criterion, not a lens.
 
 ### 3. DIAGNOSIS — CORE skills, ROUTED, in order **[GATE]**
 
@@ -202,10 +247,12 @@ Each one **loads its skill ROUTED to its command/mode** and returns findings (ci
   gate** (FAILS if the output could be any SaaS template). Exit criterion: *"this could only be THIS
   product."*
 - **3c · `design-lens-motion`** → `emil-design-eng` review (concrete question inline) + **one
-  memorable motion moment**.
-- **3d · `design-lens-a11y`** → WebFetch guidelines → cache → `web-design-guidelines` (AA).
+  memorable motion moment**. If `review-animations` is present, run it here as the **motion Block/Approve
+  gate** (feeds the verdict).
+- **3d · `design-lens-a11y`** → WebFetch guidelines → cache → `web-design-guidelines` (AA). Runs **last**
+  so it nets the motion `emil` just added.
 - **3e · `ui-ux-pro-max` (UX guidelines)** → UX guidelines pass as an extra lens (wired, not gate).
-  Opt-in add-ons (`huashu-design`, `web-accessibility`, `review-animations` if installed) run here.
+  Opt-in add-ons (`huashu-design`, `web-accessibility`) run here.
 
 ### 4. ASK — multi-select **[the heart of the orchestrator]**
 
@@ -227,6 +274,9 @@ surface genuinely new findings in a short follow-up batch — do not re-litigate
 Dispatch **`design-vitality-verdict`**: live render (light/dark/mobile via agent-browser), **diff against
 references.md**, house layer / density-bento / motion-fires / typography-with-a-point-of-view checks,
 Core Web Vitals, and verdict **`alive`/`templated`/`flat`** written to `.design-review/verdict.json`.
+Reinforced by, when present: **taste §14 pre-flight** (mechanical binary checks), **`review-animations`**
+Block/Approve (motion gate), and **`huashu-design` Playwright verify** (screenshots light/dark + console
+errors). A motion `Block` or a failed §14 check keeps the verdict below `alive`.
 
 ### 7. Vitality loop **[GATE — until the bar is met]**
 

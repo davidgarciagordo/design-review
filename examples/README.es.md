@@ -41,8 +41,10 @@ Ambas formas funcionan. La forma estructurada le da al pipeline todo lo que nece
 | Anti-slop + gate anti-plantilla | `design-taste-frontend` (a.k.a. `taste-skill`) |
 | Motion de firma + pulido | `emil-design-eng` |
 | Accesibilidad (WCAG AA) | `web-design-guidelines` |
+| Referencias de productos reales (galería + tokens) *(wired)* | `refero` (vía agent-browser o MCP) |
+| Autoría: token-plan + firma + UX-writing *(wired, integrado en el plan)* | `frontend-design` |
+| Gate Block/Approve de motion *(wired)* | `review-animations` |
 | 2ª lente anti-slop *(add-on)* | `huashu-design` |
-| Crítica de timing/easing de animaciones *(add-on)* | `review-animations` (después de `emil-design-eng`) |
 | SEO *(add-on, solo páginas públicas)* | `seo` |
 
 ```
@@ -63,7 +65,31 @@ Cada lente core es de su autor original (ver *Atribución* en el README principa
 
 **Stack:** Next.js App Router, Tailwind CSS con tokens del design system, Storybook disponible, dev server en marcha.
 
-### Paso 0 — Encuadre del target
+### Paso 0 — Preflight y encuadre
+
+**Preflight** (`node scripts/preflight.mjs --write`):
+
+```
+✓ impeccable            present (~/.claude/skills/impeccable)
+✓ design-taste-frontend present (autoskills)
+✓ emil-design-eng       present (autoskills)
+✓ web-design-guidelines present (Claude Code default)
+✓ ui-ux-pro-max         present (plugin)
+✓ review-animations     present (autoskills)
+✓ frontend-design       present (marketplace)
+✗ refero                missing — install: Refero MCP (npx refero-mcp) o usar agent-browser por defecto
+✗ huashu-design         missing — install: git clone https://github.com/alchaincyf/huashu-design ~/.claude/skills/huashu-design
+✓ agent-browser         present (Claude Code built-in)
+```
+
+[AskUserQuestion — un solo batch para todos los faltantes]:
+- `refero`: ¿instalar Refero MCP ahora o saltar? → **saltar**
+- `huashu-design`: ¿instalar ahora o saltar? → **saltar**
+
+SKIPPED `refero` → reference-research degrada a agent-browser sobre refero.design (sin token specs de DESIGN.md).
+SKIPPED `huashu-design` → asset-integrity brand-spec + verificación Playwright no disponibles; el veredicto usa capturas de agent-browser.
+
+**Encuadre:**
 
 ```
 Design system: sí (packages/design-system — tokens en design-system/tokens.ts)
@@ -74,6 +100,8 @@ Navegador en vivo: sí (dev server en localhost:3000)
 Tipo: rediseño de superficie existente → audit-first SE EJECUTA
 ```
 
+**Surface routing:** página de ajustes multi-sección autenticada → régimen **dashboard/dense**. Lente primaria: impeccable + reglas de densidad (huashu OMITIDO → densidad vía impeccable). Las reglas exclusivas de landing de taste se relajan.
+
 ### Paso 1 — audit-first [GATE · solo rediseños]
 
 El agente `design-audit-first` renderiza la página de ajustes actual (claro/oscuro/móvil) y escribe `.design-review/audit-first.md`:
@@ -82,7 +110,7 @@ El agente `design-audit-first` renderiza la página de ajustes actual (claro/osc
 
 ### Paso 2 — reference-research [GATE · siempre · la palanca #1 contra lo plano]
 
-El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (2026 popular) y tres páginas de ajustes de competidores (Linear, dashboard Vercel, ajustes Notion) con `agent-browser`. Extrae 5 patrones concretos y escribe `.design-review/references.md`:
+El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (2026 popular), tres páginas de ajustes de competidores (Linear, dashboard Vercel, ajustes Notion) con `agent-browser`, **`refero`** (galería vía agent-browser sobre refero.design — MCP OMITIDO; productos reales publicados: Mercury, Vercel, Linear listados allí), y usa el **vocabulario de `ui-ux-pro-max`** para nombrar estilos/paletas/combinaciones tipográficas con precisión. Extrae 5 patrones concretos y escribe `.design-review/references.md`:
 
 1. **[layout]** Dos columnas: nav lateral fijo + panel de contenido — Linear. Elimina los headings de sección repetitivos.
 2. **[densidad]** Bento asimétrico dentro de cada sección — filas de datos más compactas, headings más aireados — dashboard Vercel.
@@ -91,6 +119,24 @@ El agente `design-reference-research` abre `dribbble.com/shots/popular/web-desig
 5. **[color]** El borde izquierdo teal en el ítem de nav activo se gradúa a un fondo de sección con tinte teal — exclusivo de este producto.
 
 **Listón para este target:** *"La página se lee como una superficie de ajustes de producto Plexum, no como una plantilla shadcn genérica — densidad bento, secciones escalonadas y el marcador de identidad teal aterrizan."*
+
+### Paso 2b — Plan (autoría · integra `frontend-design`)
+
+Añadido a `.design-review/references.md`:
+
+**Token-plan (4 hex, subordinado a los tokens de `packages/design-system` — estos tienen prioridad):**
+- Relleno acento: `#0f7e74` (teal-700 — DS `color-brand-primary`)
+- Superficie brand-subtle: `#f0faf9` (6% de tinte teal — DS `surface-brand-subtle`)
+- Texto énfasis: `#111827` (DS `text-primary`)
+- Separador/atenuado: `#e5e7eb` (DS `border-subtle`)
+
+**Roles tipográficos (2+):** numerales display para estadísticas de facturación (`font-variant-numeric: tabular-nums`); cuerpo legible (14px / 1.5 — corrige el hallazgo de 3a).
+
+**Elemento de firma:** fondo de sección activa con tinte teal que se gradúa desde el marcador de borde izquierdo del nav — el único detalle que solo podría ser de este producto.
+
+**3 looks AI-por-defecto a evitar:** (1) rejilla uniforme de tarjetas con sombra/radio idéntico en cada sección; (2) formulario centrado de ancho completo con exceso de espacio en blanco; (3) paleta gris atenuada + acento azul (aspecto genérico de SaaS).
+
+**Checklist de UX-writing:** ✓ sin texto de placeholder redundante · ✓ el estado del toggle se autoexplica (sin etiqueta "Activado/Desactivado") · ✓ CTA único por vista · ✓ headings de sección en capitalización de oración.
 
 ### Paso 3a — lente: impeccable [GATE]
 
@@ -119,7 +165,7 @@ Hallazgos adicionales:
 - Placeholder "Introduce aquí tu nombre completo" — redundante con el label; acortar a "Ana García".
 - Texto "Activado / Desactivado" junto a cada toggle — el estado del toggle ya lo comunica; eliminar.
 
-### Paso 3c — lente: emil-design-eng [GATE — motion de firma]
+### Paso 3c — lente: emil-design-eng + gate `review-animations` [GATE — motion de firma]
 
 El agente `design-lens-motion` **carga el skill `emil-design-eng` con la herramienta Skill** y le pasa el target + las referencias del paso 2.
 
@@ -129,6 +175,8 @@ Hallazgos de higiene:
 - El botón de guardar no tiene estado de carga/confirmación — 800ms de silencio tras el clic.
 - Los toggles cambian de estado de forma instantánea — añadir transición de 200ms `ease`.
 - Sin guard de `prefers-reduced-motion` en la entrada escalonada.
+
+**Gate `review-animations`** (se ejecuta aquí — Block/Approve contra `STANDARDS.md`): se evalúa la entrada escalonada — duración máx. 400ms, easing `ease-out`, guard de `prefers-reduced-motion` ausente. Gate: **APPROVE** (stagger de 100ms dentro de los estándares; el guard se añadirá en el paso 5 — la ausencia ya es un hallazgo P1 de a11y). Alimenta el veredicto en el paso 6.
 
 ### Paso 3d — lente: web-design-guidelines [GATE — accesibilidad]
 
@@ -170,7 +218,7 @@ P3 — Pulido
 
 ### Paso 5 — Re-pasada informada
 
-Layout modificado (re-ejecución de 3a) + motion añadido (re-ejecución de 3c) + a11y re-comprobada para la nueva estructura (re-ejecución de 3d). Nuevo hallazgo: el fondo de sección con tinte teal introduce un color sin token DS — sustituido por `surface-brand-subtle` (token existente, 6% de tinte teal).
+Layout modificado (re-ejecución de 3a) + motion añadido (re-ejecución de 3c) + a11y re-comprobada para la nueva estructura (re-ejecución de 3d). Guard de `prefers-reduced-motion` añadido a la entrada escalonada (corrige el hallazgo P1 de a11y; el gate `review-animations` permanece APPROVE). Nuevo hallazgo: el fondo de sección con tinte teal introduce un color sin token DS — sustituido por `surface-brand-subtle` (token existente, 6% de tinte teal).
 
 ### Paso 6 — vitality-verdict [GATE]
 
@@ -183,6 +231,8 @@ El agente `design-vitality-verdict` renderiza la página actualizada en vivo en 
 - ¿El momento de motion se dispara? **Sí** — la entrada se dispara en la primera carga, queda inerte en la segunda (caché).
 
 Core Web Vitals: LCP 1,3s / CLS 0,02 / INP 58ms — todo verde.
+
+Reforzado por: **taste §14 pre-flight** (comprobaciones mecánicas binarias — todas superadas: sin headings en mayúsculas, sin placeholders redundantes, el toggle se autoexplica); **`review-animations`** Block/Approve: **APPROVE** (entrada escalonada dentro de STANDARDS.md, guard de reduced-motion aplicado); **verificación Playwright de `huashu-design`**: OMITIDO (no instalado) — se usan capturas de agent-browser en su lugar.
 
 **Veredicto escrito en `.design-review/verdict.json`:**
 
@@ -210,7 +260,11 @@ Capturas (claro/oscuro/móvil) confirmaron: sidebar nav renderizado; ritmo bento
 
 **Visibilidad del target:** componente (no página) — add-on SEO OMITIDO. Navegador en vivo vía Storybook.
 
-### Paso 0 — Encuadre del target
+### Paso 0 — Preflight y encuadre
+
+**Preflight** (`node scripts/preflight.mjs --write`): todos los componentes core están presentes (impeccable, design-taste-frontend, emil-design-eng, web-design-guidelines, review-animations, frontend-design, agent-browser, ui-ux-pro-max). MCP de `refero` no configurado → SKIPPED `refero` → reference-research solo vía agent-browser sobre refero.design (sin token specs de DESIGN.md). `huashu-design`: OMITIDO — verificación Playwright no disponible. No se necesita batch de `AskUserQuestion` (ninguna instalación elegida).
+
+**Encuadre:**
 
 ```
 Design system: sí (este ES el componente del design system)
@@ -221,6 +275,8 @@ Navegador en vivo: Storybook
 Tipo: rediseño de componente existente → audit-first SE EJECUTA
 ```
 
+**Surface routing:** componente del DS (no es página ni landing) → régimen **estándar**. Las reglas exclusivas de landing de taste se relajan; esta es una revisión de componente, no una auditoría de densidad a nivel de página.
+
 ### Paso 1 — audit-first [GATE · solo rediseños]
 
 El agente `design-audit-first` renderiza las stories del Button (por defecto / hover / focus / disabled) y escribe `.design-review/audit-first.md`:
@@ -229,7 +285,7 @@ El agente `design-audit-first` renderiza las stories del Button (por defecto / h
 
 ### Paso 2 — reference-research [GATE · siempre · la palanca #1 contra lo plano]
 
-El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (2026 popular) y tres botones primarios de competidores (Stripe Checkout, Linear, Vercel Deploy) con `agent-browser`. Extrae 4 patrones y escribe `.design-review/references.md`:
+El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (2026 popular), tres botones primarios de competidores (Stripe Checkout, Linear, Vercel Deploy) con `agent-browser`, **`refero`** (galería vía agent-browser sobre refero.design — MCP OMITIDO; componentes de botón reales publicados de Stripe, Linear, Vercel listados allí), y usa el **vocabulario de `ui-ux-pro-max`** para nombrar estilos de motion y semántica de color con precisión. Extrae 4 patrones y escribe `.design-review/references.md`:
 
 1. **[motion]** Pulsación micro-spring: `scale(0.96)` + colapso de sombra en 80ms `cubic-bezier(0.34, 1.56, 0.64, 1)` — Stripe.
 2. **[motion]** Ripple de marca al clic: una onda circular teal se expande desde el punto de clic y se desvanece en 350ms — shot de Dribbble #2.
@@ -237,6 +293,23 @@ El agente `design-reference-research` abre `dribbble.com/shots/popular/web-desig
 4. **[color]** Focus ring blanco con un gap de 2px (offset) independientemente del fondo del botón — Vercel.
 
 **Listón para este target:** *"Los momentos de pulsación y carga del botón se sienten inconfundiblemente Plexum — el ripple teal al clic es el de firma; solo la higiene de hover no es alive."*
+
+### Paso 2b — Plan (autoría · integra `frontend-design`)
+
+Añadido a `.design-review/references.md`:
+
+**Token-plan (3 hex, subordinado a los tokens de `packages/design-system` — estos tienen prioridad):**
+- Relleno de marca: `#0f7e74` (teal-700 — DS `color-brand-primary`)
+- Marca-oscuro (hover): `#0a5e56` (DS `color-brand-primary-dark`)
+- Focus ring: `#ffffff` (blanco — universal, funciona sobre cualquier variante de color del botón)
+
+**Roles tipográficos (2+):** label del botón (14px / medium / ligero letter-spacing para CTAs); texto de carga (visualmente oculto, SR-only vía `sr-only`).
+
+**Elemento de firma:** ripple radial teal desde la posición del puntero al hacer clic — el único momento de motion que hace que este sea inconfundiblemente un botón Plexum y no un default de React.
+
+**3 looks AI-por-defecto a evitar:** (1) relleno sólido + texto blanco con solo oscurecimiento en hover (default genérico shadcn); (2) variante solo-contorno como primario (peso insuficiente); (3) border-radius tan grande que se convierte en píldora en labels cortos (tendencia sin identidad de marca).
+
+**Checklist de UX-writing:** ✓ el label del botón es un verbo ("Guardar", "Desplegar") · ✓ texto de carga anunciado por lectores de pantalla · ✓ sin tooltip necesario en disabled (la acción se explica sola).
 
 ### Paso 3a — lente: impeccable [GATE]
 
@@ -262,7 +335,7 @@ Este es un **hallazgo de vitalidad P1**, preseleccionado.
 Hallazgos adicionales (sin contenido de texto fijo en un botón, las reglas de copia no aplican):
 - Riesgo de coherencia: sin variantes de `size` más allá de la por defecto — los consumidores probablemente están hardcodeando sobreescrituras, alejándose del design system.
 
-### Paso 3c — lente: emil-design-eng [GATE — motion de firma]
+### Paso 3c — lente: emil-design-eng + gate `review-animations` [GATE — motion de firma]
 
 El agente `design-lens-motion` **carga el skill `emil-design-eng` con la herramienta Skill** y le pasa el target + las referencias del paso 2.
 
@@ -273,6 +346,8 @@ Hallazgos de higiene:
 - Active/press: añadir micro-spring `scale(0.97)` a 80ms (`cubic-bezier(0.34, 1.56, 0.64, 1)`) — referencia #1.
 - Sin estado de carga — el botón queda en silencio durante acciones asíncronas.
 - Sin guard de `prefers-reduced-motion` en el ripple.
+
+**Gate `review-animations`** (se ejecuta aquí — Block/Approve contra `STANDARDS.md`): se evalúa el ripple teal — fade de 350ms, easing aceptable, pero guard de `prefers-reduced-motion` ausente. Gate: **BLOCK** (guard de reduced-motion ausente). Debe añadirse el guard antes de que el veredicto pueda alcanzar `alive`. Alimenta el veredicto en el paso 6.
 
 ### Paso 3d — lente: web-design-guidelines [GATE — accesibilidad]
 
@@ -310,7 +385,7 @@ P3 — Pulido
 
 ### Paso 5 — Re-pasada informada
 
-Motion añadido (re-ejecución de 3c) + a11y re-comprobada para el ripple + estado de carga (re-ejecución de 3d). Nuevo hallazgo: el SVG del spinner de carga usa `stroke="#ffffff"` hardcodeado — sustituido por `currentColor` para que herede el color del label, lo que en una futura `variant="secondary"` funcionará correctamente de forma automática.
+Motion añadido (re-ejecución de 3c) + a11y re-comprobada para el ripple + estado de carga (re-ejecución de 3d). Guard de `prefers-reduced-motion` añadido al ripple (colapsa a fade de opacidad instantáneo) — gate `review-animations` liberado (BLOCK → APPROVE). Nuevo hallazgo: el SVG del spinner de carga usa `stroke="#ffffff"` hardcodeado — sustituido por `currentColor` para que herede el color del label, lo que en una futura `variant="secondary"` funcionará correctamente de forma automática.
 
 ### Paso 6 — vitality-verdict [GATE]
 
@@ -324,6 +399,8 @@ Diff contra `.design-review/references.md`:
 - Variante disabled: **implantada** — fondo atenuado, `cursor-not-allowed`, `aria-disabled="true"`, story añadida.
 
 Core Web Vitals: N/A — componente, no página. Tiempo de render en Storybook: 110ms.
+
+Reforzado por: **taste §14 pre-flight** (comprobaciones mecánicas binarias — superadas: el label es un verbo, sin copia redundante); **`review-animations`** Block/Approve: **APPROVE** (guard de reduced-motion aplicado en el paso 5; el ripple colapsa a fade de opacidad instantáneo — dentro de STANDARDS.md); **verificación Playwright de `huashu-design`**: OMITIDO (no instalado) — se usan renders de stories de Storybook en su lugar.
 
 **Veredicto escrito en `.design-review/verdict.json`:**
 
