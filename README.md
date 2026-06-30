@@ -40,13 +40,14 @@ design-review asks a different question:
 | **Edits scattered across lens passes** — writes between lenses create drift and conflicts | **Lenses are READ-ONLY** (no Edit/Write); all edits in a single apply pass after multi-select |
 | **Verbose lens output** — walls of text from every lens drown actionable findings | **TERSE output**: each lens emits OK/KO + one-line finding. Full detail on request. |
 
-### 🧩 Part of a family — same signature, three repos
+### 🧩 Part of a family — same signature, four repos
 
 | | Repo | Role |
 |---|---|---|
 | 🛠️ | [**claude-code-setup-optimizer**](https://github.com/davidgarciagordo/claude-code-setup-optimizer) | **The hub** — methodology + automations (hooks · subagents · commands) + `/optimize-my-setup` |
 | 🔨 | [**forge-methodology**](https://github.com/davidgarciagordo/forge-methodology) | Structure *what to build* — align → spec → grill ×3 → plan → verify |
 | 🎨 | [**design-review**](https://github.com/davidgarciagordo/design-review) · *you are here* | Make *how it looks* come alive — references → core skills → vitality verdict |
+| 💸 | [**token-economy**](https://github.com/davidgarciagordo/token-economy) | Spend *less to do it* — the context-pack (step 2c) + read-only terse lenses this pipeline uses come from here; plus frugal output-style + pluggable memory. Complements [caveman](https://github.com/JuliusBrussee/caveman) (output) on the input/orchestration axis. |
 
 ## 📦 Install
 
