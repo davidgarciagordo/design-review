@@ -12,6 +12,7 @@
   "repository": "https://github.com/davidgarciagordo/design-review",
   "license": "MIT",
   "keywords": ["design", "review", "vitality", "anti-templated", "audit", "accessibility", "motion", "tokens", "ui", "ux"],
+  "skills": "./",
   "commands": ["./commands/"],
   "hooks": "./hooks/hooks.json"
 }
