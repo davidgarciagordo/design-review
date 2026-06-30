@@ -34,13 +34,14 @@ design-review hace una pregunta diferente:
 | **Ediciones dispersas entre pasadas de lentes** — escrituras entre lentes generan drift y conflictos | **Las lentes son READ-ONLY** (sin Edit/Write); todas las ediciones en una única pasada de apply tras el multi-select |
 | **Salida verbosa de las lentes** — paredes de texto de cada lente ahogan los hallazgos accionables | **Salida TERSE**: cada lente emite OK/KO + un hallazgo de una línea. Detalle completo a petición. |
 
-### 🧩 Parte de una familia — misma firma, tres repos
+### 🧩 Parte de una familia — misma firma, cuatro repos
 
 | | Repo | Rol |
 |---|---|---|
 | 🛠️ | [**claude-code-setup-optimizer**](https://github.com/davidgarciagordo/claude-code-setup-optimizer) | **El hub** — metodología + automatizaciones (hooks · subagents · comandos) + `/optimize-my-setup` |
 | 🔨 | [**forge-methodology**](https://github.com/davidgarciagordo/forge-methodology) | Estructura *qué construir* — alinear → spec → grill ×3 → plan → verificar |
 | 🎨 | [**design-review**](https://github.com/davidgarciagordo/design-review) · *estás aquí* | Hace que *cómo se ve* cobre vida — referencias → skills core → veredicto de vitalidad |
+| 💸 | [**token-economy**](https://github.com/davidgarciagordo/token-economy) | Gasta *menos en hacerlo* — el context-pack (paso 2c) + las lentes read-only terse que usa este pipeline vienen de aquí; además output-style frugal + memoria pluggable. Complementa a [caveman](https://github.com/JuliusBrussee/caveman) (salida) en el eje entrada/orquestación. |
 
 ## 📦 Instalación
 
