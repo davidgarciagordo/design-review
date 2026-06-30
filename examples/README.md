@@ -41,8 +41,10 @@ Both work. The structured form gives the pipeline everything it needs to skip de
 | Anti-slop + anti-templated gate | `design-taste-frontend` (a.k.a. `taste-skill`) |
 | Signature motion + polish | `emil-design-eng` |
 | Accessibility (WCAG AA) | `web-design-guidelines` |
+| Real-product references (gallery + tokens) *(wired)* | `refero` (via agent-browser or MCP) |
+| Authoring: token-plan + signature + UX-writing *(wired, folded into plan)* | `frontend-design` |
+| Motion Block/Approve gate *(wired)* | `review-animations` |
 | 2nd anti-slop lens *(add-on)* | `huashu-design` |
-| Motion timing/easing critique *(add-on)* | `review-animations` (after `emil-design-eng`) |
 | SEO *(add-on, public pages only)* | `seo` |
 
 ```
@@ -63,7 +65,31 @@ Each core lens is by its original author (see *Attribution* in the main README).
 
 **Stack:** Next.js App Router, Tailwind CSS with design system tokens, Storybook available, dev server running.
 
-### Step 0 — Frame the target
+### Step 0 — Preflight & frame
+
+**Preflight** (`node scripts/preflight.mjs --write`):
+
+```
+✓ impeccable            present (~/.claude/skills/impeccable)
+✓ design-taste-frontend present (autoskills)
+✓ emil-design-eng       present (autoskills)
+✓ web-design-guidelines present (Claude Code default)
+✓ ui-ux-pro-max         present (plugin)
+✓ review-animations     present (autoskills)
+✓ frontend-design       present (marketplace)
+✗ refero                missing — install: Refero MCP (npx refero-mcp) or default to agent-browser
+✗ huashu-design         missing — install: git clone https://github.com/alchaincyf/huashu-design ~/.claude/skills/huashu-design
+✓ agent-browser         present (Claude Code built-in)
+```
+
+[AskUserQuestion — one batch for all missing]:
+- `refero`: install Refero MCP now, or skip? → **skip**
+- `huashu-design`: install now, or skip? → **skip**
+
+SKIPPED `refero` → reference-research degrades to agent-browser over refero.design (no DESIGN.md token specs).
+SKIPPED `huashu-design` → asset-integrity brand-spec + Playwright verify unavailable; verdict uses agent-browser screenshots only.
+
+**Frame:**
 
 ```
 Design system: yes (packages/design-system — tokens at design-system/tokens.ts)
@@ -74,6 +100,8 @@ Live browser: yes (dev server at localhost:3000)
 Type: redesign of existing surface → audit-first RUNS
 ```
 
+**Surface routing:** authenticated multi-section settings page → **dashboard/dense** regime. Primary lens: impeccable + density rules (huashu SKIPPED → density via impeccable). Taste's landing-only rules relax.
+
 ### Step 1 — audit-first [GATE · redesigns only]
 
 Agent `design-audit-first` renders the current settings page (light/dark/mobile) and writes `.design-review/audit-first.md`:
@@ -82,7 +110,7 @@ Agent `design-audit-first` renders the current settings page (light/dark/mobile)
 
 ### Step 2 — reference-research [GATE · always · the #1 lever against flat]
 
-Agent `design-reference-research` opens `dribbble.com/shots/popular/web-design` (2026 popular) and three competitor settings pages (Linear, Vercel dashboard, Notion settings) via `agent-browser`. It extracts 5 concrete patterns and writes `.design-review/references.md`:
+Agent `design-reference-research` opens `dribbble.com/shots/popular/web-design` (2026 popular), three competitor settings pages (Linear, Vercel dashboard, Notion settings) via `agent-browser`, **`refero`** (gallery via agent-browser over refero.design — MCP SKIPPED; real shipped products: Mercury, Vercel, Linear listed there), and uses **`ui-ux-pro-max` vocabulary** to name styles/palettes/font-pairings precisely. It extracts 5 concrete patterns and writes `.design-review/references.md`:
 
 1. **[layout]** Two-column: sticky sidebar nav + content pane — Linear. Eliminates repetitive section headings.
 2. **[density]** Asymmetric bento within each section — tighter data rows, airier headings — Vercel dashboard.
@@ -91,6 +119,24 @@ Agent `design-reference-research` opens `dribbble.com/shots/popular/web-design` 
 5. **[color]** Teal left-border on active nav item graduates to a teal-tinted section background — unique to this product.
 
 **Bar for this target:** *"The page reads as a Plexum product settings surface, not a generic shadcn template — bento density, staggered sections, and the teal identity marker land."*
+
+### Step 2b — Plan (authoring · folds in `frontend-design`)
+
+Appended to `.design-review/references.md`:
+
+**Token-plan (4-hex, subordinate to `packages/design-system` tokens — those win):**
+- Accent fill: `#0f7e74` (teal-700 — DS `color-brand-primary`)
+- Surface brand-subtle: `#f0faf9` (6% teal tint — DS `surface-brand-subtle`)
+- Text emphasis: `#111827` (DS `text-primary`)
+- Separator/muted: `#e5e7eb` (DS `border-subtle`)
+
+**Typographic roles (2+):** display numerals for billing stats (`font-variant-numeric: tabular-nums`); body readable (14px / 1.5 — corrects the 3a finding).
+
+**Signature element:** teal-tinted active-section background graduating from the left-border nav marker — the one detail that could only be this product.
+
+**3 AI-default looks to avoid:** (1) uniform card grid with identical shadow/radius on every section; (2) centered full-width form with excessive blank space; (3) muted gray palette + blue accent (generic SaaS default).
+
+**UX-writing checklist:** ✓ no redundant placeholder text · ✓ toggle state self-describes (no "Enabled/Disabled" label) · ✓ single CTA per view · ✓ section headings sentence-case.
 
 ### Step 3a — lens: impeccable [GATE]
 
@@ -119,7 +165,7 @@ Additional findings:
 - Placeholder "Enter your full name here" — redundant with label; shorten to "Jane Smith".
 - "Enabled / Disabled" text beside each toggle — the toggle state already communicates this; remove.
 
-### Step 3c — lens: emil-design-eng [GATE — signature motion]
+### Step 3c — lens: emil-design-eng + `review-animations` gate [GATE — signature motion]
 
 Agent `design-lens-motion` **loads the `emil-design-eng` skill via the Skill tool** and passes it the target + the step-2 references.
 
@@ -129,6 +175,8 @@ Hygiene findings:
 - Save button has no press/loading state — 800ms silence after click.
 - Toggles snap instant between on/off — add 200ms `ease` transition.
 - No `prefers-reduced-motion` guard on the staggered entrance.
+
+**`review-animations` motion gate** (runs here — Block/Approve against `STANDARDS.md`): staggered entrance evaluated — duration 400ms max, easing `ease-out`, `prefers-reduced-motion` guard missing. Gate: **APPROVE** (100ms stagger within standards; guard will be added in step 5 — the missing guard is already a P1 a11y finding). Feeds verdict in step 6.
 
 ### Step 3d — lens: web-design-guidelines [GATE — accessibility]
 
@@ -170,7 +218,7 @@ P3 — Polish
 
 ### Step 5 — Informed re-pass
 
-Layout changed (3a re-run) + motion added (3c re-run) + a11y re-checked for the new structure (3d re-run). New finding: the teal-tinted section background introduces a color that references no DS token — swapped to `surface-brand-subtle` (existing token, 6% teal tint).
+Layout changed (3a re-run) + motion added (3c re-run) + a11y re-checked for the new structure (3d re-run). `prefers-reduced-motion` guard added to the staggered entrance (fixes the P1 a11y finding; `review-animations` gate remains APPROVE). New finding: the teal-tinted section background introduces a color that references no DS token — swapped to `surface-brand-subtle` (existing token, 6% teal tint).
 
 ### Step 6 — vitality-verdict [GATE]
 
@@ -183,6 +231,8 @@ Agent `design-vitality-verdict` renders the updated page live in light, dark, an
 - Motion moment fires? **Yes** — entrance fires on first load, transitions off on second load (cached).
 
 Core Web Vitals: LCP 1.3s / CLS 0.02 / INP 58ms — all green.
+
+Reinforced by: **taste §14 pre-flight** (mechanical binary checks — all pass: no all-caps headings, no redundant placeholders, toggle self-describes); **`review-animations`** Block/Approve: **APPROVE** (staggered entrance within STANDARDS.md, reduced-motion guard applied); **`huashu-design` Playwright verify**: SKIPPED (not installed) — agent-browser screenshots used instead.
 
 **Verdict written to `.design-review/verdict.json`:**
 
@@ -210,7 +260,11 @@ Screenshots (light/dark/mobile) confirmed: sidebar nav renders; bento rhythm vis
 
 **Target visibility:** component (not a page) — SEO add-on SKIPPED. Live browser via Storybook.
 
-### Step 0 — Frame the target
+### Step 0 — Preflight & frame
+
+**Preflight** (`node scripts/preflight.mjs --write`): all core components present (impeccable, design-taste-frontend, emil-design-eng, web-design-guidelines, review-animations, frontend-design, agent-browser, ui-ux-pro-max). `refero` MCP not configured → SKIPPED `refero` → reference-research via agent-browser over refero.design only (no DESIGN.md token specs). `huashu-design`: SKIPPED — Playwright verify unavailable. No `AskUserQuestion` batch needed (no installs chosen).
+
+**Frame:**
 
 ```
 Design system: yes (this IS the design system component)
@@ -221,6 +275,8 @@ Live browser: Storybook
 Type: redesign of existing component → audit-first RUNS
 ```
 
+**Surface routing:** DS component (not a page, not a landing) → **standard** regime. Taste's landing-only rules relax; this is a component review, not a page-level density audit.
+
 ### Step 1 — audit-first [GATE · redesigns only]
 
 Agent `design-audit-first` renders the Button stories (default / hover / focus / disabled) and writes `.design-review/audit-first.md`:
@@ -229,7 +285,7 @@ Agent `design-audit-first` renders the Button stories (default / hover / focus /
 
 ### Step 2 — reference-research [GATE · always · the #1 lever against flat]
 
-Agent `design-reference-research` opens `dribbble.com/shots/popular/web-design` (2026 popular) and three competitor primary buttons (Stripe Checkout, Linear, Vercel Deploy) via `agent-browser`. It extracts 4 patterns and writes `.design-review/references.md`:
+Agent `design-reference-research` opens `dribbble.com/shots/popular/web-design` (2026 popular), three competitor primary buttons (Stripe Checkout, Linear, Vercel Deploy) via `agent-browser`, **`refero`** (gallery via agent-browser over refero.design — MCP SKIPPED; real shipped button components from Stripe, Linear, Vercel listed there), and uses **`ui-ux-pro-max` vocabulary** to name motion styles and color semantics precisely. It extracts 4 patterns and writes `.design-review/references.md`:
 
 1. **[motion]** Micro-spring press: `scale(0.96)` + shadow collapse in 80ms `cubic-bezier(0.34, 1.56, 0.64, 1)` — Stripe.
 2. **[motion]** Brand ripple on click: a circular teal wave expands from the click point and fades in 350ms — Dribbble shot #2.
@@ -237,6 +293,23 @@ Agent `design-reference-research` opens `dribbble.com/shots/popular/web-design` 
 4. **[color]** Focus ring is white with a 2px gap (offset) regardless of button background — Vercel.
 
 **Bar for this target:** *"The button's press and load moments feel unmistakably Plexum — the teal ripple on click is the signature; hover hygiene alone is not alive."*
+
+### Step 2b — Plan (authoring · folds in `frontend-design`)
+
+Appended to `.design-review/references.md`:
+
+**Token-plan (3-hex, subordinate to `packages/design-system` tokens — those win):**
+- Brand fill: `#0f7e74` (teal-700 — DS `color-brand-primary`)
+- Brand-dark (hover): `#0a5e56` (DS `color-brand-primary-dark`)
+- Focus ring: `#ffffff` (white — universal, works over any button color variant)
+
+**Typographic roles (2+):** button label (14px / medium / slight letter-spacing for CTAs); loading text (visually hidden, SR-only via `sr-only`).
+
+**Signature element:** teal radial ripple from pointer position on click — the one motion moment that makes this unmistakably a Plexum button, not a React default.
+
+**3 AI-default looks to avoid:** (1) solid fill + white text with only hover darken (generic shadcn default); (2) outline-only variant as the primary (under-weighted); (3) border-radius so large it becomes a pill on short labels (trendy but brand-less).
+
+**UX-writing checklist:** ✓ button label is a verb ("Save", "Deploy") · ✓ loading text screen-reader-announced · ✓ no tooltip needed on disabled (action self-explains).
 
 ### Step 3a — lens: impeccable [GATE]
 
@@ -262,7 +335,7 @@ This is a **P1 vitality finding**, pre-selected.
 Additional findings (no text content on a button component, so copy rules do not apply):
 - Consistency risk: no `size` variants beyond default — consumers are likely hardcoding overrides, drifting from the design system.
 
-### Step 3c — lens: emil-design-eng [GATE — signature motion]
+### Step 3c — lens: emil-design-eng + `review-animations` gate [GATE — signature motion]
 
 Agent `design-lens-motion` **loads the `emil-design-eng` skill via the Skill tool** and passes it the target + the step-2 references.
 
@@ -273,6 +346,8 @@ Hygiene findings:
 - Active/press: add micro-spring `scale(0.97)` at 80ms (`cubic-bezier(0.34, 1.56, 0.64, 1)`) — reference #1.
 - No loading state — button goes silent during async actions.
 - No `prefers-reduced-motion` guard on the ripple.
+
+**`review-animations` motion gate** (runs here — Block/Approve against `STANDARDS.md`): teal ripple evaluated — 350ms fade, easing acceptable, but `prefers-reduced-motion` guard missing. Gate: **BLOCK** (missing reduced-motion guard). The guard must be added before the verdict can reach `alive`. Feeds verdict in step 6.
 
 ### Step 3d — lens: web-design-guidelines [GATE — accessibility]
 
@@ -310,7 +385,7 @@ P3 — Polish
 
 ### Step 5 — Informed re-pass
 
-Motion added (3c re-run) + a11y re-checked for ripple + loading (3d re-run). New finding: the loading spinner SVG uses a hardcoded `stroke="#ffffff"` — replaced with `currentColor` so it inherits label color, which in a future `variant="secondary"` would be correct automatically.
+Motion added (3c re-run) + a11y re-checked for ripple + loading (3d re-run). `prefers-reduced-motion` guard added to the ripple (collapses to instant opacity fade) — `review-animations` gate cleared (BLOCK → APPROVE). New finding: the loading spinner SVG uses a hardcoded `stroke="#ffffff"` — replaced with `currentColor` so it inherits label color, which in a future `variant="secondary"` would be correct automatically.
 
 ### Step 6 — vitality-verdict [GATE]
 
@@ -324,6 +399,8 @@ Diff against `.design-review/references.md`:
 - Disabled variant: **landed** — muted background, `cursor-not-allowed`, `aria-disabled="true"`, story added.
 
 Core Web Vitals: N/A — component, not a page. Storybook render time 110ms.
+
+Reinforced by: **taste §14 pre-flight** (mechanical binary checks — pass: label is a verb, no redundant copy); **`review-animations`** Block/Approve: **APPROVE** (reduced-motion guard applied in step 5; ripple collapses to instant opacity fade — within STANDARDS.md); **`huashu-design` Playwright verify**: SKIPPED (not installed) — Storybook story renders used instead.
 
 **Verdict written to `.design-review/verdict.json`:**
 
