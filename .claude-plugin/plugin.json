@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "design-review",
   "displayName": "Design Review — Orchestrator",
-  "version": "2.2.0",
-  "description": "Unified design orchestrator (v2.2): preflight declares every component it uses + ASKS to install + skips EXPLICITLY (scripts/preflight.mjs); routes ALL design skills to their correct command/mode; accumulates suggestions, asks user (multi-select), applies chosen via owning fix command. Vitality telos: preflight → audit-first → reference-research (Dribbble + refero + ui-ux-pro-max vocab) → plan (frontend-design) → 4 core skills ROUTED → verdict (alive/templated/flat, reinforced by review-animations + huashu Playwright) → loop. Surface routing (landing/dashboard/non-web). Agents + /design-review command + PostToolUse gate hook.",
+  "version": "2.3.0",
+  "description": "Unified design orchestrator (v2.3): token-frugal. Discover ONCE (context-pack) → judge many; lenses are READ-ONLY (no edits during diagnosis — fixes the gate-bypass bug); every agent returns TERSE (OK/KO + 1-line findings, no essays); pluggable memory (claude-mem | other | none → file artifact) for cross-run skip-rediscovery. Preflight declares+asks+installs components (scripts/preflight.mjs). Flow: preflight → audit-first → reference-research (Dribbble+refero+ui-ux-pro-max) → plan (frontend-design) → context-pack → 4 ROUTED lenses → multi-select → ONE apply pass → verdict (alive/templated/flat, +review-animations/huashu) → loop. Surface routing. Agents + /design-review + gate hook.",
   "author": {
     "name": "David García Gordo",
     "url": "https://github.com/davidgarciagordo"
