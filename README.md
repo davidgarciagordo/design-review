@@ -67,6 +67,31 @@ Or `git clone` it into `~/.claude/skills/` (skill only) — see [Install](#insta
 
 ---
 
+## 🚀 How to use
+
+```
+/design-review <target>     # a component, an app route, a Storybook story id, or an email
+```
+
+It runs the gated pipeline below and **asks you** (multi-select, recommendations pre-marked) what to
+apply — nothing changes without your pick — then renders the result live and emits a verdict
+(`alive`/`templated`/`flat`). Worked examples → [examples/](examples/README.md).
+
+```mermaid
+flowchart TD
+  P[0 · Preflight<br/>declare + ASK install + skip explicit] --> A{1 · audit-first<br/>redesigns only}
+  A --> R[/2 · reference-research [GATE]<br/>Dribbble 2026 + refero + ui-ux-pro-max/]
+  R --> PL[2b · plan<br/>tokens + signature element]
+  PL --> CP[(2c · context-pack<br/>discover ONCE)]
+  CP --> L1[3a impeccable] --> L2[3b taste<br/>anti-templated gate] --> L3[3c emil<br/>signature motion] --> L4[3d a11y AA]
+  CP -. shared, read-only .-> L2 & L3 & L4
+  L4 --> ASK{{4 · ASK — multi-select<br/>P1 + anti-templated + motion pre-marked}}
+  ASK --> FIX[5 · apply + re-pass<br/>lenses read-only; mutate only here]
+  FIX --> V{6 · vitality-verdict<br/>alive / templated / flat}
+  V -- alive --> DONE([done])
+  V -- templated / flat --> CP
+```
+
 ## What's in the box (executable, not advisory)
 
 | Piece | File | Role |
