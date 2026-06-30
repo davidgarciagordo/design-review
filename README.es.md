@@ -1,8 +1,8 @@
 [English](README.md) | **Español**
 
-# 🎨 design-review
+# 🎨 Design Review — Orchestrator
 
-[![Claude Code plugin](https://img.shields.io/badge/Claude_Code-plugin-D97757)](https://github.com/davidgarciagordo/claude-code-setup-optimizer) [![skills.sh](https://img.shields.io/badge/skills.sh-skill-111111)](https://skills.sh) ![License MIT](https://img.shields.io/badge/license-MIT-2da44e) ![Version](https://img.shields.io/badge/version-2.1.0-blue)
+[![Claude Code plugin](https://img.shields.io/badge/Claude_Code-plugin-D97757)](https://github.com/davidgarciagordo/claude-code-setup-optimizer) [![skills.sh](https://img.shields.io/badge/skills.sh-skill-111111)](https://skills.sh) ![License MIT](https://img.shields.io/badge/license-MIT-2da44e) ![Version](https://img.shields.io/badge/version-2.3.0-blue)
 
 > Un pipeline ejecutable y con gates que cura la **UI plana, sin vida y plantillada** — y termina con un veredicto explícito: **`alive` / `templated` / `flat`**.
 
@@ -22,13 +22,17 @@ design-review hace una pregunta diferente:
 - **El veredicto es explícito:** cada ejecución termina con **`alive` / `templated` / `flat`**, juzgado contra referencias reales obtenidas en vivo — no contra la memoria del modelo de "buen diseño".
 - **La vitalidad se construye, no se inspecciona** — mediante investigación de referencias y motion de firma, añadidos al diseño, no filtrados.
 
-**Tres causas raíz de "plano", y cómo el pipeline las resuelve:**
+**Siete causas raíz de "plano", y cómo v2.3 las resuelve:**
 
 | Causa raíz | Solución |
 |---|---|
 | **Telos equivocado** — un bucle de eliminación de defectos converge en "correcto plano" | Un **veredicto de vitalidad** explícito + un **bucle de vitalidad** que no se detiene hasta que el resultado es `alive` |
-| **Sin investigación de referencias** — diseñar de memoria reproduce la media de los datos de entrenamiento (una plantilla) | Un **gate de investigación de referencias** no saltable: Dribbble 2026 + 2–3 competidores, en vivo, con agent-browser. *El palanca #1 contra lo plano.* |
-| **Skills parafraseadas, no invocadas** — resumir "lo que diría impeccable" es un eco con pérdida | **Invocación real**: cada agente lente **carga el skill real** con la herramienta Skill. El pipeline solo dice qué input pasarle. |
+| **Sin investigación de referencias** — diseñar de memoria reproduce la media de los datos de entrenamiento (una plantilla) | Un **gate de investigación de referencias** no saltable: Dribbble 2026 + 2–3 competidores + **refs de productos reales vía `refero`**, en vivo, con agent-browser. *La palanca #1 contra lo plano.* |
+| **Skills parafraseadas, no invocadas** — resumir "lo que diría impeccable" es un eco con pérdida | **Invocación real y ENRUTADA**: cada agente lente **carga el skill real** enrutado a su comando/modo correcto |
+| **Componentes silenciosamente ausentes** — un skill o script faltante se asume presente y se omite | **Preflight (paso 0)**: `scripts/preflight.mjs` declara cada componente que esta ejecución necesita → PREGUNTA si instalar los faltantes → registra omisiones EXPLÍCITAMENTE |
+| **Desperdicio de tokens en el análisis multi-lente** — cada lente re-escanea el target de forma independiente | **Context-pack (paso 2c)**: descubrir UNA SOLA VEZ; cada lente juzga el mismo pack, nunca re-escanea. Palanca de tokens. |
+| **Ediciones dispersas entre pasadas de lentes** — escrituras entre lentes generan drift y conflictos | **Las lentes son READ-ONLY** (sin Edit/Write); todas las ediciones en una única pasada de apply tras el multi-select |
+| **Salida verbosa de las lentes** — paredes de texto de cada lente ahogan los hallazgos accionables | **Salida TERSE**: cada lente emite OK/KO + un hallazgo de una línea. Detalle completo a petición. |
 
 ### 🧩 Parte de una familia — misma firma, tres repos
 
@@ -60,13 +64,15 @@ También puedes `git clone` en `~/.claude/skills/` (solo el skill) — ver [Inst
 
 | Pieza | Fichero | Rol |
 |---|---|---|
+| Script · preflight | `scripts/preflight.mjs` | Declara componentes → PREGUNTA si instalar faltantes → registra omisiones EXPLÍCITAMENTE |
 | Comando | `commands/design-review.md` | `/design-review <target>` — orquesta los gates en orden |
 | Agente · audit-first | `agents/design-audit-first.md` | **[GATE]** solo rediseños: captura el estado actual + "qué conservar" |
-| Agente · reference-research | `agents/design-reference-research.md` | **[GATE]** Dribbble 2026 + competidores → 3–5 patrones → copiar+combinar+capa propia |
-| Agente · lente impeccable | `agents/design-lens-impeccable.md` | **carga** `impeccable` — estructura / auditoría |
-| Agente · lente taste | `agents/design-lens-taste.md` | **carga** `design-taste-frontend` — **gate anti-plantilla** |
-| Agente · lente motion | `agents/design-lens-motion.md` | **carga** `emil-design-eng` — **motion de firma** |
-| Agente · lente a11y | `agents/design-lens-a11y.md` | **carga** `web-design-guidelines` — accesibilidad AA |
+| Agente · reference-research | `agents/design-reference-research.md` | **[GATE]** Dribbble 2026 + competidores + **vocabulario `ui-ux-pro-max`** + **refs de productos reales vía `refero`** → 3–5 patrones → copiar+combinar+capa propia |
+| Agente · context-pack | `agents/design-context-pack.md` | Descubre el target UNA SOLA VEZ (ficheros, tokens, DS, captura) — todas las lentes comparten este pack |
+| Agente · lente impeccable | `agents/design-lens-impeccable.md` | **READ-ONLY** · **carga** `impeccable` — estructura / auditoría |
+| Agente · lente taste | `agents/design-lens-taste.md` | **READ-ONLY** · **carga** `design-taste-frontend` — **gate anti-plantilla** |
+| Agente · lente motion | `agents/design-lens-motion.md` | **READ-ONLY** · **carga** `emil-design-eng` — **motion de firma** |
+| Agente · lente a11y | `agents/design-lens-a11y.md` | **READ-ONLY** · **carga** `web-design-guidelines` — accesibilidad AA |
 | Agente · vitality verdict | `agents/design-vitality-verdict.md` | **[GATE]** check en vivo + diff vs referencias → `alive/templated/flat` |
 | Hook | `hooks/design-review-gate.js` | PostToolUse en escrituras de UI — avisa/bloquea si el veredicto no es `alive` |
 
@@ -76,19 +82,18 @@ También puedes `git clone` en `~/.claude/skills/` (solo el skill) — ver [Inst
 
 | Paso | Qué ocurre | Skill / agente |
 |------|------------|----------------|
-| **0. Encuadre** | Detectar design system, Storybook, plataforma, público/privado, navegador en vivo. Una sola tanda de preguntas al responsable. | — |
+| **0. Preflight** | `scripts/preflight.mjs`: declara cada componente que esta ejecución necesita → PREGUNTA si instalar faltantes → registra omisiones EXPLÍCITAMENTE. Enrutado por superficie: detecta landing / dashboard / non-web. Memoria enchufable: claude-mem \| otro \| ninguno→artefacto en fichero (acelerador entre ejecuciones, opcional). | `scripts/preflight.mjs` |
 | **1. audit-first** **[GATE · solo rediseños]** | Captura del estado actual; escribir "qué conservar". | `design-audit-first` |
-| **2. reference-research** **[GATE · siempre]** | Dribbble 2026 + 2–3 competidores → 3–5 patrones robables → copiar + combinar + capa propia. **La palanca #1 contra lo plano.** | `design-reference-research` + `agent-browser` |
-| **3a. estructura / auditoría** **[GATE]** | Jerarquía, IA, carga cognitiva, tokens, auditoría puntuada. | **carga** `impeccable` |
-| **3b. anti-plantilla** **[GATE]** | Anti-slop **+ un gate que FALLA la salida genérica**. Criterio de salida: "esto solo podría ser ESTE producto." | **carga** `design-taste-frontend` |
-| **3c. motion de firma** **[GATE]** | Al menos un momento de motion memorable (entrada escalonada, reveal, profundidad, deleite) — no solo higiene de hover. | **carga** `emil-design-eng` |
-| **3d. accesibilidad** **[GATE]** | Contraste AA, teclado, focus visible, roles/labels, reduced-motion. La vitalidad nunca cuesta a11y. | **carga** `web-design-guidelines` |
-| **4. Aplicar arreglos** | Una lista deduplicada P1/P2/P3; multi-select; ítems anti-plantilla + motion preseleccionados. | — |
-| **5. Re-pasada informada** | Re-ejecutar solo las lentes que tocan los arreglos elegidos. | — |
+| **2a. reference-research** **[GATE · siempre]** | Dribbble 2026 + 2–3 competidores + **vocabulario `ui-ux-pro-max`** + **refs de productos reales vía `refero`** → 3–5 patrones robables → copiar + combinar + capa propia. **La palanca #1 contra lo plano.** | `design-reference-research` + `agent-browser` |
+| **2b. plan** | Autor del plan de arreglos a partir del reference pack (`frontend-design`, integrado aquí — sin pasada de lente separada). | `frontend-design` (integrado) |
+| **2c. context-pack** | Descubrir el target UNA SOLA VEZ (ficheros, tokens DS, captura en vivo). **Cada lente juzga este pack — ninguna re-escanea.** Palanca de tokens. | `design-context-pack` |
+| **3a–3d. Cuatro lentes** **[READ-ONLY · GATE]** | Cada lente corre contra el context-pack. **Sin Edit/Write en ninguna lente.** Salida: **OK/KO + hallazgo de una línea** (terse). Detalle completo a petición. `review-animations` (gate de motion) + `huashu-design` (integridad de assets + verify Playwright) conectados junto a las cuatro lentes core; el enrutado por superficie selecciona qué lentes aplican. | **carga** `impeccable` · `design-taste-frontend` · `emil-design-eng` · `web-design-guidelines` |
+| **4. multi-select** | Una lista deduplicada P1/P2/P3 (cada ítem etiquetado con `[skill]`); ítems anti-plantilla + motion + a11y **preseleccionados**. | — |
+| **5. UNA pasada de apply** | Todos los arreglos elegidos aplicados en una única pasada. Sin ediciones incrementales entre lentes. | por skill |
 | **6. vitality-verdict** **[GATE]** | Renderizar en vivo (claro/oscuro/móvil), **diff vs las referencias**, Core Web Vitals → `alive`/`templated`/`flat` explícito. | `design-vitality-verdict` + `agent-browser` |
-| **7. Bucle de vitalidad** **[GATE]** | Si no es `alive`, iterar los pasos 3–6 (referencia más nítida, capa propia más fuerte, motion real) hasta N rondas. | — |
+| **7. Bucle de vitalidad** **[GATE]** | Si no es `alive`, iterar los pasos 2a–6 (referencia más nítida, capa propia más fuerte, motion real) hasta N rondas. | — |
 
-**Add-ons (opcionales, no son gates):** `huashu-design` (2ª lente anti-slop) · `review-animations` (crítica de motion) · `seo` (**solo targets públicos**) · `web-accessibility` (WCAG más profundo) · skill de diseño móvil (RN/Expo).
+**Add-ons opcionales (no son gates):** `seo` (**solo targets públicos**) · `web-accessibility` (WCAG más profundo) · skill de diseño móvil (RN/Expo).
 
 ---
 
@@ -141,9 +146,12 @@ Este pipeline orquesta skills de terceros — las **carga**, nunca las parafrase
 | **`design-taste-frontend`** *(core)* (a.k.a. `taste-skill`) | Anti-slop + gate anti-plantilla | https://github.com/Leonxlnx/taste-skill |
 | **`emil-design-eng`** *(core)* | Pulido + motion de firma | https://github.com/emilkowalski/skills |
 | **`web-design-guidelines`** *(core)* | Accesibilidad AA, teclado, contraste | Anthropic — Web Interface Guidelines |
+| **`ui-ux-pro-max`** *(conectado — baseline + vocab)* | Vocabulario de estilos/paletas/tipografías · guías UX · generación de arreglos | `claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
+| **`refero`** *(conectado — refs de productos reales)* | Imágenes de referencia de productos reales alimentadas al context-pack | `claude plugin install refero@refero` |
+| **`frontend-design`** *(conectado — integrado en plan)* | Autoría del plan a partir del reference pack (corre en el paso 2b, no como lente separada) | configurado por proyecto |
+| **`review-animations`** *(conectado — gate de motion)* | Gate de timing/easing/jank de animaciones conectado junto a lens-motion | https://github.com/emilkowalski/skills |
+| **`huashu-design`** *(conectado — integridad de assets + verify Playwright)* | Checks de integridad de assets + verify visual con Playwright junto a las pasadas de lentes | https://github.com/alchaincyf/huashu-design |
 | `agent-browser` | Navegador en vivo: investigación de referencias + el veredicto de vitalidad | Integrado en Claude Code / configurado por proyecto |
-| `huashu-design` *(add-on)* | 2ª lente anti-slop independiente | https://github.com/alchaincyf/huashu-design |
-| `review-animations` *(add-on)* | Crítica de timing/easing/jank de animaciones | https://github.com/emilkowalski/skills |
 | `web-accessibility` / `accessibility` *(add-on)* | Auditoría WCAG 2.2 en profundidad | https://github.com/addyosmani/web-quality-skills |
 | `seo` *(add-on, solo públicos)* | Visibilidad en buscadores | https://github.com/addyosmani/web-quality-skills |
 | skill de diseño móvil *(add-on)* | Pantallas móviles / RN | elige la tuya (p. ej. Sleek — sleek.design) |
