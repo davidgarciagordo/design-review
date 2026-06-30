@@ -13,6 +13,5 @@
   "license": "MIT",
   "keywords": ["design", "review", "vitality", "anti-templated", "audit", "accessibility", "motion", "tokens", "ui", "ux"],
   "skills": "./",
-  "commands": ["./commands/"],
-  "hooks": "./hooks/hooks.json"
+  "commands": ["./commands/"]
 }
