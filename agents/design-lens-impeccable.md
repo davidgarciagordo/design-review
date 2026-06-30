@@ -1,7 +1,7 @@
 ---
 name: design-lens-impeccable
 description: "Core lens 1/4 of design-review. LOADS the real `impeccable` skill ROUTED to its commands (`impeccable audit` + `impeccable critique`, NEVER bare) on the target with the step-2 references as context: structure, visual hierarchy, information architecture, cognitive load, tokens, scored audit. Ensures PRODUCT.md/DESIGN.md setup first (step 0) to avoid stalling on NO_PRODUCT_MD/init. Returns findings; cites file:line."
-tools: ["Skill", "Read", "Edit", "Write", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
+tools: ["Skill", "Read", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: sonnet
 ---
 

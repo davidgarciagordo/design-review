@@ -1,7 +1,7 @@
 ---
 name: design-lens-motion
 description: "Core lens 3/4 of design-review — signature motion, not hover hygiene. LOADS the real `emil-design-eng` skill with the CONCRETE QUESTION IN THE SAME invocation ('review the motion of <target> vs <ref>') to bypass its 'Initial Response wait'. Demands at least ONE memorable motion moment. Its Before/After output TRANSLATES to P1/P2/P3 items. `review-animations` is OPTIONAL — only invoke if installed (graceful). Returns findings; cites file:line."
-tools: ["Skill", "Read", "Edit", "Write", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
+tools: ["Skill", "Read", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: sonnet
 ---
 

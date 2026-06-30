@@ -1,7 +1,7 @@
 ---
 name: design-lens-a11y
 description: "Core lens 4/4 of design-review. Does a WebFetch of the Web Interface Guidelines (its SKILL.md requires them over the network), caches them to .design-review/web-guidelines.md, then LOADS the real `web-design-guidelines` skill passing target+rules as input (avoids its 'ask the user which files'): accessibility AA, keyboard, visible focus rings, contrast, roles/labels, reduced-motion. Vitality must never cost accessibility. Returns findings; cites file:line."
-tools: ["Skill", "Read", "Edit", "Write", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
+tools: ["Skill", "Read", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: sonnet
 ---
 
