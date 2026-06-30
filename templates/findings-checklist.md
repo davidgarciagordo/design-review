@@ -14,23 +14,30 @@ Copy this template after running the design-review pipeline. Fill in the finding
 result is a **failed** run.
 
 **Gates run (in order):**
-- [ ] 0 — **Bootstrap** (referenced skills detected/installed/temp-clone fallback) & frame & context
-  setup (PRODUCT.md/DESIGN.md for impeccable)
+- [ ] 0 — **Preflight** (`scripts/preflight.mjs`: declare components → ASK to install missing → install
+  chosen + reload → record skips EXPLICITLY) & **frame** & **surface routing** (landing/dashboard/non-web)
+  & context setup (PRODUCT.md/DESIGN.md for impeccable)
 - [ ] 1 — **[GATE]** `audit-first` *(redesigns only)* — `.design-review/audit-first.md`
-- [ ] 2 — **[GATE]** `reference-research` (Dribbble 2026 + competitors + `ui-ux-pro-max` vocabulary) —
+- [ ] 2 — **[GATE]** `reference-research` (Dribbble 2026 + **`refero`** real shipped products + competitors
+  + `ui-ux-pro-max` vocabulary) + **asset-integrity** (`huashu` brand-spec, if a brand is named) —
   `.design-review/references.md`
+- [ ] 2b — **Plan** (folds in `frontend-design`: 4–6 hex token-plan + signature element + "3 AI-defaults to
+  avoid" + UX-writing)
 - [ ] 3 — **[GATE]** DIAGNOSIS: CORE skills ROUTED, in order, accumulating into a single `[skill]`-tagged list:
   - [ ] 3a — `impeccable audit` + `critique` (structure / scored audit)
   - [ ] 3b — `design-taste-frontend` §11 redesign-audit + §14 (**anti-templated gate**)
-  - [ ] 3c — `emil-design-eng` review, concrete question inline (**signature motion**)
-  - [ ] 3d — WebFetch guidelines → cache → `web-design-guidelines` (a11y AA)
+  - [ ] 3c — `emil-design-eng` review, concrete question inline (**signature motion**) + `review-animations`
+    Block/Approve gate *(if present)*
+  - [ ] 3d — WebFetch guidelines → cache → `web-design-guidelines` (a11y AA · last lens)
   - [ ] 3e — `ui-ux-pro-max` UX guidelines lens (+ opt-in add-ons)
 - [ ] 4 — **ASK** — multi-select checklist (P1 + anti-templated + signature-motion PRE-MARKED)
 - [ ] 5 — **APPLY (FIX)** — routing to owning fix command per suite→phase mapping + informed re-pass
-- [ ] 6 — **[GATE]** `vitality-verdict` (alive / templated / flat) — `.design-review/verdict.json`
+- [ ] 6 — **[GATE]** `vitality-verdict` (alive / templated / flat) reinforced by `review-animations` +
+  taste §14 + `huashu` Playwright — `.design-review/verdict.json`
 - [ ] 7 — **[GATE]** Vitality loop *(until verdict is `alive`, max N rounds)*
 
-**Add-ons (opt-in):** `huashu-design` · `review-animations` *(only if installed)* · `seo` *(public only)* ·
+**Wired:** `ui-ux-pro-max` · `refero` · `frontend-design` (folded into plan) · `review-animations`.
+**Add-ons (opt-in):** `huashu-design` *(also asset-integrity + Playwright verify)* · `seo` *(public only)* ·
 `web-accessibility` · mobile-design skill.
 
 **Steps skipped:** <!-- list each skipped step and reason, e.g. "seo — private/authenticated target" -->
