@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "design-review",
   "displayName": "Design Review",
-  "version": "2.1.0",
-  "description": "Unified design orchestrator (v2.1): groups ALL design skills, routes each to its correct command/mode, accumulates suggestions, asks user (multi-select), applies chosen fixes via owning fix command. Vitality telos: bootstrap → audit-first → reference-research (+ui-ux-pro-max vocabulary) → 4 core skills REALLY ROUTED → vitality-verdict (alive/templated/flat) → loop. Agents + /design-review command + PostToolUse gate hook.",
+  "version": "2.2.0",
+  "description": "Unified design orchestrator (v2.2): preflight declares every component it uses + ASKS to install + skips EXPLICITLY (scripts/preflight.mjs); routes ALL design skills to their correct command/mode; accumulates suggestions, asks user (multi-select), applies chosen via owning fix command. Vitality telos: preflight → audit-first → reference-research (Dribbble + refero + ui-ux-pro-max vocab) → plan (frontend-design) → 4 core skills ROUTED → verdict (alive/templated/flat, reinforced by review-animations + huashu Playwright) → loop. Surface routing (landing/dashboard/non-web). Agents + /design-review command + PostToolUse gate hook.",
   "author": {
     "name": "David García Gordo",
     "url": "https://github.com/davidgarciagordo"
