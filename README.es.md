@@ -61,6 +61,31 @@ También puedes `git clone` en `~/.claude/skills/` (solo el skill) — ver [Inst
 
 ---
 
+## 🚀 Cómo se usa
+
+```
+/design-review <target>     # un componente, una ruta de la app, un id de story de Storybook, o un email
+```
+
+Corre el pipeline con gates de abajo y **te pregunta** (multi-select, recomendadas premarcadas) qué
+aplicar — nada cambia sin que lo marques — luego renderiza el resultado en vivo y emite el veredicto
+(`alive`/`templated`/`flat`). Ejemplos → [examples/](examples/README.md).
+
+```mermaid
+flowchart TD
+  P[0 · Preflight<br/>declara + PREGUNTA instalar + omite explícito] --> A{1 · audit-first<br/>solo rediseños}
+  A --> R[/2 · reference-research [GATE]<br/>Dribbble 2026 + refero + ui-ux-pro-max/]
+  R --> PL[2b · plan<br/>tokens + signature element]
+  PL --> CP[(2c · context-pack<br/>descubre UNA vez)]
+  CP --> L1[3a impeccable] --> L2[3b taste<br/>gate anti-plantilla] --> L3[3c emil<br/>motion de firma] --> L4[3d a11y AA]
+  CP -. compartido, read-only .-> L2 & L3 & L4
+  L4 --> ASK{{4 · ASK — multi-select<br/>P1 + anti-plantilla + motion premarcados}}
+  ASK --> FIX[5 · aplica + re-pass<br/>lentes read-only; solo aquí se muta]
+  FIX --> V{6 · vitality-verdict<br/>alive / templated / flat}
+  V -- alive --> DONE([listo])
+  V -- templated / flat --> CP
+```
+
 ## Qué hay en la caja (ejecutable, no solo orientativo)
 
 | Pieza | Fichero | Rol |
