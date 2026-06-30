@@ -16,14 +16,21 @@ result is a **failed** run.
 **Gates run (in order):**
 - [ ] 0 — **Preflight** (`scripts/preflight.mjs`: declare components → ASK to install missing → install
   chosen + reload → record skips EXPLICITLY) & **frame** & **surface routing** (landing/dashboard/non-web)
-  & context setup (PRODUCT.md/DESIGN.md for impeccable)
+  & context setup (PRODUCT.md/DESIGN.md for impeccable) & **memory adapter** detect (claude-mem /
+  mem-search / none → announce; degrade gracefully)
 - [ ] 1 — **[GATE]** `audit-first` *(redesigns only)* — `.design-review/audit-first.md`
 - [ ] 2 — **[GATE]** `reference-research` (Dribbble 2026 + **`refero`** real shipped products + competitors
   + `ui-ux-pro-max` vocabulary) + **asset-integrity** (`huashu` brand-spec, if a brand is named) —
   `.design-review/references.md`
 - [ ] 2b — **Plan** (folds in `frontend-design`: 4–6 hex token-plan + signature element + "3 AI-defaults to
   avoid" + UX-writing)
-- [ ] 3 — **[GATE]** DIAGNOSIS: CORE skills ROUTED, in order, accumulating into a single `[skill]`-tagged list:
+- [ ] 2c — **Context-pack** (`design-context-pack` agent: source map + file:line + tokens-in-use +
+  shared-found → `.design-review/context-pack.md`; **discover ONCE**, pass to all lenses — no lens
+  re-reads source or re-derives what an earlier lens already found)
+- [ ] 3 — **[GATE]** DIAGNOSIS: CORE skills ROUTED, in order, accumulating into a single `[skill]`-tagged list.
+  **Lenses are READ-ONLY** — no edits during diagnosis; all mutation in step 5, after multi-select. Each
+  lens receives `context-pack.md` + `references.md`; output **TERSE** (`KO` + `P# [skill] file:line —
+  problem → fix`).
   - [ ] 3a — `impeccable audit` + `critique` (structure / scored audit)
   - [ ] 3b — `design-taste-frontend` §11 redesign-audit + §14 (**anti-templated gate**)
   - [ ] 3c — `emil-design-eng` review, concrete question inline (**signature motion**) + `review-animations`
