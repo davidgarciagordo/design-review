@@ -73,7 +73,7 @@ Cada lente core es de su autor original (ver *Atribución* en el README principa
 ✓ impeccable            present (~/.claude/skills/impeccable)
 ✓ design-taste-frontend present (autoskills)
 ✓ emil-design-eng       present (autoskills)
-✓ web-design-guidelines present (Claude Code default)
+✓ web-design-guidelines present (autoskills — de terceros, Vercel)
 ✓ ui-ux-pro-max         present (plugin)
 ✓ review-animations     present (autoskills)
 ✓ frontend-design       present (marketplace)

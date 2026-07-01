@@ -4,6 +4,11 @@
 > the Skill tool (never paraphrases them) and sequences them around two new gates of its own
 > (reference-research and the vitality verdict).
 
+> **None of the 4 core skills below ship with Claude Code by default.** They are third-party skills
+> (credited to their authors in the table) that you must install separately — see
+> [Requires](../README.md#requires) — before the 4 lenses can run. Without them, each lens fails with
+> `Unknown skill` (confirmed in testing); there is no built-in fallback.
+
 **Verify every URL before installing.** Entries marked ⚠️ are best-effort.
 
 ---
@@ -19,7 +24,7 @@ each skill; no referenced skill is ever assumed "not installed".
 | 1 | `impeccable` | `design-lens-impeccable` | Structure, visual hierarchy, IA, cognitive load, tokens, scored audit. **Routed** to `impeccable audit` + `critique` (never bare) | Paul Bakaus (pbakaus) | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` |
 | 2 | `design-taste-frontend` (a.k.a. `taste-skill`) | `design-lens-taste` | Anti-slop **and anti-templated** — **routed** to §11 redesign-audit + §14 pre-flight; dials pre-set from references.md | Leonxlnx | `git clone https://github.com/Leonxlnx/taste-skill ~/.claude/skills/taste-skill` |
 | 3 | `emil-design-eng` | `design-lens-motion` | Polish **and signature motion** — concrete question **in the same invocation** (bypasses "Initial Response wait"); Before/After output → P1/P2/P3 | Emil Kowalski | `git clone https://github.com/emilkowalski/skills ~/.claude/skills/emil-skills` (use the `emil-design-eng` dir) |
-| 4 | `web-design-guidelines` | `design-lens-a11y` | Accessibility AA, keyboard, visible focus, contrast, roles/labels. **WebFetch** guidelines → cached to `.design-review/web-guidelines.md` → passed as input (avoids "which files?" prompt) | Anthropic — Web Interface Guidelines | Available in Claude Code's default skill library |
+| 4 | `web-design-guidelines` | `design-lens-a11y` | Accessibility AA, keyboard, visible focus, contrast, roles/labels. **WebFetch** guidelines → cached to `.design-review/web-guidelines.md` → passed as input (avoids "which files?" prompt) | Vercel (`vercel-labs/web-interface-guidelines`, packaged as a skill in `vercel-labs/agent-skills`) | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (alt: `curl -fsSL https://vercel.com/design/guidelines/install | bash`) |
 
 `agent-browser` is also effectively required for the two browser gates (reference-research and the vitality
 verdict). It is the browser-automation CLI — Claude Code built-in or project-configured. Without it, those
@@ -55,7 +60,7 @@ No referenced skill is ever assumed "not installed" and no skill is ever silentl
 | `impeccable` *(core)* | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` |
 | `design-taste-frontend` / `taste-skill` *(core)* | `git clone https://github.com/Leonxlnx/taste-skill ~/.claude/skills/taste-skill` |
 | `emil-design-eng` *(core)* | `git clone https://github.com/emilkowalski/skills` (use `emil-design-eng` dir) |
-| `web-design-guidelines` *(core)* | Claude Code default skill library |
+| `web-design-guidelines` *(core)* | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (third-party, Vercel — not bundled with Claude Code) |
 | `ui-ux-pro-max` *(wired intelligence)* | `claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
 | `agent-browser` | Claude Code built-in / project-configured |
 | `huashu-design` *(add-on)* | `git clone https://github.com/alchaincyf/huashu-design` |
