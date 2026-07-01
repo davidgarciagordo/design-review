@@ -4,8 +4,7 @@
   "name": "design-review",
   "description": "Design Review — pipeline de VITALIDAD de diseño (cura el 'plano y sin vida'). Agentes + comando /design-review:run + hook. Instálala suelta o desde el hub claude-code-setup-optimizer.",
   "owner": {
-    "name": "David García Gordo",
-    "url": "https://github.com/davidgarciagordo"
+    "name": "David García Gordo"
   },
   "plugins": [
     {
