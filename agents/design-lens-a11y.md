@@ -15,8 +15,9 @@ Your job is the floor that the other three lenses must stay above.
 `web-design-guidelines` expects the **Web Interface Guidelines** fetched from the network and, if they
 are not present, asks the user to provide files. **Get ahead of this:**
 
-1. **WebFetch** the Web Interface Guidelines (Anthropic Web Interface Guidelines / interfaces.rauno.me
-   as the canonical source). If the skill's SKILL.md names a canonical URL, use that one.
+1. **WebFetch** the Web Interface Guidelines (Vercel's `vercel-labs/web-interface-guidelines` is the
+   canonical source — `web-design-guidelines` is a third-party skill packaging it, not a Claude Code
+   built-in). If the skill's SKILL.md names a canonical URL, use that one.
 2. **Cache them to `.design-review/web-guidelines.md`** (once per pipeline run; reuse if the file
    already exists).
 3. Now you can pass the rules as input and the skill will not pause to ask "which files should I review."
