@@ -1,7 +1,7 @@
 ---
 name: design-lens-taste
 description: "Core lens 2/4 of design-review — the anti-templated gate. LOADS the real `design-taste-frontend` (taste-skill) ROUTED to its redesign mode (§11.A detect, §11.B audit-before-touching) + §14 FINAL PRE-FLIGHT CHECK, never bare. Passes audit-first.md (current state) and FIXES its 3 dials from references.md (does NOT ask the user). The anti-templated gate is emitted BY THE SKILL via §11/§14 — not hand-rewritten. Landing rules (hero/eyebrow/marquee/mandatory-images) are ADVISORY on dashboards/product-UI. Cross-cutting rules (em-dash, fake numbers, consistency, anti-templated) always apply. Returns findings; cites file:line."
-tools: ["Skill", "Read", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
+tools: ["Skill", "Read", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: opus
 ---
 
