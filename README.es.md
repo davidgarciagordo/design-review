@@ -15,7 +15,7 @@ Solo este plugin:
 /plugin install design-review
 ```
 
-O toda la suite (este + token-economy, forge-methodology, working-methods, automations) desde un único catálogo:
+O toda la suite (este + token-economy, forge-methodology, working-methods, automations) desde [un único catálogo](https://github.com/davidgarciagordo/claude-plugins):
 
 ```bash
 /plugin marketplace add davidgarciagordo/claude-plugins
