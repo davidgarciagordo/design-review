@@ -1,6 +1,6 @@
 ---
 name: design-review
-description: "UNIFIED ORCHESTRATOR for design skills — groups ALL design skills and runs them in recommended order, ROUTING each to its correct command/mode, ACCUMULATES all suggestions into one prioritized list, ASKS the user (multi-select, P1 pre-marked) what to apply, and APPLIES the chosen ones by routing to the owning fix command. On top: vitality telos — audit-first (redesigns) → reference-research GATE (Dribbble 2026 + competitors + ui-ux-pro-max vocabulary) → 4 CORE skills REALLY invoked and ROUTED (impeccable→design-taste-frontend→emil-design-eng→web-design-guidelines) → explicit vitality-verdict (alive/templated/flat) → loop. Bootstrap: detects and INSTALLS referenced skills (never assumes 'not installed'). Trigger: 'improve design', 'make this alive / less flat', 'design review', '/design-review <target>'."
+description: "UNIFIED ORCHESTRATOR for design skills — groups ALL design skills and runs them in recommended order, ROUTING each to its correct command/mode, ACCUMULATES all suggestions into one prioritized list, ASKS the user (multi-select, P1 pre-marked) what to apply, and APPLIES the chosen ones by routing to the owning fix command. On top: vitality telos — audit-first (redesigns) → reference-research GATE (Dribbble 2026 + competitors + ui-ux-pro-max vocabulary) → 4 CORE skills REALLY invoked and ROUTED (impeccable→design-taste-frontend→emil-design-eng→web-design-guidelines) → explicit vitality-verdict (alive/templated/flat) → loop. Bootstrap: detects and INSTALLS referenced skills (never assumes 'not installed'). Trigger: 'improve design', 'make this alive / less flat', 'design review'; explicit command: '/design-review:run <target>'."
 ---
 
 # design-review — UNIFIED ORCHESTRATOR (v2.2, 2026-06-30)
@@ -73,11 +73,13 @@ If you only have time for one idea: **a flat design is a bug, even when nothing 
 
 ## How the pipeline is built (executable, not advisory)
 
-This is a set of **agents + a `/design-review` command + a hook**:
+This is a set of **agents + a `/design-review:run` command + a hook**. This skill (`design-review:design-review`)
+auto-triggers by description/context (methodology + telos); `/design-review:run <target>` is the explicit,
+step-by-step entrypoint — they share the same pipeline, invoked two different ways:
 
 | Piece | File | Role |
 |---|---|---|
-| Orchestrator command | `commands/design-review.md` | `/design-review <target>` — runs the unified flow IN ORDER |
+| Orchestrator command | `commands/run.md` | `/design-review:run <target>` — runs the unified flow IN ORDER |
 | Audit-first gate | `agents/design-audit-first.md` | Redesigns only: screenshot current + "what to keep" |
 | **Reference-research gate** | `agents/design-reference-research.md` | **[GATE]** Dribbble 2026 + competitors + `ui-ux-pro-max` vocabulary; 3–5 patterns; copy+combine+house |
 | **Context-pack** | `agents/design-context-pack.md` | **discover ONCE** — source map + file:line + shared-found; lenses judge this, not re-scan (token lever) |

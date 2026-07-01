@@ -6,7 +6,7 @@
 
 > Un pipeline ejecutable y con gates que cura la **UI plana, sin vida y plantillada** — y termina con un veredicto explícito: **`alive` / `templated` / `flat`**.
 
-**design-review** convierte un target visual — un componente, pantalla, página, email o dashboard — de *correcto* a *vivo*. No es un checklist que se lee; es un conjunto de **agentes + un comando `/design-review` + un hook** que ejecutan un pipeline imperativo: estudian referencias reales de 2026, invocan las skills de diseño correctas en orden y se niegan a dar el trabajo por terminado mientras el resultado siga pareciendo una plantilla.
+**design-review** convierte un target visual — un componente, pantalla, página, email o dashboard — de *correcto* a *vivo*. No es un checklist que se lee; es un conjunto de **agentes + un comando `/design-review:run` + un hook** que ejecutan un pipeline imperativo: estudian referencias reales de 2026, invocan las skills de diseño correctas en orden y se niegan a dar el trabajo por terminado mientras el resultado siga pareciendo una plantilla.
 
 Es compañero de [Forge Methodology](https://github.com/davidgarciagordo/forge-methodology): **Forge estructura qué construir; design-review hace que cómo se ve cobre vida**.
 
@@ -49,7 +49,7 @@ design-review hace una pregunta diferente:
 # 🟢 Como skill (Claude Code + 20+ agentes vía skills.sh)
 npx skills add davidgarciagordo/design-review
 
-# 🔌 Como plugin standalone de Claude Code (agentes + comando /design-review + hook gate)
+# 🔌 Como plugin standalone de Claude Code (agentes + comando /design-review:run + hook gate)
 /plugin marketplace add davidgarciagordo/design-review
 /plugin install design-review@design-review
 
@@ -64,8 +64,12 @@ También puedes `git clone` en `~/.claude/skills/` (solo el skill) — ver [Inst
 ## 🚀 Cómo se usa
 
 ```
-/design-review <target>     # un componente, una ruta de la app, un id de story de Storybook, o un email
+/design-review:run <target>     # comando explícito — un componente, una ruta de la app, un id de story de Storybook, o un email
 ```
+
+El pipeline también se auto-dispara como skill `design-review:design-review` por contexto/descripción (p.
+ej. "mejora este diseño", "hazlo vivo") — `/design-review:run <target>` es el entrypoint explícito, con
+argumento, del mismo pipeline.
 
 Corre el pipeline con gates de abajo y **te pregunta** (multi-select, recomendadas premarcadas) qué
 aplicar — nada cambia sin que lo marques — luego renderiza el resultado en vivo y emite el veredicto
@@ -91,7 +95,8 @@ flowchart TD
 | Pieza | Fichero | Rol |
 |---|---|---|
 | Script · preflight | `${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs` | Declara componentes → PREGUNTA si instalar faltantes → registra omisiones EXPLÍCITAMENTE |
-| Comando | `commands/design-review.md` | `/design-review <target>` — orquesta los gates en orden |
+| Skill | `SKILL.md` | `design-review:design-review` — se auto-dispara por descripción/contexto; la metodología + telos completos |
+| Comando | `commands/run.md` | `/design-review:run <target>` — entrypoint explícito, orquesta los gates en orden |
 | Agente · audit-first | `agents/design-audit-first.md` | **[GATE]** solo rediseños: captura el estado actual + "qué conservar" |
 | Agente · reference-research | `agents/design-reference-research.md` | **[GATE]** Dribbble 2026 + competidores + **vocabulario `ui-ux-pro-max`** + **refs de productos reales vía `refero`** → 3–5 patrones → copiar+combinar+capa propia |
 | Agente · context-pack | `agents/design-context-pack.md` | Descubre el target UNA SOLA VEZ (ficheros, tokens, DS, captura) — todas las lentes comparten este pack |
@@ -202,13 +207,13 @@ git clone https://github.com/davidgarciagordo/design-review ~/.claude/skills/des
 improve design
 make this alive / less flat
 design review
-/design-review <target>
+/design-review:run <target>
 ```
 
 ### Prompt estructurado
 
 ```
-/design-review apps/web/app/settings/page.tsx
+/design-review:run apps/web/app/settings/page.tsx
 
 Target: página de ajustes (autenticada — privada; add-on SEO desactivado)
 Stack: Next.js App Router, Tailwind, tokens del design system
@@ -217,7 +222,7 @@ Navegador en vivo: disponible (dev server en puerto 3000)
 
 ### El hook de aplicación
 
-Cuando una escritura/edición toca un fichero de UI, el hook PostToolUse comprueba si hay un veredicto `alive` en `.design-review/verdict.json`. Modos mediante `DESIGN_REVIEW_GATE`: `warn` (por defecto, orientativo), `block` (exit 2 — el agente debe ejecutar `/design-review` hasta `alive`), `off` (desactivado).
+Cuando una escritura/edición toca un fichero de UI, el hook PostToolUse comprueba si hay un veredicto `alive` en `.design-review/verdict.json`. Modos mediante `DESIGN_REVIEW_GATE`: `warn` (por defecto, orientativo), `block` (exit 2 — el agente debe ejecutar `/design-review:run` hasta `alive`), `off` (desactivado).
 
 ### Sin Claude Code
 

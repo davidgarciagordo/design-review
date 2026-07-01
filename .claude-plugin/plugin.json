@@ -3,7 +3,7 @@
   "name": "design-review",
   "displayName": "Design Review — Orchestrator",
   "version": "2.3.0",
-  "description": "Unified design orchestrator (v2.3): token-frugal. Discover ONCE (context-pack) → judge many; lenses are READ-ONLY (no edits during diagnosis — fixes the gate-bypass bug); every agent returns TERSE (OK/KO + 1-line findings, no essays); pluggable memory (claude-mem | other | none → file artifact) for cross-run skip-rediscovery. Preflight declares+asks+installs components (scripts/preflight.mjs). Flow: preflight → audit-first → reference-research (Dribbble+refero+ui-ux-pro-max) → plan (frontend-design) → context-pack → 4 ROUTED lenses → multi-select → ONE apply pass → verdict (alive/templated/flat, +review-animations/huashu) → loop. Surface routing. Agents + /design-review + gate hook.",
+  "description": "Unified design orchestrator (v2.3): token-frugal. Discover ONCE (context-pack) → judge many; lenses are READ-ONLY (no edits during diagnosis — fixes the gate-bypass bug); every agent returns TERSE (OK/KO + 1-line findings, no essays); pluggable memory (claude-mem | other | none → file artifact) for cross-run skip-rediscovery. Preflight declares+asks+installs components (scripts/preflight.mjs). Flow: preflight → audit-first → reference-research (Dribbble+refero+ui-ux-pro-max) → plan (frontend-design) → context-pack → 4 ROUTED lenses → multi-select → ONE apply pass → verdict (alive/templated/flat, +review-animations/huashu) → loop. Surface routing. Agents + /design-review:run + gate hook.",
   "author": {
     "name": "David García Gordo",
     "url": "https://github.com/davidgarciagordo"

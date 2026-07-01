@@ -10,7 +10,7 @@
  * Mode via env DESIGN_REVIEW_GATE:
  *   - "off"   → silent (disabled)
  *   - "warn"  → advisory: surfaces a reminder to the agent (non-blocking)   [default]
- *   - "block" → blocks (exit 2): the agent must run /design-review to verdict "alive"
+ *   - "block" → blocks (exit 2): the agent must run /design-review:run to verdict "alive"
  *
  * Reads .design-review/verdict.json (written by the design-vitality-verdict agent). A verdict of
  * "alive" newer than the edited file → pass. Anything else → warn/block.
@@ -102,7 +102,7 @@ function main() {
     `[design-review-gate] UI file changed: ${file}\n` +
     `${state}\n` +
     `Telos: a front-end change isn't done when it's merely correct — it must be ALIVE and 2026, ` +
-    `not flat/templated. Run "/design-review ${file}" and iterate until the verdict is "alive" ` +
+    `not flat/templated. Run "/design-review:run ${file}" and iterate until the verdict is "alive" ` +
     `(reference-research + the 4 core skills + vitality loop). Override per-edit with ` +
     `DESIGN_REVIEW_GATE=off if this isn't a design-bearing change.`;
 
