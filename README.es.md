@@ -6,6 +6,22 @@ Plugin de Claude Code. Un pipeline con gates que cura la **UI plana y plantillad
 
 Compañero de [forge-methodology](https://github.com/davidgarciagordo/forge-methodology): Forge estructura *qué construir*; design-review hace que *cómo se ve* cobre vida.
 
+## Requiere
+
+Este plugin **orquesta 4 skills de terceros — no las incluye**. Ninguna viene de fábrica con Claude Code.
+Instálalas las 4 antes de correr `/design-review:run`, o cada una de las 4 lentes core fallará con
+`Unknown skill` (confirmado en pruebas reales — no hay degradado silencioso para una skill core ausente):
+
+| Skill | Autor | Instalación |
+|---|---|---|
+| `impeccable` | Paul Bakaus ([pbakaus](https://github.com/pbakaus)) | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` |
+| `design-taste-frontend` (`taste-skill`) | [Leonxlnx](https://github.com/Leonxlnx) | `npx -y skills@latest add Leonxlnx/taste-skill --skill design-taste-frontend` |
+| `emil-design-eng` | Emil Kowalski ([emilkowalski](https://github.com/emilkowalski)) | `npx -y skills@latest add emilkowalski/skills --skill emil-design-eng` |
+| `web-design-guidelines` | Vercel (`vercel-labs/web-interface-guidelines`) | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (alt: `curl -fsSL https://vercel.com/design/guidelines/install | bash`) |
+
+Detalle completo (add-ons, inteligencia conectada, mecanismo de bootstrap): [references/attribution.md](references/attribution.md).
+`node scripts/preflight.mjs` comprueba qué hay presente en tu entorno.
+
 ## Instalación
 
 Solo este plugin:
@@ -59,7 +75,7 @@ Navegador en vivo: disponible (dev server en puerto 3000)
 
 ## Atribución
 
-Orquesta skills de terceros — las carga, nunca las parafrasea. Core (obligatorios): [`impeccable`](https://github.com/pbakaus/impeccable), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill), [`emil-design-eng`](https://github.com/emilkowalski/skills), `web-design-guidelines` (Anthropic). Add-ons conectados: `ui-ux-pro-max`, `refero`, `frontend-design`, `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Detalle completo: [references/attribution.md](references/attribution.md).
+Orquesta skills de terceros — las carga, nunca las parafrasea. Core (obligatorios, de terceros — ver [Requiere](#requiere)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). Add-ons conectados: `ui-ux-pro-max`, `refero`, `frontend-design`, `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Detalle completo: [references/attribution.md](references/attribution.md).
 
 Alternativa: clónalo en `~/.claude/skills/design-review` para cargarlo como plugin local sin marketplace.
 
