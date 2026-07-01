@@ -13,13 +13,13 @@ Estos son ejemplos realistas, no sintéticos. Cada uno muestra el target, qué p
 **Corto** — deja que el pipeline detecte capacidades y se ejecute:
 
 ```
-/design-review apps/web/app/settings/page.tsx
+/design-review:run apps/web/app/settings/page.tsx
 ```
 
 **Estructurado** — proporciona contexto para evitar preguntas de detección:
 
 ```
-/design-review apps/web/app/settings/page.tsx
+/design-review:run apps/web/app/settings/page.tsx
 
 Target: página de ajustes de cuenta (autenticada — privada)
 Stack: Next.js App Router, Tailwind CSS, tokens de @acme/design-system
@@ -33,7 +33,7 @@ Ambas formas funcionan. La forma estructurada le da al pipeline todo lo que nece
 
 ## Un prompt para todas, o una lente core por separado
 
-`/design-review` es el **un prompt para todas** — ejecuta cada lente aplicable en orden, fusiona los hallazgos en un solo checklist y termina con un veredicto de vitalidad. Cada una de las 4 lentes core es independiente y puede invocarse sola cuando solo quieres esa lente:
+`/design-review:run` (o el skill auto-disparado `design-review:design-review`) es el **un prompt para todas** — ejecuta cada lente aplicable en orden, fusiona los hallazgos en un solo checklist y termina con un veredicto de vitalidad. Cada una de las 4 lentes core es independiente y puede invocarse sola cuando solo quieres esa lente:
 
 | Si solo quieres… | Invoca por separado |
 |---|---|
@@ -52,7 +52,7 @@ Ambas formas funcionan. La forma estructurada le da al pipeline todo lo que nece
 Ejecuta impeccable en apps/web/app/settings/page.tsx — solo auditoría puntuada, sin más pasos.
 
 # todo, orquestado, un solo checklist, un veredicto de vitalidad
-/design-review apps/web/app/settings/page.tsx
+/design-review:run apps/web/app/settings/page.tsx
 ```
 
 Cada lente core es de su autor original (ver *Atribución* en el README principal). El pipeline solo las secuencia — no las parafrasea. ¿Falta alguna? El paso 0 ofrece instalarla.

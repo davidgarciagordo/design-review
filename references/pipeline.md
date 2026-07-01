@@ -4,7 +4,7 @@
 > skill* — it never paraphrases a skill's content. Skills are reasoning an agent **loads** via the Skill
 > tool; restating them in bullets is the bug this rewrite fixes.
 
-This document expands the imperative pipeline in `SKILL.md` and the `/design-review` command. Use it when
+This document expands the imperative pipeline in `SKILL.md` and the `/design-review:run` command. Use it when
 running the pipeline manually or adapting it to a new project.
 
 ---

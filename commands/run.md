@@ -1,9 +1,9 @@
 ---
-description: "Run the design-VITALITY pipeline on a target. Gated, imperative: audit-first → reference-research → 4 core skills invoked in order → apply fixes → vitality verdict (alive/templated/flat) → loop. Cures flat, templated UI. Usage: /design-review <target>"
+description: "Run the design-VITALITY pipeline on a target. Gated, imperative: audit-first → reference-research → 4 core skills invoked in order → apply fixes → vitality verdict (alive/templated/flat) → loop. Cures flat, templated UI. Usage: /design-review:run <target>"
 argument-hint: "<target — file path, route, component, story, or email>"
 ---
 
-# /design-review — orchestrate the design-vitality pipeline
+# /design-review:run — orchestrate the design-vitality pipeline
 
 **Target:** `$ARGUMENTS` (a file path, app route, component, Storybook story, or email).
 

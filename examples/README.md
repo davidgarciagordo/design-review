@@ -13,13 +13,13 @@ These are realistic examples — not synthetic. Each shows the target, which ste
 **Short** — let the pipeline detect capabilities and run:
 
 ```
-/design-review apps/web/app/settings/page.tsx
+/design-review:run apps/web/app/settings/page.tsx
 ```
 
 **Structured** — provide context upfront to skip detection questions:
 
 ```
-/design-review apps/web/app/settings/page.tsx
+/design-review:run apps/web/app/settings/page.tsx
 
 Target: account settings page (authenticated — private)
 Stack: Next.js App Router, Tailwind CSS, @acme/design-system tokens
@@ -33,7 +33,7 @@ Both work. The structured form gives the pipeline everything it needs to skip de
 
 ## One prompt for all, or one core lens standalone
 
-`/design-review` is the **one prompt for all** — it runs every applicable lens in order, merges findings into a single checklist, and ends with a vitality verdict. Each of the 4 core lenses is independent and can be invoked on its own when you only want that lens:
+`/design-review:run` (or the auto-triggered `design-review:design-review` skill) is the **one prompt for all** — it runs every applicable lens in order, merges findings into a single checklist, and ends with a vitality verdict. Each of the 4 core lenses is independent and can be invoked on its own when you only want that lens:
 
 | Want only… | Invoke standalone |
 |---|---|
@@ -52,7 +52,7 @@ Both work. The structured form gives the pipeline everything it needs to skip de
 Run impeccable on apps/web/app/settings/page.tsx — scored audit only, no other steps.
 
 # everything, orchestrated, one checklist, one vitality verdict
-/design-review apps/web/app/settings/page.tsx
+/design-review:run apps/web/app/settings/page.tsx
 ```
 
 Each core lens is by its original author (see *Attribution* in the main README). The pipeline only sequences them — it does not paraphrase them. Missing one? Step 0 offers to install it.

@@ -7,7 +7,7 @@
 > An executable, gated pipeline that cures **flat, lifeless, templated UI** — and ends with an explicit verdict: **alive / templated / flat**.
 
 **design-review** turns a visual target — a component, screen, page, email, or dashboard — from *correct*
-into *alive*. It is not a checklist you read; it is a set of **agents + a `/design-review` command + a
+into *alive*. It is not a checklist you read; it is a set of **agents + a `/design-review:run` command + a
 hook** that run an imperative pipeline: study real 2026 references, invoke the right design skills in
 order, and refuse to call the result done while it still looks like a template.
 
@@ -55,7 +55,7 @@ design-review asks a different question:
 # 🟢 As a skill (Claude Code + 20+ agents via skills.sh)
 npx skills add davidgarciagordo/design-review
 
-# 🔌 As a standalone Claude Code plugin (agents + /design-review command + gate hook)
+# 🔌 As a standalone Claude Code plugin (agents + /design-review:run command + gate hook)
 /plugin marketplace add davidgarciagordo/design-review
 /plugin install design-review@design-review
 
@@ -70,8 +70,12 @@ Or `git clone` it into `~/.claude/skills/` (skill only) — see [Install](#insta
 ## 🚀 How to use
 
 ```
-/design-review <target>     # a component, an app route, a Storybook story id, or an email
+/design-review:run <target>     # explicit command — a component, an app route, a Storybook story id, or an email
 ```
+
+The pipeline also auto-triggers as the `design-review:design-review` skill from context/description (e.g.
+"improve this design", "make this alive") — `/design-review:run <target>` is the explicit, argument-taking
+entrypoint for the same pipeline.
 
 It runs the gated pipeline below and **asks you** (multi-select, recommendations pre-marked) what to
 apply — nothing changes without your pick — then renders the result live and emits a verdict
@@ -97,7 +101,8 @@ flowchart TD
 | Piece | File | Role |
 |---|---|---|
 | Script · preflight | `${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs` | Declares components → ASKs to install missing → records skips EXPLICITLY |
-| Command | `commands/design-review.md` | `/design-review <target>` — runs the unified flow in order |
+| Skill | `SKILL.md` | `design-review:design-review` — auto-triggers by description/context; the full methodology + telos |
+| Command | `commands/run.md` | `/design-review:run <target>` — explicit entrypoint, runs the unified flow in order |
 | Agent · audit-first | `agents/design-audit-first.md` | **[GATE]** redesigns only: screenshot current + "what to keep" |
 | Agent · reference-research | `agents/design-reference-research.md` | **[GATE]** Dribbble 2026 + competitors + **`ui-ux-pro-max` vocabulary** + **`refero` real-product refs** → 3–5 patterns → copy+combine+house |
 | Agent · context-pack | `agents/design-context-pack.md` | Discover target ONCE (files, tokens, DS, screenshot) — all lenses share this pack |
@@ -212,13 +217,13 @@ git clone https://github.com/davidgarciagordo/design-review ~/.claude/skills/des
 improve design
 make this alive / less flat
 design review
-/design-review <target>
+/design-review:run <target>
 ```
 
 ### Structured prompt
 
 ```
-/design-review apps/web/app/settings/page.tsx
+/design-review:run apps/web/app/settings/page.tsx
 
 Target: settings page (authenticated — private; SEO add-on off)
 Stack: Next.js App Router, Tailwind, design-system tokens
@@ -229,7 +234,7 @@ Live browser: available (dev server on port 3000)
 
 When a write/edit touches a UI file, the PostToolUse hook checks for an `alive` verdict in
 `.design-review/verdict.json`. Modes via `DESIGN_REVIEW_GATE`: `warn` (default, advisory), `block` (exit 2
-— the agent must run `/design-review` to `alive`), `off` (disabled).
+— the agent must run `/design-review:run` to `alive`), `off` (disabled).
 
 ### Without Claude Code
 
