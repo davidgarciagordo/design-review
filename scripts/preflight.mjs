@@ -69,8 +69,8 @@ export const MANIFEST = [
     phase: '3d diagnosis (last lens — net over motion added by emil)',
     kind: 'skill',
     detect: ['~/.claude/skills/web-design-guidelines/SKILL.md', '.claude/skills/web-design-guidelines/SKILL.md'],
-    install: 'Claude Code default skill library (or git clone the Vercel web-interface-guidelines repo)',
-    notes: 'Fetches the live Vercel rules each run — needs network; cache as fallback.',
+    install: 'npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines',
+    notes: 'Third-party (Vercel, vercel-labs/web-interface-guidelines) — NOT bundled with Claude Code. Fetches the live Vercel rules each run — needs network; cache as fallback.',
   },
   {
     id: 'ui-ux-pro-max',
@@ -78,6 +78,7 @@ export const MANIFEST = [
     role: 'design-intelligence DB: 84 styles / 161 palettes / font-pairings / 99 UX rules / charts',
     phase: '3a-pre baseline + 2 reference vocabulary + 3e UX lens + 5 generation',
     kind: 'plugin',
+    pluginKey: 'ui-ux-pro-max@ui-ux-pro-max-skill',
     detect: [
       '~/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/*/.claude/skills/ui-ux-pro-max/SKILL.md',
       '~/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/SKILL.md',
@@ -187,29 +188,102 @@ function isPresent(c) {
   return (c.detect || []).some(globExists);
 }
 
-const result = MANIFEST.map((c) => ({
-  id: c.id,
-  tier: c.tier,
-  kind: c.kind,
-  role: c.role,
-  phase: c.phase,
-  present: isPresent(c),
-  install: c.install,
-  notes: c.notes || '',
-}));
+/**
+ * Session-enablement check — LIMITED SCOPE, see the printed caveat below.
+ *
+ * "On disk" and "enabled this session" are different things: a plugin can be
+ * present in ~/.claude/plugins and still be disabled via `enabledPlugins` in a
+ * settings file (confirmed real case: ui-ux-pro-max on disk with
+ * `enabledPlugins: {}` → every invocation threw `Unknown skill`, while a
+ * presence-only check reported it as "✓ present"). This only resolves that for
+ * `kind: 'plugin'` MANIFEST entries that declare a `pluginKey`
+ * (`"name@marketplace"`, the key format `enabledPlugins` uses) — see
+ * docs.claude.com/en/docs/claude-code/plugins-reference. Skills installed as
+ * loose directories under `~/.claude/skills/<name>` (the 4 core skills this
+ * pipeline routes to) have no separate per-skill enable flag, so for those
+ * "present" is the only signal this script can give — see the printed note.
+ */
+const SETTINGS_SCOPES = [
+  // Highest precedence first: managed cannot be overridden by anything below it;
+  // after that the documented order is local > project > user.
+  { scope: 'managed', path: '/Library/Application Support/ClaudeCode/managed-settings.json' }, // macOS
+  { scope: 'managed', path: '/etc/claude-code/managed-settings.json' }, // Linux/WSL
+  { scope: 'local', path: path.join(CWD, '.claude', 'settings.local.json') },
+  { scope: 'project', path: path.join(CWD, '.claude', 'settings.json') },
+  { scope: 'user', path: path.join(HOME, '.claude', 'settings.json') },
+];
+
+function readJSON(p) {
+  try {
+    return JSON.parse(fs.readFileSync(p, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+/** Returns { enabled: true|false|undefined, source: string|null }. */
+function pluginEnabledState(pluginKey) {
+  for (const { scope, path: p } of SETTINGS_SCOPES) {
+    const settings = readJSON(p);
+    const value = settings?.enabledPlugins?.[pluginKey];
+    if (typeof value === 'boolean') return { enabled: value, source: scope };
+  }
+  return { enabled: undefined, source: null }; // no explicit setting at any checked scope
+}
+
+function statusOf(c, present) {
+  if (!present) return { symbol: '✗', label: 'not found' };
+  if (c.kind === 'plugin' && c.pluginKey) {
+    const { enabled, source } = pluginEnabledState(c.pluginKey);
+    if (enabled === false) return { symbol: '⚠', label: `present but DISABLED (enabledPlugins:${source})` };
+    if (enabled === true) return { symbol: '✓', label: `present and enabled (enabledPlugins:${source})` };
+    return { symbol: '✓', label: 'present (no explicit enabledPlugins entry found — falls back to plugin default)' };
+  }
+  return { symbol: '✓', label: 'present (enablement not checked — see note below)' };
+}
+
+const result = MANIFEST.map((c) => {
+  const present = isPresent(c);
+  return {
+    id: c.id,
+    tier: c.tier,
+    kind: c.kind,
+    role: c.role,
+    phase: c.phase,
+    present,
+    status: statusOf(c, present),
+    install: c.install,
+    notes: c.notes || '',
+  };
+});
 
 const present = result.filter((r) => r.present);
 const missing = result.filter((r) => !r.present);
+const disabled = present.filter((r) => r.status.symbol === '⚠');
+
+const ENABLEMENT_NOTE =
+  'Note: enablement is only verified for plugin-kind components with a known `enabledPlugins` key ' +
+  '(currently: ui-ux-pro-max), checked against settings.local.json / settings.json (project) and ' +
+  '~/.claude/settings.json (user), plus the two common managed-settings.json OS paths — not every ' +
+  'possible scope or override mechanism. Loose skills under ~/.claude/skills/<name> (impeccable, ' +
+  'taste-skill, emil-design-eng, web-design-guidelines) have no separate per-skill enable flag, so ' +
+  '"present" is the best signal this script can give for them. If a lens still throws `Unknown skill` ' +
+  "despite a ✓ here, run `/plugin list` to confirm it's actually enabled this session.";
 
 const args = process.argv.slice(2);
 if (args.includes('--json')) {
-  process.stdout.write(JSON.stringify({ present, missing }, null, 2) + '\n');
+  process.stdout.write(JSON.stringify({ present, missing, disabled, note: ENABLEMENT_NOTE }, null, 2) + '\n');
 } else {
-  const line = (r) => `  ${r.present ? '✓' : '✗'} [${r.tier}] ${r.id} — ${r.role}`;
+  const line = (r) => `  ${r.status.symbol} [${r.tier}] ${r.id} — ${r.role} (${r.status.label})`;
   process.stdout.write('design-review preflight — components it orchestrates\n\n');
   process.stdout.write('PRESENT:\n' + present.map(line).join('\n') + '\n\n');
   process.stdout.write('MISSING (ask user → install or skip EXPLICITLY):\n');
   process.stdout.write(missing.map((r) => `${line(r)}\n      install: ${r.install}`).join('\n') + '\n');
+  if (disabled.length) {
+    process.stdout.write('\n⚠ DISABLED THIS SESSION (on disk but will still throw `Unknown skill`):\n');
+    process.stdout.write(disabled.map((r) => `  ⚠ ${r.id} — enable with: claude plugin enable ${r.id}`).join('\n') + '\n');
+  }
+  process.stdout.write('\n' + ENABLEMENT_NOTE + '\n');
 }
 
 if (args.includes('--write')) {
@@ -222,10 +296,13 @@ if (args.includes('--write')) {
     "> NOT auto-installed: the orchestrator asks the user, and records skips here EXPLICITLY.",
     '',
     '## Present',
-    ...present.map((r) => `- ✓ **${r.id}** [${r.tier}] — ${r.role} _(phase: ${r.phase})_`),
+    ...present.map((r) => `- ${r.status.symbol} **${r.id}** [${r.tier}] — ${r.role} _(phase: ${r.phase})_ — ${r.status.label}`),
     '',
     '## Missing — decide per item (install / skip)',
     ...missing.map((r) => `- ✗ **${r.id}** [${r.tier}] — ${r.role}\n  - install: \`${r.install}\`\n  - if skipped: ${r.notes || 'this lens/phase is degraded; announce it.'}`),
+    '',
+    '## Note on enablement checking',
+    ENABLEMENT_NOTE,
     '',
   ].join('\n');
   fs.writeFileSync(path.join(dir, 'preflight.md'), md);
