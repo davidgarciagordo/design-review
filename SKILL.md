@@ -17,6 +17,24 @@ instantiations reference this file and override where project identity differs.
 
 ---
 
+## Requires (read before using)
+
+This skill **orchestrates 4 third-party skills — none of them ship with Claude Code by default**. Install
+all 4 first, or each of the 4 core lenses fails with `Unknown skill` (confirmed in testing — no silent
+degrade for a missing core skill):
+
+| Skill | Author | Install |
+|---|---|---|
+| `impeccable` | Paul Bakaus (pbakaus) | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` |
+| `design-taste-frontend` (`taste-skill`) | Leonxlnx | `npx -y skills@latest add Leonxlnx/taste-skill --skill design-taste-frontend` |
+| `emil-design-eng` | Emil Kowalski | `npx -y skills@latest add emilkowalski/skills --skill emil-design-eng` |
+| `web-design-guidelines` | Vercel (`vercel-labs/web-interface-guidelines`) | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (alt: `curl -fsSL https://vercel.com/design/guidelines/install \| bash`) |
+
+`node scripts/preflight.mjs` reports what's present in your environment; full attribution and add-ons in
+[references/attribution.md](references/attribution.md).
+
+---
+
 ## The grace of this skill (v2.1 — read this first)
 
 design-review **groups ALL design skills and orchestrates them in a UNIFIED flow**: runs each in recommended
@@ -118,7 +136,7 @@ Manifest summary (`tier`: **core** gate · **wired** integrated · **addon** opt
 | `impeccable` | core | structure / audit / scored critique | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` |
 | `taste-skill` (`design-taste-frontend`) | core | anti-templated / composition | `npx -y skills@latest add Leonxlnx/taste-skill --skill design-taste-frontend` |
 | `emil-design-eng` | core | signature motion / polish | `npx -y skills@latest add emilkowalski/skills --skill emil-design-eng` |
-| `web-design-guidelines` | core | a11y AA (file:line) | Claude Code default skill library |
+| `web-design-guidelines` | core | a11y AA (file:line) | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (third-party, Vercel) |
 | `ui-ux-pro-max` | wired | styles/palettes/font-pairings/UX/charts DB | `claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` (needs `python3`) |
 | `review-animations` | wired | motion Block/Approve gate (STANDARDS.md) | `npx -y skills@latest add emilkowalski/skills --skill review-animations` |
 | `frontend-design` (Anthropic) | wired | authoring: token-plan + signature + UX-writing (**folded into taste/plan**) | Anthropic agent-skills marketplace |
