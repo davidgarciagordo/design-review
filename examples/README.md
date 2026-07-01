@@ -67,7 +67,7 @@ Each core lens is by its original author (see *Attribution* in the main README).
 
 ### Step 0 — Preflight & frame
 
-**Preflight** (`node scripts/preflight.mjs --write`):
+**Preflight** (`node "${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs" --write`):
 
 ```
 ✓ impeccable            present (~/.claude/skills/impeccable)
@@ -282,7 +282,7 @@ Screenshots (light/dark/mobile) confirmed: sidebar nav renders; bento rhythm vis
 
 ### Step 0 — Preflight & frame
 
-**Preflight** (`node scripts/preflight.mjs --write`): all core components present (impeccable, design-taste-frontend, emil-design-eng, web-design-guidelines, review-animations, frontend-design, agent-browser, ui-ux-pro-max). `refero` MCP not configured → SKIPPED `refero` → reference-research via agent-browser over refero.design only (no DESIGN.md token specs). `huashu-design`: SKIPPED — Playwright verify unavailable. No `AskUserQuestion` batch needed (no installs chosen).
+**Preflight** (`node "${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs" --write`): all core components present (impeccable, design-taste-frontend, emil-design-eng, web-design-guidelines, review-animations, frontend-design, agent-browser, ui-ux-pro-max). `refero` MCP not configured → SKIPPED `refero` → reference-research via agent-browser over refero.design only (no DESIGN.md token specs). `huashu-design`: SKIPPED — Playwright verify unavailable. No `AskUserQuestion` batch needed (no installs chosen).
 
 **Memory adapter:** none detected — relying on `.design-review/*.md` artifacts; no cross-run cache.
 

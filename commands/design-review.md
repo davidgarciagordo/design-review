@@ -24,7 +24,7 @@ telos; this command is its executable spine.
 ## Step 0 — Preflight + frame the target
 
 **Preflight (declare what it uses; ask; install-or-skip-EXPLICITLY):** run
-`node scripts/preflight.mjs --write`. For MISSING components, present **one** `AskUserQuestion` batch
+`node "${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs" --write`. For MISSING components, present **one** `AskUserQuestion` batch
 (install now / skip, showing each manifest install command). Install chosen → `/reload-plugins` +
 `/reload-skills` (or ask to restart). Record skips EXPLICITLY in `.design-review/preflight.md` and announce
 them ("SKIPPED `<id>` → lens `<x>` degraded"). Never install silently; never skip silently.
