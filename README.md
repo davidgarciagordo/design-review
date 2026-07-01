@@ -96,7 +96,7 @@ flowchart TD
 
 | Piece | File | Role |
 |---|---|---|
-| Script · preflight | `scripts/preflight.mjs` | Declares components → ASKs to install missing → records skips EXPLICITLY |
+| Script · preflight | `${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs` | Declares components → ASKs to install missing → records skips EXPLICITLY |
 | Command | `commands/design-review.md` | `/design-review <target>` — runs the unified flow in order |
 | Agent · audit-first | `agents/design-audit-first.md` | **[GATE]** redesigns only: screenshot current + "what to keep" |
 | Agent · reference-research | `agents/design-reference-research.md` | **[GATE]** Dribbble 2026 + competitors + **`ui-ux-pro-max` vocabulary** + **`refero` real-product refs** → 3–5 patterns → copy+combine+house |
@@ -114,7 +114,7 @@ flowchart TD
 
 | Step | What happens | Skill / agent |
 |------|-------------|--------|
-| **0. Preflight** | `scripts/preflight.mjs`: declare every component this run needs → ASK to install missing → record skips EXPLICITLY. Surface routing: detect landing / dashboard / non-web to route lenses. Pluggable memory: claude-mem \| other \| none→file artifact (cross-run accelerator, optional). | `scripts/preflight.mjs` |
+| **0. Preflight** | `${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs`: declare every component this run needs → ASK to install missing → record skips EXPLICITLY. Surface routing: detect landing / dashboard / non-web to route lenses. Pluggable memory: claude-mem \| other \| none→file artifact (cross-run accelerator, optional). | `${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs` |
 | **1. audit-first** **[GATE · redesigns]** | Screenshot the current state; write "what to keep". | `design-audit-first` |
 | **2a. reference-research** **[GATE · always]** | Dribbble 2026 + 2–3 competitors + **`ui-ux-pro-max` vocabulary** + **`refero` real-product refs** → 3–5 stealable patterns → copy + combine + house layer. **The #1 lever against flat.** | `design-reference-research` + `agent-browser` |
 | **2b. plan** | Author fix plan from the reference pack (`frontend-design`, folded here — no separate lens pass). | `frontend-design` (folded) |

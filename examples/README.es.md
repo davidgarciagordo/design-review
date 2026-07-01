@@ -67,7 +67,7 @@ Cada lente core es de su autor original (ver *Atribución* en el README principa
 
 ### Paso 0 — Preflight y encuadre
 
-**Preflight** (`node scripts/preflight.mjs --write`):
+**Preflight** (`node "${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs" --write`):
 
 ```
 ✓ impeccable            present (~/.claude/skills/impeccable)
@@ -282,7 +282,7 @@ Capturas (claro/oscuro/móvil) confirmaron: sidebar nav renderizado; ritmo bento
 
 ### Paso 0 — Preflight y encuadre
 
-**Preflight** (`node scripts/preflight.mjs --write`): todos los componentes core están presentes (impeccable, design-taste-frontend, emil-design-eng, web-design-guidelines, review-animations, frontend-design, agent-browser, ui-ux-pro-max). MCP de `refero` no configurado → SKIPPED `refero` → reference-research solo vía agent-browser sobre refero.design (sin token specs de DESIGN.md). `huashu-design`: OMITIDO — verificación Playwright no disponible. No se necesita batch de `AskUserQuestion` (ninguna instalación elegida).
+**Preflight** (`node "${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs" --write`): todos los componentes core están presentes (impeccable, design-taste-frontend, emil-design-eng, web-design-guidelines, review-animations, frontend-design, agent-browser, ui-ux-pro-max). MCP de `refero` no configurado → SKIPPED `refero` → reference-research solo vía agent-browser sobre refero.design (sin token specs de DESIGN.md). `huashu-design`: OMITIDO — verificación Playwright no disponible. No se necesita batch de `AskUserQuestion` (ninguna instalación elegida).
 
 **Memory adapter:** ninguno detectado — usando `.design-review/*.md` como memoria de sesión; sin caché entre ejecuciones.
 

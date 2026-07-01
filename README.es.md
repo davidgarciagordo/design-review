@@ -90,7 +90,7 @@ flowchart TD
 
 | Pieza | Fichero | Rol |
 |---|---|---|
-| Script · preflight | `scripts/preflight.mjs` | Declara componentes → PREGUNTA si instalar faltantes → registra omisiones EXPLÍCITAMENTE |
+| Script · preflight | `${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs` | Declara componentes → PREGUNTA si instalar faltantes → registra omisiones EXPLÍCITAMENTE |
 | Comando | `commands/design-review.md` | `/design-review <target>` — orquesta los gates en orden |
 | Agente · audit-first | `agents/design-audit-first.md` | **[GATE]** solo rediseños: captura el estado actual + "qué conservar" |
 | Agente · reference-research | `agents/design-reference-research.md` | **[GATE]** Dribbble 2026 + competidores + **vocabulario `ui-ux-pro-max`** + **refs de productos reales vía `refero`** → 3–5 patrones → copiar+combinar+capa propia |
@@ -108,7 +108,7 @@ flowchart TD
 
 | Paso | Qué ocurre | Skill / agente |
 |------|------------|----------------|
-| **0. Preflight** | `scripts/preflight.mjs`: declara cada componente que esta ejecución necesita → PREGUNTA si instalar faltantes → registra omisiones EXPLÍCITAMENTE. Enrutado por superficie: detecta landing / dashboard / non-web. Memoria enchufable: claude-mem \| otro \| ninguno→artefacto en fichero (acelerador entre ejecuciones, opcional). | `scripts/preflight.mjs` |
+| **0. Preflight** | `${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs`: declara cada componente que esta ejecución necesita → PREGUNTA si instalar faltantes → registra omisiones EXPLÍCITAMENTE. Enrutado por superficie: detecta landing / dashboard / non-web. Memoria enchufable: claude-mem \| otro \| ninguno→artefacto en fichero (acelerador entre ejecuciones, opcional). | `${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs` |
 | **1. audit-first** **[GATE · solo rediseños]** | Captura del estado actual; escribir "qué conservar". | `design-audit-first` |
 | **2a. reference-research** **[GATE · siempre]** | Dribbble 2026 + 2–3 competidores + **vocabulario `ui-ux-pro-max`** + **refs de productos reales vía `refero`** → 3–5 patrones robables → copiar + combinar + capa propia. **La palanca #1 contra lo plano.** | `design-reference-research` + `agent-browser` |
 | **2b. plan** | Autor del plan de arreglos a partir del reference pack (`frontend-design`, integrado aquí — sin pasada de lente separada). | `frontend-design` (integrado) |

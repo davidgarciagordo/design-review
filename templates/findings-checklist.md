@@ -14,7 +14,7 @@ Copy this template after running the design-review pipeline. Fill in the finding
 result is a **failed** run.
 
 **Gates run (in order):**
-- [ ] 0 — **Preflight** (`scripts/preflight.mjs`: declare components → ASK to install missing → install
+- [ ] 0 — **Preflight** (`${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs`: declare components → ASK to install missing → install
   chosen + reload → record skips EXPLICITLY) & **frame** & **surface routing** (landing/dashboard/non-web)
   & context setup (PRODUCT.md/DESIGN.md for impeccable) & **memory adapter** detect (claude-mem /
   mem-search / none → announce; degrade gracefully)

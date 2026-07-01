@@ -98,7 +98,7 @@ references, return its findings.* **Never** summarise the skill or invoke it bar
 The orchestrator **declares every component it uses and how to install it** — single source of truth is
 **`scripts/preflight.mjs`** (the MANIFEST). It NEVER installs silently and NEVER assumes "not installed".
 
-1. **Detect** — run `node scripts/preflight.mjs --write`: prints present/missing + writes
+1. **Detect** — run `node "${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs" --write`: prints present/missing + writes
    `.design-review/preflight.md`. Read-only (filesystem globs + MCP-config content + `which`).
 2. **Ask** — for MISSING components, present **one** `AskUserQuestion` batch: per item *install now* or
    *skip*, showing the manifest's exact install command. Never decide for the user.
@@ -204,7 +204,7 @@ reusable components. Reuse > reinvent. If a reusable piece is missing → create
 
 ### 0. Preflight & frame
 
-**Preflight** (above): `node scripts/preflight.mjs --write` → ASK to install missing (one batch) →
+**Preflight** (above): `node "${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs" --write` → ASK to install missing (one batch) →
 install chosen + reload → record skips EXPLICITLY. **Context setup:** ensure `PRODUCT.md`/`DESIGN.md` for
 impeccable (run its `scripts/context.mjs`; if `NO_PRODUCT_MD`, generate minimal docs from the project's
 design doc — do NOT let impeccable fall into its `init` flow). **Frame:** read the target, its design doc,
