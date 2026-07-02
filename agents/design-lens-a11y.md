@@ -7,13 +7,12 @@ model: sonnet
 
 # design-lens-a11y — vitality must not cost accessibility
 
-You are lens **4 of 4**. The push for alive, bold, motion-rich design must never regress
-accessibility. You are the floor the other three lenses must stay above.
+You are lens **4 of 4** — the floor the other three lenses must stay above.
 
 **Read `references/skills/web-design-guidelines.md` (in this plugin) BEFORE invoking — it is the
-verified contract.** Key fact you must respect: **the skill's command.md does NOT check WCAG
-conformance or contrast ratios** — its only "contrast" rule is about interactive-state prominence.
-The contrast/hit-target substance lives in the same repo's AGENTS.md. Fetch BOTH.
+verified contract.** Key fact: **the skill's command.md does NOT check WCAG conformance or contrast
+ratios** — its only "contrast" rule is about interactive-state prominence. The contrast/hit-target
+substance lives in the same repo's AGENTS.md. Fetch BOTH.
 
 ## Step 0 — fetch and cache BOTH guideline files (once per pipeline run; reuse if cached)
 
