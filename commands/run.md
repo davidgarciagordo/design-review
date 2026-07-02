@@ -12,9 +12,9 @@ real references, ending in an explicit verdict. A target that passes every corre
 looks templated has **failed** (full telos in `SKILL.md`; this command is its executable spine).
 
 **UX contract with the owner: ONE decision.** The pipeline runs end-to-end on its own — detecting,
-installing, diagnosing — and asks the owner exactly ONE thing: the multi-select of which changes to
-apply (step 4). Scope/brand questions fold into that same interaction when possible. Everything
-else is announced, never asked.
+installing, diagnosing — and batches owner questions to at most two: the missing-component installs
+(step 0, only if something is missing) and the multi-select of which changes to apply (step 4).
+Scope/brand questions fold into the step-4 interaction. Everything else is announced, never asked.
 
 **Hard rules**
 - Run the steps **IN ORDER**. Steps marked **[GATE]** cannot be skipped or reordered.
@@ -27,21 +27,23 @@ else is announced, never asked.
 
 ---
 
-## Step 0 — Auto-provision + frame the target (announce, don't ask)
+## Step 0 — Preflight: detect → ASK → install-or-skip-explicitly (announce the frame, ask the installs)
 
-**Provision (detect → auto-install → announce):** run
-`node "${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs" --write`.
-- For each MISSING **core** component (`impeccable`, taste skill, `emil-design-eng`,
-  `web-design-guidelines`): **install it automatically** using the verified command from the
-  manifest / `references/skills/<name>.md` — do not ask first, do not install silently either:
-  announce each install as you do it ("installing `impeccable` (MIT, pbakaus) — required by lens 1").
-  After installing, `/reload-skills` (or note a restart is needed).
-- For missing **optional** components (`ui-ux-pro-max`, `huashu-design`, `review-animations`,
-  `refero`): install the free no-side-effect ones the same way if the surface needs them; skip the
-  rest EXPLICITLY, recording each skip in `.design-review/preflight.md`
-  ("SKIPPED `<id>` → lens `<x>` degraded").
-- If an install FAILS, that is the only provisioning case worth surfacing to the owner — fold it
-  into the step-4 question rather than stopping, unless a core lens is impossible without it.
+Same contract as the skill's Step 0 (single source of truth: `scripts/preflight.mjs`). **Never
+install silently; never install a third-party component without an explicit OK.** Installing code
+from a repo touches the user's setup — that always goes through a question, even inside a pipeline
+they invoked.
+- **Detect** — run `node "${CLAUDE_PLUGIN_ROOT}/scripts/preflight.mjs" --write` (read-only; writes
+  `.design-review/preflight.md`).
+- **Ask** — for MISSING components (core: `impeccable`, taste skill, `emil-design-eng`,
+  `web-design-guidelines`; optional: `ui-ux-pro-max`, `huashu-design`, `review-animations`,
+  `refero`), **one** `AskUserQuestion` batch: per item *install now* or *skip*, showing the
+  manifest's exact command and marking which lens each gates.
+- **Install chosen** → run the command, then `/reload-skills` (or note a restart is needed).
+- **Skip = EXPLICIT** → recorded in `.design-review/preflight.md` AND announced in the run output
+  ("SKIPPED `<id>` → lens `<x>` degraded"). No silent skips.
+- If an install FAILS, fold it into the step-4 question rather than stopping, unless a core lens is
+  impossible without it.
 - ⚠️ preflight checks enablement only for plugin-type components; a skill can be on disk yet the
   session may still need `/reload-skills` — if a lens later reports Unknown-skill, reload and retry
   once before reporting failure.
