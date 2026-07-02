@@ -75,7 +75,7 @@ Live browser: available (dev server on port 3000)
 
 ## Attribution
 
-Orchestrates skills authored by others — loads them, never paraphrases. Core (mandatory, third-party — see [Requires](#requires)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). Wired add-ons: `ui-ux-pro-max`, `refero`, `frontend-design`, `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Full detail: [references/attribution.md](references/attribution.md).
+Orchestrates skills authored by others — loads them, never paraphrases. Core (mandatory, third-party — see [Requires](#requires)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). Wired add-ons: `ui-ux-pro-max`, `refero`, `frontend-design` (official Anthropic plugin — plan criterion), `building-components` (Vercel standard — component-authoring criterion in the apply pass), `agent-browser` (Vercel Labs — THE tester: live render for research and the final verdict), `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Full detail: [references/attribution.md](references/attribution.md).
 
 Alternative: clone into `~/.claude/skills/design-review` to load as a local plugin without a marketplace.
 

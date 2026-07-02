@@ -75,7 +75,7 @@ Navegador en vivo: disponible (dev server en puerto 3000)
 
 ## Atribución
 
-Orquesta skills de terceros — las carga, nunca las parafrasea. Core (obligatorios, de terceros — ver [Requiere](#requiere)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). Add-ons conectados: `ui-ux-pro-max`, `refero`, `frontend-design`, `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Detalle completo: [references/attribution.md](references/attribution.md).
+Orquesta skills de terceros — las carga, nunca las parafrasea. Core (obligatorios, de terceros — ver [Requiere](#requiere)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). Add-ons conectados: `ui-ux-pro-max`, `refero`, `frontend-design` (plugin oficial de Anthropic — criterio del plan), `building-components` (estándar de Vercel — criterio de autoría de componentes en el apply), `agent-browser` (Vercel Labs — EL tester: render vivo para research y el veredicto final), `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Detalle completo: [references/attribution.md](references/attribution.md).
 
 Alternativa: clónalo en `~/.claude/skills/design-review` para cargarlo como plugin local sin marketplace.
 
