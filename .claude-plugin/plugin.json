@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "design-review",
   "displayName": "Design Review — Orchestrator",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Unified design orchestrator (v2.3): token-frugal. Discover ONCE (context-pack) → judge many; lenses are READ-ONLY (no edits during diagnosis — fixes the gate-bypass bug); every agent returns TERSE (OK/KO + 1-line findings, no essays); pluggable memory (claude-mem | other | none → file artifact) for cross-run skip-rediscovery. Preflight declares+asks+installs components (scripts/preflight.mjs). Flow: preflight → audit-first → reference-research (Dribbble+refero+ui-ux-pro-max) → plan (frontend-design) → context-pack → 4 ROUTED lenses → multi-select → ONE apply pass → verdict (alive/templated/flat, +review-animations/huashu) → loop. Surface routing. Agents + /design-review:run + gate hook.",
   "author": {
     "name": "David García Gordo",
@@ -11,7 +11,20 @@
   "homepage": "https://github.com/davidgarciagordo/design-review",
   "repository": "https://github.com/davidgarciagordo/design-review",
   "license": "MIT",
-  "keywords": ["design", "review", "vitality", "anti-templated", "audit", "accessibility", "motion", "tokens", "ui", "ux"],
+  "keywords": [
+    "design",
+    "review",
+    "vitality",
+    "anti-templated",
+    "audit",
+    "accessibility",
+    "motion",
+    "tokens",
+    "ui",
+    "ux"
+  ],
   "skills": "./",
-  "commands": ["./commands/"]
+  "commands": [
+    "./commands/"
+  ]
 }
