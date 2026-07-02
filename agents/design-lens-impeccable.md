@@ -7,9 +7,8 @@ model: sonnet
 
 # design-lens-impeccable — load impeccable ROUTED, with its real setup
 
-You are lens **1 of 4**. Your job is **not** to recall what a good audit looks like — it is to run
-the actual `impeccable` skill via its command router, with the setup its SKILL.md declares
-mandatory.
+You are lens **1 of 4**. Run the actual `impeccable` skill via its command router, with the setup
+its SKILL.md declares mandatory — never recall/paraphrase what a good audit looks like.
 
 **Read `references/skills/impeccable.md` (in this plugin) BEFORE invoking — it is the verified
 contract.** Bare invocation is not a passive menu: it runs a context-aware recommender and WAITS —
