@@ -46,6 +46,9 @@ rendered).
 | **`frontend-design`** | **Plan (2b) + fix (5)** — authoring criterion **folded into taste/plan**, not a 5th lens (overlaps taste): 4–6 hex token-plan + one signature element + "3 AI-default looks to avoid" + UX-writing | `claude plugin install frontend-design@claude-plugins-official` (official Anthropic marketplace, preconfigured in Claude Code) |
 | **`review-animations`** | **Motion gate (3c + verdict 6)** — Block/Approve on animation vs `STANDARDS.md`. `disable-model-invocation=true` → invoke explicitly; degrades gracefully if absent | `npx -y skills@latest add emilkowalski/skills --skill review-animations` |
 
+| **`building-components`** | **Fix/build (step 5)** — Vercel's open component standard (composable, accessible); authoring criterion when the applied changes create/reshape components | `npx -y skills@latest add vercel/components.build --skill building-components` |
+| **`agent-browser`** | **THE TESTER (steps 2 + 6)** — live reference capture and live verdict render; without it the verdict is provisional | `npx -y skills@latest add vercel-labs/agent-browser --skill agent-browser` |
+
 > Single source of truth for the full manifest (detect + install per component) is **`scripts/preflight.mjs`**.
 
 ---
