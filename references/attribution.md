@@ -11,6 +11,10 @@
 
 **Verify every URL before installing.** Entries marked ⚠️ are best-effort.
 
+> **Per-skill VERIFIED playbooks live in [`references/skills/`](skills/)** — exact invocation,
+> commands, gotchas and orchestrator-claim corrections, each checked against the skill's real
+> source at a pinned commit. Agents follow those files, not this overview.
+
 ---
 
 ## The 4 CORE skills — mandatory · non-skippable · invoked in this exact order
@@ -22,8 +26,8 @@ each skill; no referenced skill is ever assumed "not installed".
 | # | Skill | Lens / agent | What it contributes | Author / source | Install |
 |---|---|---|---|---|---|
 | 1 | `impeccable` | `design-lens-impeccable` | Structure, visual hierarchy, IA, cognitive load, tokens, scored audit. **Routed** to `impeccable audit` + `critique` (never bare) | Paul Bakaus (pbakaus) | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` |
-| 2 | `design-taste-frontend` (a.k.a. `taste-skill`) | `design-lens-taste` | Anti-slop **and anti-templated** — **routed** to §11 redesign-audit + §14 pre-flight; dials pre-set from references.md | Leonxlnx | `git clone https://github.com/Leonxlnx/taste-skill ~/.claude/skills/taste-skill` |
-| 3 | `emil-design-eng` | `design-lens-motion` | Polish **and signature motion** — concrete question **in the same invocation** (bypasses "Initial Response wait"); Before/After output → P1/P2/P3 | Emil Kowalski | `git clone https://github.com/emilkowalski/skills ~/.claude/skills/emil-skills` (use the `emil-design-eng` dir) |
+| 2 | `design-taste-frontend` (a.k.a. `taste-skill`) | `design-lens-taste` | Anti-slop **and anti-templated** — **routed** to §11 redesign-audit + §14 pre-flight; dials pre-set from references.md | Leonxlnx | `npx -y skills@latest add https://github.com/Leonxlnx/taste-skill --skill design-taste-frontend` (registered name varies by install dir: `taste-skill` or `design-taste-frontend`) |
+| 3 | `emil-design-eng` | `design-lens-motion` | Polish **and signature motion** — concrete question **in the same invocation** (bypasses "Initial Response wait"); Before/After output → P1/P2/P3 | Emil Kowalski | `npx -y skills@latest add emilkowalski/skills --skill emil-design-eng` |
 | 4 | `web-design-guidelines` | `design-lens-a11y` | Accessibility AA, keyboard, visible focus, contrast, roles/labels. **WebFetch** guidelines → cached to `.design-review/web-guidelines.md` → passed as input (avoids "which files?" prompt) | Vercel (`vercel-labs/web-interface-guidelines`, packaged as a skill in `vercel-labs/agent-skills`) | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (alt: `curl -fsSL https://vercel.com/design/guidelines/install | bash`) |
 
 `agent-browser` is also effectively required for the two browser gates (reference-research and the vitality
@@ -37,7 +41,7 @@ rendered).
 
 | Skill | Role in the pipeline | Source / Install |
 |---|---|---|
-| **`ui-ux-pro-max`** | **Wired across phases** — 3a-pre baseline (`search.py --design-system`), reference-research vocabulary (84 styles, 161 palettes, font-pairings), UX-guidelines lens (3e), fix (`:design`/`:ui-styling`/`:design-system`). Raw palettes/fonts = reference only; project tokens win. Needs `python3` | `claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
+| **`ui-ux-pro-max`** | **Wired across phases** — 3a-pre baseline (`search.py --design-system`), reference-research vocabulary (84 styles, 161 palettes, font-pairings), UX-guidelines lens (3e), fix (`:design`/`:ui-styling`/`:design-system`). Raw palettes/fonts = reference only; project tokens win. Needs `python3` | `claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill && claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
 | **`refero`** | **Reference-research (step 2)** — real products **in production** (gallery via agent-browser; `DESIGN.md` token specs via MCP). Complements Dribbble (trend) with shipped-product references. Tokens = reference only | Refero MCP (opt-in) ⚠️; default = agent-browser over `refero.design` |
 | **`frontend-design`** | **Plan (2b) + fix (5)** — authoring criterion **folded into taste/plan**, not a 5th lens (overlaps taste): 4–6 hex token-plan + one signature element + "3 AI-default looks to avoid" + UX-writing | Anthropic agent-skills marketplace |
 | **`review-animations`** | **Motion gate (3c + verdict 6)** — Block/Approve on animation vs `STANDARDS.md`. `disable-model-invocation=true` → invoke explicitly; degrades gracefully if absent | `npx -y skills@latest add emilkowalski/skills --skill review-animations` |
@@ -58,16 +62,19 @@ No referenced skill is ever assumed "not installed" and no skill is ever silentl
 | Skill | Detect / install command |
 |---|---|
 | `impeccable` *(core)* | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` |
-| `design-taste-frontend` / `taste-skill` *(core)* | `git clone https://github.com/Leonxlnx/taste-skill ~/.claude/skills/taste-skill` |
-| `emil-design-eng` *(core)* | `git clone https://github.com/emilkowalski/skills` (use `emil-design-eng` dir) |
+| `design-taste-frontend` / `taste-skill` *(core)* | `npx -y skills@latest add https://github.com/Leonxlnx/taste-skill --skill design-taste-frontend` (registered name varies by install dir: `taste-skill` or `design-taste-frontend`) |
+| `emil-design-eng` *(core)* | `npx -y skills@latest add emilkowalski/skills --skill emil-design-eng` |
 | `web-design-guidelines` *(core)* | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (third-party, Vercel — not bundled with Claude Code) |
-| `ui-ux-pro-max` *(wired intelligence)* | `claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
+| `ui-ux-pro-max` *(wired intelligence)* | `claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill && claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
 | `agent-browser` | Claude Code built-in / project-configured |
-| `huashu-design` *(add-on)* | `git clone https://github.com/alchaincyf/huashu-design` |
+| `huashu-design` *(add-on)* | `npx -y skills@latest add alchaincyf/huashu-design` |
 
-> **`review-animations` does NOT exist as a standalone skill/command.** It is optional — only if
-> installed (lives in the `emilkowalski/skills` repo). Treat it gracefully: if absent, the pipeline
-> continues; note that a dedicated animation timing/easing critique was not run.
+> **`review-animations`** IS standalone-installable (`npx -y skills@latest add emilkowalski/skills
+> --skill review-animations`) but its frontmatter sets `disable-model-invocation: true` — **the model
+> can never invoke it via the Skill tool, not even explicitly**. Routes: the user types
+> `/review-animations`, or an agent READS its SKILL.md + STANDARDS.md and applies them as prompt
+> content (what this pipeline does). Optional: if absent, the pipeline continues; note that the
+> dedicated timing/easing critique was not run. See references/skills/review-animations.md.
 
 ---
 
