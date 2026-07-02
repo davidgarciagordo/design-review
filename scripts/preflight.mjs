@@ -110,7 +110,7 @@ export const MANIFEST = [
       '~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/frontend-design/SKILL.md',
       '~/.claude/skills/frontend-design/SKILL.md',
     ],
-    install: 'claude plugin install (Anthropic agent-skills marketplace) — frontend-design',
+    install: 'claude plugin install frontend-design@claude-plugins-official',
     notes: 'Overlaps taste; fold its token-plan + avoid-list + UX-writing into the plan, do not run as a 5th lens.',
   },
   {
