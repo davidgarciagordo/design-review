@@ -136,11 +136,22 @@ export const MANIFEST = [
   {
     id: 'agent-browser',
     tier: 'wired',
-    role: 'live reference + live verdict (light/dark/mobile)',
-    phase: '2 reference-research + 6 verdict',
+    role: 'THE TESTER: live reference capture + live verdict render (light/dark/mobile) — nothing ships judged only from code; the built surface is verified in a real browser',
+    phase: '2 reference-research + 6 verdict (live verification gate)',
     kind: 'skill',
     detect: ['~/.claude/skills/agent-browser/SKILL.md', '.claude/skills/agent-browser/SKILL.md'],
-    install: 'Claude Code built-in / project-configured browser automation',
+    install: 'npx -y skills@latest add vercel-labs/agent-browser --skill agent-browser',
+    notes: 'Vercel Labs browser-automation CLI (skills.sh/vercel-labs/agent-browser). Without it the verdict is PROVISIONAL only — alive cannot be claimed for a design no one rendered.',
+  },
+  {
+    id: 'building-components',
+    tier: 'wired',
+    role: 'component-building standard (composable, accessible UI components) — authoring criterion for the FIX/build phase when the applied changes create or reshape components',
+    phase: '5 fix/build (component work) — criterion, not a lens',
+    kind: 'skill',
+    detect: ['~/.claude/skills/building-components/SKILL.md', '.claude/skills/building-components/SKILL.md'],
+    install: 'npx -y skills@latest add vercel/components.build --skill building-components',
+    notes: 'Vercel open standard (skills.sh/vercel/components.build). Load via Skill tool during step 5 when building/reshaping components; folds into the apply pass like frontend-design does for the plan.',
   },
 ];
 
