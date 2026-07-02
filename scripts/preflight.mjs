@@ -40,8 +40,8 @@ export const MANIFEST = [
     phase: '3a diagnosis (lead lens) + 1 audit-first + 5 fix',
     kind: 'skill',
     detect: ['~/.claude/skills/impeccable/SKILL.md', '.claude/skills/impeccable/SKILL.md'],
-    install: 'git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable',
-    notes: 'Needs PRODUCT.md (+ DESIGN.md) in cwd/.agents/context/docs, else it blocks with NO_PRODUCT_MD.',
+    install: 'git clone https://github.com/pbakaus/impeccable /tmp/impeccable && cp -r /tmp/impeccable/.claude/skills/impeccable ~/.claude/skills/impeccable (documented interactive form: npx impeccable install)',
+    notes: 'Needs PRODUCT.md (only PRODUCT.md blocks with NO_PRODUCT_MD; DESIGN.md optional). Mandatory 5-step setup incl. the brand/product register — see references/skills/impeccable.md. Monorepo: context.mjs needs --target.',
   },
   {
     id: 'taste-skill',
@@ -50,8 +50,12 @@ export const MANIFEST = [
     role: 'anti-templated / composition (landing/portfolio); §14 pre-flight',
     phase: '3b diagnosis + 1 audit-first (§11) + 6 verdict (§14)',
     kind: 'skill',
-    detect: ['~/.claude/skills/taste-skill/SKILL.md', '.claude/skills/taste-skill/SKILL.md', '.agents/skills/taste-skill/SKILL.md'],
-    install: 'npx -y skills@latest add Leonxlnx/taste-skill --skill design-taste-frontend',
+    detect: [
+      '~/.claude/skills/taste-skill/SKILL.md', '.claude/skills/taste-skill/SKILL.md', '.agents/skills/taste-skill/SKILL.md',
+      '~/.claude/skills/design-taste-frontend/SKILL.md', '.claude/skills/design-taste-frontend/SKILL.md',
+    ],
+    install: 'npx -y skills@latest add https://github.com/Leonxlnx/taste-skill --skill design-taste-frontend',
+    notes: 'Registered name depends on install dir (taste-skill OR design-taste-frontend) — agents must try both. It is a GENERATOR: always route to §11/§14, forbid generation.',
   },
   {
     id: 'emil-design-eng',
@@ -65,17 +69,17 @@ export const MANIFEST = [
   {
     id: 'web-design-guidelines',
     tier: 'core',
-    role: 'accessibility AA / keyboard / focus / contrast (file:line)',
+    role: 'a11y semantics / keyboard / focus-visible / reduced-motion (file:line) — NO WCAG-AA/contrast ratios (those need AGENTS.md injection + a measuring tool)',
     phase: '3d diagnosis (last lens — net over motion added by emil)',
     kind: 'skill',
     detect: ['~/.claude/skills/web-design-guidelines/SKILL.md', '.claude/skills/web-design-guidelines/SKILL.md'],
     install: 'npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines',
-    notes: 'Third-party (Vercel, vercel-labs/web-interface-guidelines) — NOT bundled with Claude Code. Fetches the live Vercel rules each run — needs network; cache as fallback.',
+    notes: 'Third-party (Vercel) — NOT bundled with Claude Code. Its command.md has no WCAG/contrast-ratio checks; the a11y lens also fetches the repo AGENTS.md (APCA contrast, hit targets). Needs network; cache as fallback.',
   },
   {
     id: 'ui-ux-pro-max',
     tier: 'wired',
-    role: 'design-intelligence DB: 84 styles / 161 palettes / font-pairings / 99 UX rules / charts',
+    role: 'design-intelligence DB: 84 styles / 161 palettes / 73 font-pairings / 99 UX rules / charts (BM25 search.py, deterministic — run with Bash, no model)',
     phase: '3a-pre baseline + 2 reference vocabulary + 3e UX lens + 5 generation',
     kind: 'plugin',
     pluginKey: 'ui-ux-pro-max@ui-ux-pro-max-skill',
@@ -83,8 +87,8 @@ export const MANIFEST = [
       '~/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/*/.claude/skills/ui-ux-pro-max/SKILL.md',
       '~/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/SKILL.md',
     ],
-    install: 'claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill',
-    notes: 'Needs python3 (search.py). Its raw palettes/fonts are REFERENCE only — the project design-system tokens win.',
+    install: 'claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill && claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill',
+    notes: 'Needs python3 (search.py, stdlib-only). Marketplace add REQUIRED before install. :design/:ui-styling/:design-system are sibling skills, not modes. Raw palettes/fonts are REFERENCE only — project tokens win.',
   },
   {
     id: 'review-animations',
@@ -94,7 +98,7 @@ export const MANIFEST = [
     kind: 'skill',
     detect: ['~/.claude/skills/review-animations/SKILL.md', '.claude/skills/review-animations/SKILL.md', '.agents/skills/review-animations/SKILL.md'],
     install: 'npx -y skills@latest add emilkowalski/skills --skill review-animations',
-    notes: 'Lives in the emilkowalski/skills repo; disable-model-invocation=true → invoke explicitly.',
+    notes: 'disable-model-invocation=true → the model can NEVER Skill-invoke it (not even explicitly). Routes: user types /review-animations, or an agent READS its SKILL.md + STANDARDS.md and applies them. Its 6 impact tiers are the native P1/P2/P3 source.',
   },
   {
     id: 'frontend-design',
@@ -122,12 +126,12 @@ export const MANIFEST = [
   {
     id: 'huashu-design',
     tier: 'addon',
-    role: 'asset-integrity (WebSearch facts + brand-spec) + Playwright verify + multi-format builder (PPT/video/mockup/dense dashboard)',
-    phase: '2 pre-build (assets) + 6 verify + primary builder for non-landing surfaces',
+    role: 'asset-integrity (WebSearch facts + brand-spec) + Step-10 review (6-dim rubric, Concept veto ≤5 = templated) + verify.py console gate + multi-format builder',
+    phase: '2 pre-build (assets) + 3e/6 review (Concept veto feeds the verdict) + 6 verify + primary builder for non-landing surfaces',
     kind: 'skill',
     detect: ['~/.claude/skills/huashu-design/SKILL.md', '.claude/skills/huashu-design/SKILL.md'],
-    install: 'git clone https://github.com/alchaincyf/huashu-design ~/.claude/skills/huashu-design',
-    notes: 'When used, force review mode + grant WebSearch. Density exception (≥3 dense elements) for dashboards.',
+    install: 'npx -y skills@latest add alchaincyf/huashu-design',
+    notes: 'All content in Chinese — invoke by name, fix output language. Review = its Step 10 ONLY (read-only pinned, scene declared) or it generates/asks. verify.py: file:// only, NO dark mode (agent-browser owns that); needs pip playwright + chromium.',
   },
   {
     id: 'agent-browser',
@@ -139,6 +143,10 @@ export const MANIFEST = [
     install: 'Claude Code built-in / project-configured browser automation',
   },
 ];
+
+// Not in the manifest (nothing to install/detect): `VoltAgent/awesome-design-md` — a free MIT
+// catalog of 73 pre-extracted DESIGN.md brand design languages, used on demand by the
+// reference-research agent as an optional source. Steal patterns, never clone the brand.
 
 function expand(p) {
   return p.startsWith('~/') ? path.join(HOME, p.slice(2)) : path.resolve(CWD, p);

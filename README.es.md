@@ -9,13 +9,13 @@ Compañero de [forge-methodology](https://github.com/davidgarciagordo/forge-meth
 ## Requiere
 
 Este plugin **orquesta 4 skills de terceros — no las incluye**. Ninguna viene de fábrica con Claude Code.
-Instálalas las 4 antes de correr `/design-review:run`, o cada una de las 4 lentes core fallará con
-`Unknown skill` (confirmado en pruebas reales — no hay degradado silencioso para una skill core ausente):
+**No hace falta instalarlas a mano**: `/design-review:run` auto-instala en el Step 0 cualquier skill core
+que falte (anunciándolo, nunca en silencio). La tabla queda como referencia / instalación manual:
 
 | Skill | Autor | Instalación |
 |---|---|---|
 | `impeccable` | Paul Bakaus ([pbakaus](https://github.com/pbakaus)) | `git clone https://github.com/pbakaus/impeccable ~/.claude/skills/impeccable` |
-| `design-taste-frontend` (`taste-skill`) | [Leonxlnx](https://github.com/Leonxlnx) | `npx -y skills@latest add Leonxlnx/taste-skill --skill design-taste-frontend` |
+| `design-taste-frontend` (`taste-skill`) | [Leonxlnx](https://github.com/Leonxlnx) | `npx -y skills@latest add https://github.com/Leonxlnx/taste-skill --skill design-taste-frontend` |
 | `emil-design-eng` | Emil Kowalski ([emilkowalski](https://github.com/emilkowalski)) | `npx -y skills@latest add emilkowalski/skills --skill emil-design-eng` |
 | `web-design-guidelines` | Vercel (`vercel-labs/web-interface-guidelines`) | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (alt: `curl -fsSL https://vercel.com/design/guidelines/install | bash`) |
 
