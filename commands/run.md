@@ -7,10 +7,9 @@ argument-hint: "<target — file path, route, component, story, or email>"
 
 **Target:** `$ARGUMENTS` (a file path, app route, component, Storybook story, or email).
 
-You are the **orchestrator**. Your telos is not "remove defects" but **make this target ALIVE and
-unmistakably 2026** — judged against real references, ending in an explicit verdict. A target that
-passes every correctness check and still looks templated has **failed**. Read `SKILL.md` for the
-full telos; this command is its executable spine.
+You are the **orchestrator**. Telos: **make this target ALIVE and unmistakably 2026** — judged against
+real references, ending in an explicit verdict. A target that passes every correctness check and still
+looks templated has **failed** (full telos in `SKILL.md`; this command is its executable spine).
 
 **UX contract with the owner: ONE decision.** The pipeline runs end-to-end on its own — detecting,
 installing, diagnosing — and asks the owner exactly ONE thing: the multi-select of which changes to
@@ -59,7 +58,8 @@ fold the rest into the step-4 multi-select instead of a separate interrogation.
 
 ## Step 1 — `audit-first` **[GATE · redesigns only]**
 If the target already exists, dispatch the **`design-audit-first`** agent: screenshot the current
-state and write "what to keep" to `.design-review/audit-first.md`. Skip only for greenfield (say so).
+state and write "what to keep" to `.design-review/audit-first.md`. **PASS = the artifact exists**, or
+"skipped — greenfield" stated explicitly.
 
 ## Step 2 — `reference-research` **[GATE · ALWAYS · #1 lever against flat]**
 Dispatch the **`design-reference-research`** agent. agent-browser over Dribbble 2026 popular +
@@ -68,7 +68,8 @@ search.py run deterministically (Bash — 84 styles / 161 palettes / 73 font-pai
 a pre-extracted DESIGN.md from `VoltAgent/awesome-design-md` when a reference brand is in its free
 catalog (steal patterns, never clone the brand). Extract **3-5 concrete patterns** → write the
 **copy + combine + house-layer** decision AND the 3 taste dials to `.design-review/references.md`.
-**Do not proceed until this artifact exists.** If a brand/product is named, run **asset-integrity**
+**PASS = `references.md` exists with ≥3 tagged patterns + dials + the bar; do not proceed without
+it.** If a brand/product is named, run **asset-integrity**
 first (huashu-design audited AGAINST its brand-asset-protocol.md / real client assets — never
 invent logos or data).
 
@@ -80,7 +81,8 @@ the UX-writing checklist. Authoring criterion, not a lens.
 ## Step 3 — The 4 core lenses, REAL invocation **[GATE · in order]**
 Dispatch each lens agent in turn, passing target + `.design-review/references.md` (+
 `.design-review/audit-first.md` to the taste lens). Each loads its real skill per its playbook and
-returns findings (cite `file:line`). Accumulate; drop nothing.
+returns findings (cite `file:line`). Accumulate; drop nothing. **PASS = all 4 lenses returned
+(line 1 `OK`/`KO`), merged into one `[skill]`-tagged list.**
 
 1. **`design-lens-impeccable`** → full 5-step setup, detect.mjs pre-pass, then routed
    `audit` + `critique` (expects critique's dual-sub-agent fan-out or surfaces its DEGRADED banner).
@@ -126,8 +128,10 @@ typographic point of view, run Core Web Vitals, and emit an explicit
 **`alive` / `templated` / `flat`** verdict written to `.design-review/verdict.json`. Reinforced
 when present by: **review-animations Block/Approve (by reading)**, **taste §14** (judgment
 checklist + the 2 mechanical greps), **huashu Step-10 review** (its Concept veto ≤5 = `templated`
-by definition), and **huashu verify.py** (console-error exit-code gate, local HTML only). A motion
+by definition), and **huashu verify.py** (console-error exit-code gate, local HTML only).
+**Binary rule: `alive` requires ALL bar checks true AND no reinforcement gate failed** — a motion
 `Block`, a failed §14 box, or a Concept veto holds the verdict below `alive`.
+**PASS = `verdict.json` exists with an explicit verdict.**
 
 ## Step 7 — Vitality loop **[GATE · until the bar is met]**
 If the verdict is not `alive`, **iterate steps 3-6** (sharper reference, stronger house layer,
