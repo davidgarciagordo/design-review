@@ -107,6 +107,12 @@ pre-selected** — those are why the target was flat; they are not optional poli
 owner-only decisions (scope/brand, failed installs) into this same batch. Apply only what's chosen.
 This is the owner's ONLY required interaction in the whole run.
 
+**Applying the chosen fixes:** route each item to its owning skill command (impeccable's fix
+commands, emil's motion framework). When an applied change **creates or reshapes a component**,
+load the **`building-components`** skill (Vercel's composable/accessible component standard — see
+the manifest) as the authoring criterion for that component, the same way `frontend-design` is the
+authoring criterion for the plan.
+
 ## Step 5 — Informed re-pass
 Re-run only the lenses the chosen fixes touch (layout → impeccable + live; motion → emil +
 verdict). impeccable's `polish` closes the fix pass (it consumes the critique snapshot as its
