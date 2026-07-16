@@ -1,5 +1,5 @@
 ---
-description: "Run the design-VITALITY pipeline on a target. Gated, imperative: auto-provision skills → audit-first → reference-research → 4 core lenses in order → ONE multi-select (the user's only decision) → apply → vitality verdict (alive/templated/flat) → loop. Cures flat, templated UI. Usage: /design-review:run <target>"
+description: "Run the design-VITALITY pipeline on a target. Gated, imperative: preflight (detect + ASK + install) → audit-first → reference-research → 4 core lenses in order → ONE multi-select (the user's only decision) → apply → vitality verdict (alive/templated/flat) → loop. Cures flat, templated UI. Usage: /design-review:run <target>"
 argument-hint: "<target — file path, route, component, story, or email>"
 ---
 
@@ -7,7 +7,7 @@ argument-hint: "<target — file path, route, component, story, or email>"
 
 **Target:** `$ARGUMENTS` (a file path, app route, component, Storybook story, or email).
 
-You are the **orchestrator**. Telos: **make this target ALIVE and unmistakably 2026** — judged against
+You are the **orchestrator**. Telos: **make this target ALIVE and unmistakably current** — judged against
 real references, ending in an explicit verdict. A target that passes every correctness check and still
 looks templated has **failed** (full telos in `SKILL.md`; this command is its executable spine).
 
@@ -64,7 +64,7 @@ state and write "what to keep" to `.design-review/audit-first.md`. **PASS = the 
 "skipped — greenfield" stated explicitly.
 
 ## Step 2 — `reference-research` **[GATE · ALWAYS · #1 lever against flat]**
-Dispatch the **`design-reference-research`** agent. agent-browser over Dribbble 2026 popular +
+Dispatch the **`design-reference-research`** agent. agent-browser over current Dribbble popular +
 `refero` (real shipped products) + 2-3 domain competitors + **ui-ux-pro-max vocabulary via its
 search.py run deterministically (Bash — 84 styles / 161 palettes / 73 font-pairings)** + optionally
 a pre-extracted DESIGN.md from `VoltAgent/awesome-design-md` when a reference brand is in its free
@@ -109,18 +109,18 @@ Merge all findings into one deduplicated list: P1 (broken/identity/a11y) · P2 (
 (`AskUserQuestion`, `multiSelect: true`) with P1 **and the anti-templated + signature-motion items
 pre-selected** — those are why the target was flat; they are not optional polish. Fold any pending
 owner-only decisions (scope/brand, failed installs) into this same batch. Apply only what's chosen.
-This is the owner's ONLY required interaction in the whole run.
+This is the owner's ONLY required interaction in the whole run. **No edits happen in this step** —
+all mutation belongs to step 5.
 
-**Applying the chosen fixes:** route each item to its owning skill command (impeccable's fix
+## Step 5 — APPLY (FIX) + informed re-pass
+**Apply the chosen fixes:** route each item to its owning skill command (impeccable's fix
 commands, emil's motion framework). When an applied change **creates or reshapes a component**,
 load the **`building-components`** skill (Vercel's composable/accessible component standard — see
 the manifest) as the authoring criterion for that component, the same way `frontend-design` is the
 authoring criterion for the plan.
-
-## Step 5 — Informed re-pass
-Re-run only the lenses the chosen fixes touch (layout → impeccable + live; motion → emil +
-verdict). impeccable's `polish` closes the fix pass (it consumes the critique snapshot as its
-backlog). Surface genuinely new findings briefly; don't re-litigate settled items.
+**Then the informed re-pass:** re-run only the lenses the chosen fixes touch (layout → impeccable +
+live; motion → emil + verdict). impeccable's `polish` closes the fix pass (it consumes the critique
+snapshot as its backlog). Surface genuinely new findings briefly; don't re-litigate settled items.
 
 ## Step 6 — `vitality-verdict` **[GATE]**
 Dispatch the **`design-vitality-verdict`** agent: render the real target live (light/dark/mobile
@@ -147,4 +147,5 @@ report done on a `templated`/`flat` verdict**; surface it as a failed run.
 ## Closing report
 Return: the findings applied, the **final verdict** (`alive`/`templated`/`flat`) and the reference
 it was judged against, the closing screenshots (light/dark/mobile), Core Web Vitals, which
-components were auto-installed or skipped in step 0, and which add-ons ran or were skipped and why.
+components were installed (each after an explicit OK) or skipped in step 0, and which add-ons ran
+or were skipped and why.

@@ -1,6 +1,6 @@
 ---
 name: design-review
-description: "UNIFIED ORCHESTRATOR for design skills — runs ALL design skills in order, ROUTING each to its correct command/mode, ACCUMULATES suggestions into one prioritized list, ASKS the user (multi-select, P1 pre-marked), APPLIES the chosen ones via the owning fix command. Vitality telos: audit-first (redesigns) → reference-research GATE (Dribbble 2026 + competitors + ui-ux-pro-max vocabulary) → 4 CORE skills REALLY invoked via the Skill tool and ROUTED (impeccable→design-taste-frontend→emil-design-eng→web-design-guidelines) → explicit vitality-verdict (alive/templated/flat) → loop. Bootstrap: detects and INSTALLS referenced skills. Trigger: 'improve design', 'make this alive / less flat', 'design review'; explicit command: '/design-review:run <target>'."
+description: "UNIFIED ORCHESTRATOR for design skills — runs ALL design skills in order, ROUTING each to its correct command/mode, ACCUMULATES suggestions into one prioritized list, ASKS the user (multi-select, P1 pre-marked), APPLIES the chosen ones via the owning fix command. Vitality telos: audit-first (redesigns) → reference-research GATE (current Dribbble popular + competitors + ui-ux-pro-max vocabulary) → 4 CORE skills REALLY invoked via the Skill tool and ROUTED (impeccable→design-taste-frontend→emil-design-eng→web-design-guidelines) → explicit vitality-verdict (alive/templated/flat) → loop. Bootstrap: detects and INSTALLS referenced skills. Trigger: 'improve design', 'make this alive / less flat', 'design review'; explicit command: '/design-review:run <target>'."
 ---
 
 # design-review — UNIFIED ORCHESTRATOR (v2.3)
@@ -14,7 +14,7 @@ Project instantiations reference this file and override where project identity d
 
 The question is **not** *"does this design have defects?"* (that loop's ceiling is correct-but-flat). It is:
 
-> ### Is this design ALIVE and unmistakably 2026 **against these specific references**?
+> ### Is this design ALIVE and unmistakably current **against these specific references**?
 
 - **Correctness is the floor.** WCAG AA, tokens, no overflow — table stakes. A target that passes all of
   them and still reads generic has **FAILED** this pipeline.
@@ -51,7 +51,7 @@ skill fails its lens with `Unknown skill` (confirmed in testing — no silent de
 |---|---|---|
 | Orchestrator command | `commands/run.md` | `/design-review:run <target>` — runs the unified flow IN ORDER |
 | Audit-first gate | `agents/design-audit-first.md` | Redesigns only: screenshot current + "what to keep" |
-| **Reference-research gate** | `agents/design-reference-research.md` | **[GATE]** Dribbble 2026 + competitors + `ui-ux-pro-max` vocabulary; 3–5 patterns; copy+combine+house |
+| **Reference-research gate** | `agents/design-reference-research.md` | **[GATE]** current Dribbble popular + competitors + `ui-ux-pro-max` vocabulary; 3–5 patterns; copy+combine+house |
 | **Context-pack** | `agents/design-context-pack.md` | **discover ONCE** — source map + file:line + shared-found; lenses judge this, not re-scan |
 | Lens: structure/audit | `agents/design-lens-impeccable.md` | **routes** `impeccable audit` + `critique` (READ-ONLY) |
 | Lens: anti-templated | `agents/design-lens-taste.md` | **routes** `design-taste-frontend` §11 + §14; gate that FAILS generic output |
@@ -95,7 +95,7 @@ Manifest summary (`tier`: **core** gate · **wired** integrated · **addon** opt
 | `frontend-design` (Anthropic) | wired | authoring: token-plan + signature + UX-writing (**folded into taste/plan**) | Anthropic agent-skills marketplace |
 | `refero` | wired | real-product reference (gallery + DESIGN.md tokens) | Refero MCP (opt-in); default = agent-browser over refero.design |
 | `huashu-design` | addon | asset-integrity + Playwright verify + non-landing builder | `git clone https://github.com/alchaincyf/huashu-design ~/.claude/skills/huashu-design` |
-| `agent-browser` | wired | live reference + live verdict | Claude Code built-in |
+| `agent-browser` | wired | live reference + live verdict | `npx -y skills@latest add vercel-labs/agent-browser --skill agent-browser` (Vercel Labs — NOT built into Claude Code; without it the verdict is provisional) |
 
 > `review-animations` and `refero` raw tokens **degrade gracefully** — never break the pipeline on their
 > absence; announce the degraded lens and continue.
@@ -195,7 +195,7 @@ in its §11.B.
 ### 2. `reference-research` **[GATE — ALWAYS · the #1 lever against flat]**
 
 Dispatch **`design-reference-research`**: agent-browser over `dribbble.com/shots/popular/web-design`
-(2026 trend) **+ `refero`** (real shipped products) **+ 2–3 domain competitors + `ui-ux-pro-max` as
+(current trend) **+ `refero`** (real shipped products) **+ 2–3 domain competitors + `ui-ux-pro-max` as
 vocabulary**. Extract **3–5 patterns** → write the **copy+combine+house-layer** decision in
 `.design-review/references.md` (includes the "alive vs flat" bar and the **dials** for the taste lens).
 **Asset-integrity (only if a brand/product is named):** verify facts and pull REAL assets

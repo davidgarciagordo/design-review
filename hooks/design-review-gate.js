@@ -25,14 +25,22 @@ if (MODE === 'off') process.exit(0);
 // UI file detection — conservative, to avoid false positives on backend code.
 const ALWAYS_UI_EXT = new Set(['.tsx', '.jsx', '.vue', '.svelte', '.astro', '.mjml', '.css', '.scss', '.less']);
 const MAYBE_UI_EXT = new Set(['.ts', '.js', '.mjs', '.html']);
-const UI_PATH_HINT = /(^|\/)(components?|ui|design-system|styles?|app|pages|views|screens|emails?|apps\/(web|hq|marketing|mobile))(\/|$)/i;
+// Dir names that are UI wherever they appear. Deliberately EXCLUDES bare `app/` and `pages/`:
+// Node backends use those names too (Express/NestJS/Rails-style `app/`), which caused false
+// positives — Next-style routers are matched by their real UI entry filenames below instead.
+const UI_PATH_HINT = /(^|\/)(components?|ui|design-system|styles?|views|screens|stories|storybook|emails?|apps\/(web|hq|marketing|mobile))(\/|$)/i;
+// Next.js app router: only its UI entry files count for plain .ts/.js/.mjs.
+const NEXT_APP_UI_FILE = /(^|\/)app\/(.+\/)?(page|layout|template|loading|error|not-found|default)\.(ts|js|mjs)$/i;
+// Next.js pages router: everything under pages/ is a route component except pages/api/.
+const NEXT_PAGES_UI_FILE = /(^|\/)pages\/(?!api\/).+\.(ts|js|mjs)$/i;
 
 function isUiFile(file) {
   if (!file) return false;
-  const ext = path.extname(file).toLowerCase();
+  const f = file.replace(/\\/g, '/');
+  const ext = path.extname(f).toLowerCase();
   if (ALWAYS_UI_EXT.has(ext)) return true;
-  if (MAYBE_UI_EXT.has(ext)) return UI_PATH_HINT.test(file.replace(/\\/g, '/'));
-  return false;
+  if (!MAYBE_UI_EXT.has(ext)) return false;
+  return UI_PATH_HINT.test(f) || NEXT_APP_UI_FILE.test(f) || NEXT_PAGES_UI_FILE.test(f);
 }
 
 function findRoot(start) {
@@ -101,7 +109,7 @@ function main() {
   const msg =
     `[design-review-gate] UI file changed: ${file}\n` +
     `${state}\n` +
-    `Telos: a front-end change isn't done when it's merely correct — it must be ALIVE and 2026, ` +
+    `Telos: a front-end change isn't done when it's merely correct — it must be ALIVE and current, ` +
     `not flat/templated. Run "/design-review:run ${file}" and iterate until the verdict is "alive" ` +
     `(reference-research + the 4 core skills + vitality loop). Override per-edit with ` +
     `DESIGN_REVIEW_GATE=off if this isn't a design-bearing change.`;

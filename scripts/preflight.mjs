@@ -168,7 +168,6 @@ function globExists(pattern) {
   if (!pattern.includes('*')) return fs.existsSync(expand(pattern));
   const abs = expand(pattern);
   const star = abs.indexOf('*');
-  const base = abs.slice(0, star).replace(/\/[^/]*$/, (m) => m); // dir before '*'
   const dir = path.dirname(abs.slice(0, star) + 'x');
   const tailParts = abs.slice(star + 1).split('/').filter(Boolean);
   try {

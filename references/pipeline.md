@@ -1,9 +1,10 @@
 # Pipeline — step-by-step reference (executable, gated, vitality-first)
 
 > Expands the imperative pipeline in `SKILL.md` and `/design-review:run`. Use it when running the
-> pipeline manually or adapting it to a new project. The telos and its binary rules live in `SKILL.md`;
-> skills are reasoning an agent **loads** via the Skill tool — restating them in bullets is the bug this
-> pipeline exists to fix.
+> pipeline manually or adapting it to a new project. **`SKILL.md` is canonical** for the telos, step
+> order, and gate definitions — this file expands, it does not redefine; on any divergence, `SKILL.md`
+> wins. Skills are reasoning an agent **loads** via the Skill tool — restating them in bullets is the
+> bug this pipeline exists to fix.
 
 Root-cause → fix map (why the steps are shaped this way):
 
@@ -55,7 +56,7 @@ flatness hypotheses). **PASS = the artifact exists**, or "skipped — greenfield
 
 **Agent:** `design-reference-research`.
 
-1. Load `agent-browser`; open `https://dribbble.com/shots/popular/web-design` (2026 popular) and **2–3
+1. Load `agent-browser`; open `https://dribbble.com/shots/popular/web-design` (current popular) and **2–3
    real domain competitors**; screenshot relevant surfaces.
 2. Run `ui-ux-pro-max`'s `search.py` (Bash, deterministic) as **vocabulary**: name precisely what you see
    (style, palette, font-pair) instead of vague adjectives like "clean and modern".
