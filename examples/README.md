@@ -4,7 +4,7 @@
 
 > Concrete worked examples showing the gated pipeline in action: preflight, reference research, context-pack (discover-once), the 4 core lenses loaded READ-ONLY via the Skill tool, the anti-templated gate failing and recovering, and an explicit vitality verdict.
 
-These are realistic examples — not synthetic. Each shows the target, which steps ran (and which were skipped), what each lens found (terse), the checklist presented, what was applied, and the final vitality verdict judged against the live references.
+These are **illustrative worked examples** — authored to show the pipeline's mechanics faithfully, not transcripts of real runs. Each shows the target, which steps ran (and which were skipped), what each lens found (terse), the checklist presented, what was applied, and the final vitality verdict judged against the live references.
 
 ---
 
@@ -79,7 +79,7 @@ Each core lens is by its original author (see *Attribution* in the main README).
 ✓ frontend-design       present (marketplace)
 ✗ refero                missing — install: Refero MCP (npx refero-mcp) or default to agent-browser
 ✗ huashu-design         missing — install: git clone https://github.com/alchaincyf/huashu-design ~/.claude/skills/huashu-design
-✓ agent-browser         present (Claude Code built-in)
+✓ agent-browser         present (~/.claude/skills — Vercel Labs CLI)
 ```
 
 [AskUserQuestion — one batch for all missing]:
@@ -112,7 +112,7 @@ Agent `design-audit-first` renders the current settings page (light/dark/mobile)
 
 ### Step 2 — reference-research [GATE · always · the #1 lever against flat]
 
-Agent `design-reference-research` opens `dribbble.com/shots/popular/web-design` (2026 popular), three competitor settings pages (Linear, Vercel dashboard, Notion settings) via `agent-browser`, **`refero`** (gallery via agent-browser over refero.design — MCP SKIPPED; real shipped products: Mercury, Vercel, Linear listed there), and uses **`ui-ux-pro-max` vocabulary** to name styles/palettes/font-pairings precisely. Extracts 5 concrete patterns → writes `.design-review/references.md`:
+Agent `design-reference-research` opens `dribbble.com/shots/popular/web-design` (current popular), three competitor settings pages (Linear, Vercel dashboard, Notion settings) via `agent-browser`, **`refero`** (gallery via agent-browser over refero.design — MCP SKIPPED; real shipped products: Mercury, Vercel, Linear listed there), and uses **`ui-ux-pro-max` vocabulary** to name styles/palettes/font-pairings precisely. Extracts 5 concrete patterns → writes `.design-review/references.md`:
 
 1. **[layout]** Two-column: sticky sidebar nav + content pane — Linear. Eliminates repetitive section headings.
 2. **[density]** Asymmetric bento within each section — tighter data rows, airier headings — Vercel dashboard.
@@ -307,7 +307,7 @@ Agent `design-audit-first` renders the Button stories (default / hover / focus /
 
 ### Step 2 — reference-research [GATE · always · the #1 lever against flat]
 
-Agent `design-reference-research` opens `dribbble.com/shots/popular/web-design` (2026 popular), three competitor primary buttons (Stripe Checkout, Linear, Vercel Deploy) via `agent-browser`, **`refero`** (gallery via agent-browser over refero.design — MCP SKIPPED; real shipped button components: Stripe, Linear, Vercel listed there), and uses **`ui-ux-pro-max` vocabulary** to name motion styles and color semantics precisely. Extracts 4 patterns → writes `.design-review/references.md`:
+Agent `design-reference-research` opens `dribbble.com/shots/popular/web-design` (current popular), three competitor primary buttons (Stripe Checkout, Linear, Vercel Deploy) via `agent-browser`, **`refero`** (gallery via agent-browser over refero.design — MCP SKIPPED; real shipped button components: Stripe, Linear, Vercel listed there), and uses **`ui-ux-pro-max` vocabulary** to name motion styles and color semantics precisely. Extracts 4 patterns → writes `.design-review/references.md`:
 
 1. **[motion]** Micro-spring press: `scale(0.96)` + shadow collapse in 80ms `cubic-bezier(0.34, 1.56, 0.64, 1)` — Stripe.
 2. **[motion]** Brand ripple on click: a circular teal wave expands from the click point and fades in 350ms — Dribbble shot #2.

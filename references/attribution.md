@@ -6,7 +6,7 @@
 
 > **None of the 4 core skills below ship with Claude Code by default.** They are third-party skills
 > (credited to their authors in the table) that you must install separately — see
-> [Requires](../README.md#requires) — before the 4 lenses can run. Without them, each lens fails with
+> [Requirements](../README.md#requirements--the-honest-version) — before the 4 lenses can run. Without them, each lens fails with
 > `Unknown skill` (confirmed in testing); there is no built-in fallback.
 
 **Verify every URL before installing.** Entries marked ⚠️ are best-effort.
@@ -31,8 +31,9 @@ each skill; no referenced skill is ever assumed "not installed".
 | 4 | `web-design-guidelines` | `design-lens-a11y` | Accessibility AA, keyboard, visible focus, contrast, roles/labels. **WebFetch** guidelines → cached to `.design-review/web-guidelines.md` → passed as input (avoids "which files?" prompt) | Vercel (`vercel-labs/web-interface-guidelines`, packaged as a skill in `vercel-labs/agent-skills`) | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (alt: `curl -fsSL https://vercel.com/design/guidelines/install | bash`) |
 
 `agent-browser` is also effectively required for the two browser gates (reference-research and the vitality
-verdict). It is the browser-automation CLI — Claude Code built-in or project-configured. Without it, those
-steps degrade: the verdict can only be **provisional** (you cannot claim `alive` for a design no one
+verdict). It is **Vercel Labs' browser-automation CLI** (`npx -y skills@latest add vercel-labs/agent-browser
+--skill agent-browser` — skills.sh/vercel-labs/agent-browser), **not a Claude Code built-in**. Without it,
+those steps degrade: the verdict can only be **provisional** (you cannot claim `alive` for a design no one
 rendered).
 
 ---
@@ -69,7 +70,7 @@ No referenced skill is ever assumed "not installed" and no skill is ever silentl
 | `emil-design-eng` *(core)* | `npx -y skills@latest add emilkowalski/skills --skill emil-design-eng` |
 | `web-design-guidelines` *(core)* | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (third-party, Vercel — not bundled with Claude Code) |
 | `ui-ux-pro-max` *(wired intelligence)* | `claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill && claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
-| `agent-browser` | Claude Code built-in / project-configured |
+| `agent-browser` *(wired — quasi-required)* | `npx -y skills@latest add vercel-labs/agent-browser --skill agent-browser` (Vercel Labs — NOT built into Claude Code) |
 | `huashu-design` *(add-on)* | `npx -y skills@latest add alchaincyf/huashu-design` |
 
 > **`review-animations`** IS standalone-installable (`npx -y skills@latest add emilkowalski/skills
@@ -99,7 +100,7 @@ These are the levers against "flat", implemented as agents in this repo:
 
 | Gate | Agent | Role |
 |---|---|---|
-| **reference-research** | `design-reference-research` | The #1 lever: Dribbble 2026 + competitors + ui-ux-pro-max vocabulary → 3–5 patterns → copy+combine+house. Writes `.design-review/references.md`. |
+| **reference-research** | `design-reference-research` | The #1 lever: current Dribbble popular + competitors + ui-ux-pro-max vocabulary → 3–5 patterns → copy+combine+house. Writes `.design-review/references.md`. |
 | **vitality verdict** | `design-vitality-verdict` | Live check + diff vs references → explicit `alive`/`templated`/`flat`. Writes `.design-review/verdict.json` (the hook reads it). |
 
 ---

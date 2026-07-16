@@ -10,7 +10,7 @@ Copy this template after running the design-review pipeline. Fill in the finding
 **Date:** <!-- YYYY-MM-DD -->
 **Stack:** <!-- framework, CSS method, design system -->
 
-**Telos:** not "does it have defects?" but **"is it ALIVE and 2026 vs the references?"** A correct-but-flat
+**Telos:** not "does it have defects?" but **"is it ALIVE and current vs the references?"** A correct-but-flat
 result is a **failed** run.
 
 **Gates run (in order):**
@@ -19,7 +19,7 @@ result is a **failed** run.
   & context setup (PRODUCT.md/DESIGN.md for impeccable) & **memory adapter** detect (claude-mem /
   mem-search / none → announce; degrade gracefully)
 - [ ] 1 — **[GATE]** `audit-first` *(redesigns only)* — `.design-review/audit-first.md`
-- [ ] 2 — **[GATE]** `reference-research` (Dribbble 2026 + **`refero`** real shipped products + competitors
+- [ ] 2 — **[GATE]** `reference-research` (current Dribbble popular + **`refero`** real shipped products + competitors
   + `ui-ux-pro-max` vocabulary) + **asset-integrity** (`huashu` brand-spec, if a brand is named) —
   `.design-review/references.md`
 - [ ] 2b — **Plan** (folds in `frontend-design`: 4–6 hex token-plan + signature element + "3 AI-defaults to
