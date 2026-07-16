@@ -34,6 +34,11 @@ O toda la suite (este + token-economy, forge-methodology, working-methods, autom
 /plugin install design-review@davidgarciagordo-plugins
 ```
 
+> **Nota honesta:** el comando `/design-review:run`, los 8 agents y el hook de enforcement solo
+> existen en tu sesión cuando el plugin está **instalado y habilitado**
+> (`/plugin install design-review@davidgarciagordo-plugins`). Leer este repo sin instalarlo te da
+> la metodología como prosa — ningún gate se ejecuta.
+
 Después, apúntalo a un target:
 
 ```
@@ -107,7 +112,7 @@ Dos modos de fallo más que ninguna skill cubre tienen sus propios gates: **dise
 
 - **Claude Code.** Las piezas ejecutables (ruteo vía Skill tool, agentes, `AskUserQuestion`, el hook) son features de Claude Code. Fuera de Claude Code puedes seguir [`SKILL.md`](SKILL.md) + [`references/pipeline.md`](references/pipeline.md) a mano como metodología, pero nada de esto se ejecuta solo en otro sitio.
 - **Las 4 skills core son de terceros y NO vienen incluidas** — [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). El paso 0 detecta lo que falta y **pregunta ítem a ítem antes de instalar** — nunca instala en silencio, y tampoco omite en silencio: una skill core saltada hace fallar su lente de forma ruidosa (`Unknown skill` / degradación anunciada), no produce calladamente una review más floja. Comandos de instalación: [references/attribution.md](references/attribution.md); `node scripts/preflight.mjs` muestra qué hay presente en tu entorno.
-- **`agent-browser` es cuasi-requerido.** Es la CLI de automatización de navegador de Vercel Labs (`npx -y skills@latest add vercel-labs/agent-browser --skill agent-browser`), **no un built-in de Claude Code**. Los dos gates de navegador (reference-research y el veredicto final) dependen de ella — sin ella el veredicto es **solo provisional**: no se puede afirmar `alive` de un diseño que nadie ha renderizado.
+- **`agent-browser` es cuasi-requerido — y debe ser el de Vercel Labs.** Es la [CLI de automatización de navegador de Vercel Labs](https://github.com/vercel-labs/agent-browser), construida y optimizada para browsing dirigido por agentes (`npx -y skills@latest add vercel-labs/agent-browser`) — **no un built-in de Claude Code, y no intercambiable por una herramienta genérica de automatización de navegador**. Los dos gates de navegador (reference-research y el veredicto final) dependen de ella — sin ella el veredicto es **solo provisional**: no se puede afirmar `alive` de un diseño que nadie ha renderizado.
 - **Acceso a red** (research de Dribbble/competidores, fetch de las guidelines de Vercel), `node` para los scripts del repo, `python3` solo si usas `ui-ux-pro-max`.
 
 ## Mini-glosario
@@ -127,7 +132,7 @@ Dos modos de fallo más que ninguna skill cubre tienen sus propios gates: **dise
 
 ## Atribución
 
-Orquesta skills de terceros — las carga, nunca las parafrasea. Core (obligatorias, de terceros — ver [Requisitos](#requisitos--la-versión-honesta)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). Add-ons conectados: `ui-ux-pro-max`, `refero`, `frontend-design` (plugin oficial de Anthropic — criterio del plan), `building-components` (estándar de Vercel — criterio de autoría de componentes en el apply), `agent-browser` (Vercel Labs — EL tester: render vivo para research y el veredicto final), `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Detalle completo: [references/attribution.md](references/attribution.md).
+Orquesta skills de terceros — las carga, nunca las parafrasea. Core (obligatorias, de terceros — ver [Requisitos](#requisitos--la-versión-honesta)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). Add-ons conectados: `ui-ux-pro-max`, `refero`, `frontend-design` (plugin oficial de Anthropic — criterio del plan), `building-components` (estándar de Vercel — criterio de autoría de componentes en el apply), [`agent-browser`](https://github.com/vercel-labs/agent-browser) (Vercel Labs — EL tester: render vivo para research y el veredicto final; optimizado para browsing dirigido por agentes, nunca un sustituto genérico), `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Detalle completo: [references/attribution.md](references/attribution.md).
 
 Alternativa: clónalo en `~/.claude/skills/design-review` para cargarlo como plugin local sin marketplace.
 

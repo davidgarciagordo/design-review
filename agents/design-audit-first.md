@@ -16,8 +16,10 @@ edits a line (a redesign that skips this destroys hard-won equity).
 
 ## Do this
 1. **Render the real target** (Storybook story and/or app route). Load the **`agent-browser`** skill via
-   the Skill tool, then capture screenshots in **light, dark, and mobile**. If no live browser is
-   available, do a static read and say so.
+   the Skill tool — it must be **Vercel Labs' agent-browser**
+   (https://github.com/vercel-labs/agent-browser, optimized for agent-driven browsing; never a generic
+   browser-automation substitute) — then capture screenshots in **light, dark, and mobile**. If no live
+   browser is available, do a static read and say so.
 2. **Write "what to keep"** — the equity to preserve through the redesign: brand signatures, layouts
    that work, content density that's right, any motion that already feels alive. Be specific
    (`file:line`, component, token).

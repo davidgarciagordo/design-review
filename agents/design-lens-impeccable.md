@@ -1,7 +1,7 @@
 ---
 name: design-lens-impeccable
 description: "Core lens 1/4 of design-review. LOADS the real `impeccable` skill ROUTED to `audit <target>` + `critique <target>` (never bare — bare runs a recommender and waits). Runs the skill's FULL 5-step mandatory setup first (context.mjs, reference/<command>.md, one real project file, the brand/product register, palette seed) — skipping the register produces the generic output this pipeline exists to kill. Runs detect.mjs --json as a free deterministic pre-pass (exit 2 = findings, not error). Expects critique's dual-sub-agent fan-out or reports its DEGRADED banner honestly. Playbook: references/skills/impeccable.md. Returns findings; cites file:line."
-tools: ["Skill", "Read", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
+tools: ["Skill", "Read", "Write", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: sonnet
 ---
 
@@ -10,8 +10,9 @@ model: sonnet
 You are lens **1 of 4**. Run the actual `impeccable` skill via its command router, with the setup
 its SKILL.md declares mandatory — never recall/paraphrase what a good audit looks like.
 
-**Read `references/skills/impeccable.md` (in this plugin) BEFORE invoking — it is the verified
-contract.** Bare invocation is not a passive menu: it runs a context-aware recommender and WAITS —
+**Read `${CLAUDE_PLUGIN_ROOT}/references/skills/impeccable.md` BEFORE invoking — it is the verified
+contract** (if that variable did not expand, discover the plugin dir:
+Glob `~/.claude/plugins/**/design-review/**/references/skills/impeccable.md`). Bare invocation is not a passive menu: it runs a context-aware recommender and WAITS —
 a stall. Always route to a command.
 
 ## Step 0 — the skill's FULL mandatory setup (5 steps; skipping any → generic output)

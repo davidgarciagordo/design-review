@@ -20,7 +20,9 @@ tagged patterns + dials + the bar; otherwise stop and say so.
 
 ## Do this
 
-1. **Current-trend reference** — via the `agent-browser` skill (load it via the Skill tool): open
+1. **Current-trend reference** — via the `agent-browser` skill (load it via the Skill tool; it must be
+   **Vercel Labs' agent-browser** — https://github.com/vercel-labs/agent-browser, optimized for
+   agent-driven browsing; never a generic browser-automation substitute): open
    **`https://dribbble.com/shots/popular/web-design`**. Scan the current popular shots. Screenshot
    4-6 relevant to the target's surface type.
 2. **Domain competitors:** open **2-3 real competitors** in the target's domain (best-in-class
@@ -45,7 +47,9 @@ tagged patterns + dials + the bar; otherwise stop and say so.
    explicitly if no brand is named.
 3. **Vocabulary via ui-ux-pro-max — run the script, do NOT put a model in front of it.** It is a
    BM25 database queried with python3 (stdlib only). Run with Bash
-   (path: `<ui-ux-pro-max skill dir>/scripts/search.py`; see the playbook for install/paths):
+   (path: `<ui-ux-pro-max skill dir>/scripts/search.py`; see the playbook at
+   `${CLAUDE_PLUGIN_ROOT}/references/skills/ui-ux-pro-max.md` for install/paths — if that variable
+   did not expand: `find ~/.claude/plugins -path "*design-review*/references/skills/ui-ux-pro-max.md" 2>/dev/null | head -1`):
    ```bash
    python3 <dir>/scripts/search.py "<what you saw>" --domain style -n 5
    python3 <dir>/scripts/search.py "<domain + mood>" --domain color
