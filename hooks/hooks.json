@@ -10,7 +10,7 @@
             "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/design-review-gate.js\""
           }
         ],
-        "description": "Vitality gate: when a write/edit touches a UI file, warn (or block, via DESIGN_REVIEW_GATE=block) unless design-review produced an 'alive' verdict for it. Telos = alive/2026, not correct-but-flat."
+        "description": "Vitality gate: when a write/edit touches a UI file, warn (or block, via DESIGN_REVIEW_GATE=block) unless design-review produced an 'alive' verdict for it. Telos = alive/current, not correct-but-flat."
       }
     ]
   }

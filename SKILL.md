@@ -1,6 +1,6 @@
 ---
 name: design-review
-description: "UNIFIED ORCHESTRATOR for design skills — runs ALL design skills in order, ROUTING each to its correct command/mode, ACCUMULATES suggestions into one prioritized list, ASKS the user (multi-select, P1 pre-marked), APPLIES the chosen ones via the owning fix command. Vitality telos: audit-first (redesigns) → reference-research GATE (Dribbble 2026 + competitors + ui-ux-pro-max vocabulary) → 4 CORE skills REALLY invoked via the Skill tool and ROUTED (impeccable→design-taste-frontend→emil-design-eng→web-design-guidelines) → explicit vitality-verdict (alive/templated/flat) → loop. Bootstrap: detects and INSTALLS referenced skills. Trigger: 'improve design', 'make this alive / less flat', 'design review'; explicit command: '/design-review:run <target>'."
+description: "UNIFIED ORCHESTRATOR for design skills — runs ALL design skills in order, ROUTING each to its correct command/mode, ACCUMULATES suggestions into one prioritized list, ASKS the user (multi-select, P1 pre-marked), APPLIES the chosen ones via the owning fix command. Vitality telos: audit-first (redesigns) → reference-research GATE (current Dribbble popular + competitors + ui-ux-pro-max vocabulary) → 4 CORE skills REALLY invoked via the Skill tool and ROUTED (impeccable→design-taste-frontend→emil-design-eng→web-design-guidelines) → explicit vitality-verdict (alive/templated/flat) → loop. Bootstrap: detects missing referenced skills → ASKS per item → installs only the chosen ones (never silently). Trigger: 'improve design', 'make this alive / less flat', 'design review'; explicit command: '/design-review:run <target>'."
 ---
 
 # design-review — UNIFIED ORCHESTRATOR (v2.3)
@@ -14,7 +14,7 @@ Project instantiations reference this file and override where project identity d
 
 The question is **not** *"does this design have defects?"* (that loop's ceiling is correct-but-flat). It is:
 
-> ### Is this design ALIVE and unmistakably 2026 **against these specific references**?
+> ### Is this design ALIVE and unmistakably current **against these specific references**?
 
 - **Correctness is the floor.** WCAG AA, tokens, no overflow — table stakes. A target that passes all of
   them and still reads generic has **FAILED** this pipeline.
@@ -51,7 +51,7 @@ skill fails its lens with `Unknown skill` (confirmed in testing — no silent de
 |---|---|---|
 | Orchestrator command | `commands/run.md` | `/design-review:run <target>` — runs the unified flow IN ORDER |
 | Audit-first gate | `agents/design-audit-first.md` | Redesigns only: screenshot current + "what to keep" |
-| **Reference-research gate** | `agents/design-reference-research.md` | **[GATE]** Dribbble 2026 + competitors + `ui-ux-pro-max` vocabulary; 3–5 patterns; copy+combine+house |
+| **Reference-research gate** | `agents/design-reference-research.md` | **[GATE]** current Dribbble popular + competitors + `ui-ux-pro-max` vocabulary; 3–5 patterns; copy+combine+house |
 | **Context-pack** | `agents/design-context-pack.md` | **discover ONCE** — source map + file:line + shared-found; lenses judge this, not re-scan |
 | Lens: structure/audit | `agents/design-lens-impeccable.md` | **routes** `impeccable audit` + `critique` (READ-ONLY) |
 | Lens: anti-templated | `agents/design-lens-taste.md` | **routes** `design-taste-frontend` §11 + §14; gate that FAILS generic output |
@@ -95,7 +95,7 @@ Manifest summary (`tier`: **core** gate · **wired** integrated · **addon** opt
 | `frontend-design` (Anthropic) | wired | authoring: token-plan + signature + UX-writing (**folded into taste/plan**) | Anthropic agent-skills marketplace |
 | `refero` | wired | real-product reference (gallery + DESIGN.md tokens) | Refero MCP (opt-in); default = agent-browser over refero.design |
 | `huashu-design` | addon | asset-integrity + Playwright verify + non-landing builder | `git clone https://github.com/alchaincyf/huashu-design ~/.claude/skills/huashu-design` |
-| `agent-browser` | wired | live reference + live verdict | Claude Code built-in |
+| `agent-browser` | wired | live reference + live verdict | `npx -y skills@latest add vercel-labs/agent-browser` (**Vercel Labs' agent-browser** — https://github.com/vercel-labs/agent-browser, optimized for agent-driven browsing; NOT built into Claude Code, NOT a generic browser-automation substitute; without it the verdict is provisional) |
 
 > `review-animations` and `refero` raw tokens **degrade gracefully** — never break the pipeline on their
 > absence; announce the degraded lens and continue.
@@ -187,15 +187,15 @@ density regime + primary lens/builder (see "Surface routing"). Resolve owner-onl
 
 ### 1. `audit-first` **[GATE — redesigns only]**
 
-**Trigger:** the target already exists. Dispatch **`design-audit-first`**: screenshot the current state +
+**Trigger:** the target already exists. Dispatch **`design-review:design-audit-first`**: screenshot the current state +
 write `.design-review/audit-first.md` ("what to keep" equity + "what to attack"). The taste lens uses this
 in its §11.B.
 **PASS = `.design-review/audit-first.md` exists** — or the run states "skipped — greenfield" explicitly.
 
 ### 2. `reference-research` **[GATE — ALWAYS · the #1 lever against flat]**
 
-Dispatch **`design-reference-research`**: agent-browser over `dribbble.com/shots/popular/web-design`
-(2026 trend) **+ `refero`** (real shipped products) **+ 2–3 domain competitors + `ui-ux-pro-max` as
+Dispatch **`design-review:design-reference-research`**: agent-browser over `dribbble.com/shots/popular/web-design`
+(current trend) **+ `refero`** (real shipped products) **+ 2–3 domain competitors + `ui-ux-pro-max` as
 vocabulary**. Extract **3–5 patterns** → write the **copy+combine+house-layer** decision in
 `.design-review/references.md` (includes the "alive vs flat" bar and the **dials** for the taste lens).
 **Asset-integrity (only if a brand/product is named):** verify facts and pull REAL assets
@@ -211,7 +211,7 @@ UX-writing checklist. Authoring criterion, not a lens.
 
 ### 2c. Context-pack — discover ONCE (token lever)
 
-Build **`.design-review/context-pack.md`** with ONE agent (`design-context-pack`): source map (component
+Build **`.design-review/context-pack.md`** with ONE agent (`design-review:design-context-pack`): source map (component
 tree, props, tokens-in-use, **file:line** of every point of interest), decisive source excerpts, cached
 baseline screenshots (audit-first), cached a11y guidelines, and the **already-known shared findings**
 (`SHARED-FOUND`). Without it each lens re-reads the whole surface and re-derives the same bugs
@@ -219,20 +219,22 @@ baseline screenshots (audit-first), cached a11y guidelines, and the **already-kn
 
 ### 3. DIAGNOSIS — CORE skills, ROUTED, in order **[GATE]**
 
-Dispatch each lens in turn, passing **`context-pack.md` + `references.md`**. Each **loads its skill via
+Dispatch each lens in turn, passing **`context-pack.md` + `references.md` + its resolved playbook path
+(`${CLAUDE_PLUGIN_ROOT}/references/skills/<name>.md` — inject it in the prompt; the subagent's cwd is
+the project, so a relative path does not resolve)**. Each **loads its skill via
 the Skill tool ROUTED to its command/mode** and returns findings citing `file:line`. Three hard rules:
 1. **Lenses are READ-ONLY** — NO Edit/Write; findings only. (A lens that edits during diagnosis bypasses
    the step-4 ASK gate.) ALL edits happen in step 5, ONE apply pass, after the multi-select.
 2. **Do NOT re-read source** — it's in the context-pack; read source only to confirm a line the pack lacks.
 3. **Do NOT re-report `SHARED-FOUND`** — add only your lens's unique angle. Terse output (see Rules).
 
-- **3a · `design-lens-impeccable`** → `impeccable audit` + `critique`.
-- **3b · `design-lens-taste`** → `design-taste-frontend` §11 + §14. **Anti-templated gate**: FAILS if the
+- **3a · `design-review:design-lens-impeccable`** → `impeccable audit` + `critique`.
+- **3b · `design-review:design-lens-taste`** → `design-taste-frontend` §11 + §14. **Anti-templated gate**: FAILS if the
   output could be any SaaS template. Exit criterion: *"this could only be THIS product."*
-- **3c · `design-lens-motion`** → `emil-design-eng` review (concrete question inline) + **one memorable
+- **3c · `design-review:design-lens-motion`** → `emil-design-eng` review (concrete question inline) + **one memorable
   motion moment**. If `review-animations` is present, it runs here (by reading) as the **motion
   Block/Approve gate** (feeds the verdict).
-- **3d · `design-lens-a11y`** → WebFetch guidelines → cache → `web-design-guidelines` (AA). Runs **last**
+- **3d · `design-review:design-lens-a11y`** → WebFetch guidelines → cache → `web-design-guidelines` (AA). Runs **last**
   so it nets the motion emil just added.
 - **3e · `ui-ux-pro-max` (UX guidelines)** → extra UX lens (wired, not gate). Opt-in add-ons
   (`huashu-design`, `web-accessibility`) run here.
@@ -256,7 +258,7 @@ do not re-litigate settled items.
 
 ### 6. `vitality-verdict` **[GATE]**
 
-Dispatch **`design-vitality-verdict`**: live render (light/dark/mobile via agent-browser), **diff against
+Dispatch **`design-review:design-vitality-verdict`**: live render (light/dark/mobile via agent-browser), **diff against
 references.md**, house layer / density-bento / motion-fires / typography checks, Core Web Vitals, and
 verdict **`alive`/`templated`/`flat`** written to `.design-review/verdict.json`. Reinforced, when present,
 by **taste §14 pre-flight**, **`review-animations`** Block/Approve, **`huashu-design` Playwright verify**.

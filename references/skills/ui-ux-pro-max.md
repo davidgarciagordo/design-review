@@ -14,9 +14,11 @@ skills, NOT modes of the search script** — invoke them via the Skill tool by t
 
 ## What it actually is
 A BM25-searchable design database (python3 stdlib only, no pip): **84 styles · 161 palettes ·
-73 font-pairings** (counted from the shipped CSVs — the "50+/57" figures floating around come from
-a stale SKILL.md description) · 25 charts · 161 product types · 99 UX guidelines · 1923 google-fonts
-· 16 stacks. It is a CONSULTATION tool — there is no fix command.
+73 font-pairings** (counted from the CSVs shipped in the pinned v2.6.2 — the "50+/57" figures
+floating around come from a stale SKILL.md description) · 25 charts · 161 product types ·
+99 UX guidelines · 1923 google-fonts · 16 stacks. ⚠️ **Counts vary by version** (e.g. v2.5.0
+shipped 192 palettes/products) — if your installed version differs from the pin, re-count from its
+`data/*.csv` before citing figures. It is a CONSULTATION tool — there is no fix command.
 
 ## Invoke (script path: `<skill-dir>/scripts/search.py`; Windows: `python` not `python3`)
 - **Design-system baseline** (its SKILL.md prescribes this as a mandatory step, :363-379):

@@ -40,6 +40,9 @@ export const MANIFEST = [
     phase: '3a diagnosis (lead lens) + 1 audit-first + 5 fix',
     kind: 'skill',
     detect: ['~/.claude/skills/impeccable/SKILL.md', '.claude/skills/impeccable/SKILL.md'],
+    // Version the playbook (references/skills/impeccable.md) was verified against. An older
+    // installed version means the playbook contract (flags, stalls, banners) may not hold.
+    minContractVersion: '3.9.1',
     install: 'git clone https://github.com/pbakaus/impeccable /tmp/impeccable && cp -r /tmp/impeccable/.claude/skills/impeccable ~/.claude/skills/impeccable (documented interactive form: npx impeccable install)',
     notes: 'Needs PRODUCT.md (only PRODUCT.md blocks with NO_PRODUCT_MD; DESIGN.md optional). Mandatory 5-step setup incl. the brand/product register — see references/skills/impeccable.md. Monorepo: context.mjs needs --target.',
   },
@@ -140,8 +143,8 @@ export const MANIFEST = [
     phase: '2 reference-research + 6 verdict (live verification gate)',
     kind: 'skill',
     detect: ['~/.claude/skills/agent-browser/SKILL.md', '.claude/skills/agent-browser/SKILL.md'],
-    install: 'npx -y skills@latest add vercel-labs/agent-browser --skill agent-browser',
-    notes: 'Vercel Labs browser-automation CLI (skills.sh/vercel-labs/agent-browser). Without it the verdict is PROVISIONAL only — alive cannot be claimed for a design no one rendered.',
+    install: 'npx -y skills@latest add vercel-labs/agent-browser',
+    notes: "Must be Vercel Labs' agent-browser (https://github.com/vercel-labs/agent-browser — purpose-built and optimized for agent-driven browsing); NOT a generic browser-automation substitute. Without it the verdict is PROVISIONAL only — alive cannot be claimed for a design no one rendered.",
   },
   {
     id: 'building-components',
@@ -163,23 +166,30 @@ function expand(p) {
   return p.startsWith('~/') ? path.join(HOME, p.slice(2)) : path.resolve(CWD, p);
 }
 
-function globExists(pattern) {
+function globResolve(pattern) {
   // Minimal glob: supports a single '*' segment (used for plugin version dirs).
-  if (!pattern.includes('*')) return fs.existsSync(expand(pattern));
+  // Returns the first matching absolute path, or null.
+  if (!pattern.includes('*')) {
+    const abs = expand(pattern);
+    return fs.existsSync(abs) ? abs : null;
+  }
   const abs = expand(pattern);
   const star = abs.indexOf('*');
-  const base = abs.slice(0, star).replace(/\/[^/]*$/, (m) => m); // dir before '*'
   const dir = path.dirname(abs.slice(0, star) + 'x');
   const tailParts = abs.slice(star + 1).split('/').filter(Boolean);
   try {
     for (const entry of fs.readdirSync(dir)) {
       const candidate = path.join(dir, entry, ...tailParts);
-      if (fs.existsSync(candidate)) return true;
+      if (fs.existsSync(candidate)) return candidate;
     }
   } catch {
     /* dir missing */
   }
-  return false;
+  return null;
+}
+
+function globExists(pattern) {
+  return globResolve(pattern) !== null;
 }
 
 function binExists(cmd) {
@@ -205,6 +215,49 @@ function isPresent(c) {
   // MCP servers: the config file must actually reference the server id, not just exist.
   if (c.kind === 'mcp') return (c.detect || []).some((p) => fileContains(p, c.id));
   return (c.detect || []).some(globExists);
+}
+
+/** Reads `version:` from the YAML frontmatter of an installed SKILL.md, or null. */
+function frontmatterVersion(file) {
+  try {
+    const text = fs.readFileSync(file, 'utf8');
+    const fm = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    if (!fm) return null;
+    const v = fm[1].match(/^version:\s*["']?(\d+(?:\.\d+){0,2})["']?\s*$/m);
+    return v ? v[1] : null;
+  } catch {
+    return null;
+  }
+}
+
+/** True when semver `a` < semver `b` (numeric, missing segments = 0). */
+function semverLt(a, b) {
+  const pa = a.split('.').map(Number);
+  const pb = b.split('.').map(Number);
+  for (let i = 0; i < 3; i++) {
+    const x = pa[i] || 0;
+    const y = pb[i] || 0;
+    if (x !== y) return x < y;
+  }
+  return false;
+}
+
+/**
+ * Contract-version drift check — NON-BLOCKING. Each playbook in references/skills/ was verified
+ * against a pinned source version; when the MANIFEST entry declares `minContractVersion`, compare
+ * it to the `version:` frontmatter of the installed SKILL.md. Older = the playbook contract
+ * (flags, stalls, banners) may not hold for what is actually installed. Only report; never fail.
+ * Returns null (no contract declared / not present), or {state, installed, contract}.
+ */
+function contractStatus(c, present) {
+  if (!c.minContractVersion || !present) return null;
+  const file = (c.detect || []).map(globResolve).find(Boolean);
+  const installed = file && file.endsWith('SKILL.md') ? frontmatterVersion(file) : null;
+  if (!installed) return { state: 'unversioned', installed: null, contract: c.minContractVersion };
+  if (semverLt(installed, c.minContractVersion)) {
+    return { state: 'outdated', installed, contract: c.minContractVersion };
+  }
+  return { state: 'ok', installed, contract: c.minContractVersion };
 }
 
 /**
@@ -250,7 +303,7 @@ function pluginEnabledState(pluginKey) {
   return { enabled: undefined, source: null }; // no explicit setting at any checked scope
 }
 
-function statusOf(c, present) {
+function statusOf(c, present, contract) {
   if (!present) return { symbol: '✗', label: 'not found' };
   if (c.kind === 'plugin' && c.pluginKey) {
     const { enabled, source } = pluginEnabledState(c.pluginKey);
@@ -258,11 +311,27 @@ function statusOf(c, present) {
     if (enabled === true) return { symbol: '✓', label: `present and enabled (enabledPlugins:${source})` };
     return { symbol: '✓', label: 'present (no explicit enabledPlugins entry found — falls back to plugin default)' };
   }
+  if (contract) {
+    if (contract.state === 'outdated') {
+      return {
+        symbol: '⚠',
+        label: `outdated (installed v${contract.installed} < contract v${contract.contract} — playbook contract may not hold; re-verify or update)`,
+      };
+    }
+    if (contract.state === 'unversioned') {
+      return {
+        symbol: '?',
+        label: `unversioned (installed SKILL.md declares no version; playbook contract is v${contract.contract} — cannot verify drift)`,
+      };
+    }
+    return { symbol: '✓', label: `present, v${contract.installed} ≥ contract v${contract.contract} (enablement not checked — see note below)` };
+  }
   return { symbol: '✓', label: 'present (enablement not checked — see note below)' };
 }
 
 const result = MANIFEST.map((c) => {
   const present = isPresent(c);
+  const contract = contractStatus(c, present);
   return {
     id: c.id,
     tier: c.tier,
@@ -270,7 +339,8 @@ const result = MANIFEST.map((c) => {
     role: c.role,
     phase: c.phase,
     present,
-    status: statusOf(c, present),
+    contract,
+    status: statusOf(c, present, contract),
     install: c.install,
     notes: c.notes || '',
   };
@@ -278,7 +348,8 @@ const result = MANIFEST.map((c) => {
 
 const present = result.filter((r) => r.present);
 const missing = result.filter((r) => !r.present);
-const disabled = present.filter((r) => r.status.symbol === '⚠');
+const disabled = present.filter((r) => r.status.label.includes('DISABLED'));
+const outdated = present.filter((r) => r.contract && r.contract.state !== 'ok');
 
 const ENABLEMENT_NOTE =
   'Note: enablement is only verified for plugin-kind components with a known `enabledPlugins` key ' +
@@ -291,7 +362,7 @@ const ENABLEMENT_NOTE =
 
 const args = process.argv.slice(2);
 if (args.includes('--json')) {
-  process.stdout.write(JSON.stringify({ present, missing, disabled, note: ENABLEMENT_NOTE }, null, 2) + '\n');
+  process.stdout.write(JSON.stringify({ present, missing, disabled, outdated, note: ENABLEMENT_NOTE }, null, 2) + '\n');
 } else {
   const line = (r) => `  ${r.status.symbol} [${r.tier}] ${r.id} — ${r.role} (${r.status.label})`;
   process.stdout.write('design-review preflight — components it orchestrates\n\n');
@@ -301,6 +372,10 @@ if (args.includes('--json')) {
   if (disabled.length) {
     process.stdout.write('\n⚠ DISABLED THIS SESSION (on disk but will still throw `Unknown skill`):\n');
     process.stdout.write(disabled.map((r) => `  ⚠ ${r.id} — enable with: claude plugin enable ${r.id}`).join('\n') + '\n');
+  }
+  if (outdated.length) {
+    process.stdout.write('\n⚠ CONTRACT-VERSION DRIFT (non-blocking — the verified playbook may not match what is installed):\n');
+    process.stdout.write(outdated.map((r) => `  ${r.status.symbol} ${r.id} — ${r.status.label}`).join('\n') + '\n');
   }
   process.stdout.write('\n' + ENABLEMENT_NOTE + '\n');
 }

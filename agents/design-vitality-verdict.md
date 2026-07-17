@@ -10,12 +10,16 @@ model: opus
 You are the **final judge**: only here, against the real render and the real references, is
 **alive vs flat** decided. Correctness is assumed by now — you judge **vitality**.
 
-**Read the playbooks in `references/skills/` for any skill you touch here — they are the verified
-contracts** (`review-animations.md`, `taste-skill.md`, `huashu-design.md`).
+**Read the playbooks in `${CLAUDE_PLUGIN_ROOT}/references/skills/` for any skill you touch here —
+they are the verified contracts** (`review-animations.md`, `taste-skill.md`, `huashu-design.md`;
+if that variable did not expand, discover the plugin dir:
+Glob `~/.claude/plugins/**/design-review/**/references/skills/taste-skill.md`).
 
 ## Do this
 
-1. **Render the real target live.** Load the **`agent-browser`** skill via the Skill tool, then
+1. **Render the real target live.** Load the **`agent-browser`** skill via the Skill tool — it must
+   be **Vercel Labs' agent-browser** (https://github.com/vercel-labs/agent-browser, optimized for
+   agent-driven browsing; never a generic browser-automation substitute) — then
    screenshot the target (Storybook story and/or app route) in **light, dark, and mobile**.
    Screenshots are ground truth. (agent-browser owns light/dark — huashu's verify.py cannot do
    color-scheme emulation.)

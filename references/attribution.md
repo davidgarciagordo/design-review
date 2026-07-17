@@ -6,7 +6,7 @@
 
 > **None of the 4 core skills below ship with Claude Code by default.** They are third-party skills
 > (credited to their authors in the table) that you must install separately — see
-> [Requires](../README.md#requires) — before the 4 lenses can run. Without them, each lens fails with
+> [Requirements](../README.md#requirements--the-honest-version) — before the 4 lenses can run. Without them, each lens fails with
 > `Unknown skill` (confirmed in testing); there is no built-in fallback.
 
 **Verify every URL before installing.** Entries marked ⚠️ are best-effort.
@@ -31,9 +31,12 @@ each skill; no referenced skill is ever assumed "not installed".
 | 4 | `web-design-guidelines` | `design-lens-a11y` | Accessibility AA, keyboard, visible focus, contrast, roles/labels. **WebFetch** guidelines → cached to `.design-review/web-guidelines.md` → passed as input (avoids "which files?" prompt) | Vercel (`vercel-labs/web-interface-guidelines`, packaged as a skill in `vercel-labs/agent-skills`) | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (alt: `curl -fsSL https://vercel.com/design/guidelines/install | bash`) |
 
 `agent-browser` is also effectively required for the two browser gates (reference-research and the vitality
-verdict). It is the browser-automation CLI — Claude Code built-in or project-configured. Without it, those
-steps degrade: the verdict can only be **provisional** (you cannot claim `alive` for a design no one
-rendered).
+verdict). It is **Vercel Labs' browser-automation CLI —
+[github.com/vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser), purpose-built and
+optimized for agent-driven browsing** (`npx -y skills@latest add vercel-labs/agent-browser` —
+skills.sh/vercel-labs/agent-browser), **not a Claude Code built-in and not interchangeable with a generic
+browser-automation tool**. Without it, those steps degrade: the verdict can only be **provisional** (you
+cannot claim `alive` for a design no one rendered).
 
 ---
 
@@ -47,18 +50,20 @@ rendered).
 | **`review-animations`** | **Motion gate (3c + verdict 6)** — Block/Approve on animation vs `STANDARDS.md`. `disable-model-invocation=true` → invoke explicitly; degrades gracefully if absent | `npx -y skills@latest add emilkowalski/skills --skill review-animations` |
 
 | **`building-components`** | **Fix/build (step 5)** — Vercel's open component standard (composable, accessible); authoring criterion when the applied changes create/reshape components | `npx -y skills@latest add vercel/components.build --skill building-components` |
-| **`agent-browser`** | **THE TESTER (steps 2 + 6)** — live reference capture and live verdict render; without it the verdict is provisional | `npx -y skills@latest add vercel-labs/agent-browser --skill agent-browser` |
+| **`agent-browser`** | **THE TESTER (steps 2 + 6)** — live reference capture and live verdict render; without it the verdict is provisional. Must be **Vercel Labs' agent-browser** ([github.com/vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser), optimized for agent-driven browsing) — not a generic substitute | `npx -y skills@latest add vercel-labs/agent-browser` |
 
 > Single source of truth for the full manifest (detect + install per component) is **`scripts/preflight.mjs`**.
 
 ---
 
-## Bootstrap — detect → install → fallback → use (step 0, non-negotiable)
+## Bootstrap — detect → ASK → install-or-skip → fallback → use (step 0, non-negotiable)
 
-No referenced skill is ever assumed "not installed" and no skill is ever silently skipped. Mechanism:
+No referenced skill is ever assumed "not installed", nothing installs silently, and no skill is ever
+silently skipped. Mechanism:
 
 1. **Available as plugin/skill** (in `~/.claude/skills`, marketplace, or `.claude/skills` in the project) → use it.
-2. **Missing → install it** (`npx skills add <author/repo>` or `claude plugin install <plugin>@<marketplace>`).
+2. **Missing → ASK the user** (one batch: install or skip per item), then install only what is chosen
+   (`npx skills add <author/repo>` or `claude plugin install <plugin>@<marketplace>`).
 3. **Fallback if it cannot be installed formally** → clone the repo to a temp dir and read/use its
    `SKILL.md` directly. ("At a minimum, know how to use it by installing it in a temp location.")
 
@@ -69,7 +74,7 @@ No referenced skill is ever assumed "not installed" and no skill is ever silentl
 | `emil-design-eng` *(core)* | `npx -y skills@latest add emilkowalski/skills --skill emil-design-eng` |
 | `web-design-guidelines` *(core)* | `npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines` (third-party, Vercel — not bundled with Claude Code) |
 | `ui-ux-pro-max` *(wired intelligence)* | `claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill && claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
-| `agent-browser` | Claude Code built-in / project-configured |
+| `agent-browser` *(wired — quasi-required)* | `npx -y skills@latest add vercel-labs/agent-browser` (**Vercel Labs** — https://github.com/vercel-labs/agent-browser, optimized for agent-driven browsing; NOT built into Claude Code, NOT a generic browser-automation substitute) |
 | `huashu-design` *(add-on)* | `npx -y skills@latest add alchaincyf/huashu-design` |
 
 > **`review-animations`** IS standalone-installable (`npx -y skills@latest add emilkowalski/skills
@@ -99,7 +104,7 @@ These are the levers against "flat", implemented as agents in this repo:
 
 | Gate | Agent | Role |
 |---|---|---|
-| **reference-research** | `design-reference-research` | The #1 lever: Dribbble 2026 + competitors + ui-ux-pro-max vocabulary → 3–5 patterns → copy+combine+house. Writes `.design-review/references.md`. |
+| **reference-research** | `design-reference-research` | The #1 lever: current Dribbble popular + competitors + ui-ux-pro-max vocabulary → 3–5 patterns → copy+combine+house. Writes `.design-review/references.md`. |
 | **vitality verdict** | `design-vitality-verdict` | Live check + diff vs references → explicit `alive`/`templated`/`flat`. Writes `.design-review/verdict.json` (the hook reads it). |
 
 ---

@@ -1,7 +1,7 @@
 ---
 name: design-context-pack
 description: "Phase 2c of design-review — DISCOVER ONCE. Reads the target source ONCE, builds .design-review/context-pack.md (component tree, props, tokens-in-use, file:line map, key excerpts, cached baseline screenshots + a11y guidelines refs, and the already-known shared findings from audit-first). The 4 lenses then JUDGE this pack instead of each re-scanning the whole surface (kills ~80% rediscovery overlap). Read-only. Terse output."
-tools: ["Read", "Bash", "Grep", "Glob"]
+tools: ["Read", "Write", "Bash", "Grep", "Glob"]
 model: sonnet
 ---
 

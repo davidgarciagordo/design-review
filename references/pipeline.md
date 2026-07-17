@@ -1,9 +1,10 @@
 # Pipeline — step-by-step reference (executable, gated, vitality-first)
 
 > Expands the imperative pipeline in `SKILL.md` and `/design-review:run`. Use it when running the
-> pipeline manually or adapting it to a new project. The telos and its binary rules live in `SKILL.md`;
-> skills are reasoning an agent **loads** via the Skill tool — restating them in bullets is the bug this
-> pipeline exists to fix.
+> pipeline manually or adapting it to a new project. **`SKILL.md` is canonical** for the telos, step
+> order, and gate definitions — this file expands, it does not redefine; on any divergence, `SKILL.md`
+> wins. Skills are reasoning an agent **loads** via the Skill tool — restating them in bullets is the
+> bug this pipeline exists to fix.
 
 Root-cause → fix map (why the steps are shaped this way):
 
@@ -12,7 +13,7 @@ Root-cause → fix map (why the steps are shaped this way):
 | Wrong telos (defect-removal ceiling) | Explicit **vitality verdict** + **loop** | 6, 7 |
 | No reference research (designing from memory = template) | **reference-research GATE** + `ui-ux-pro-max` vocabulary | 2 |
 | Skills paraphrased or invoked bare (stalls in router/setup) | **REAL and ROUTED invocation** via the Skill tool | 3 |
-| Skills assumed "not installed" | **Bootstrap (step 0)**: detect → install → temp-clone fallback | 0 |
+| Skills assumed "not installed" | **Bootstrap (step 0)**: detect → ASK → install-or-skip explicitly → temp-clone fallback | 0 |
 
 ---
 
@@ -27,9 +28,11 @@ browser** (available or not). A vague target makes the wrong steps run.
 ## Step 0 — Bootstrap & Frame the target
 
 **Bootstrap (first, non-negotiable):** detect every referenced skill and ensure it is usable:
-(a) present in `~/.claude/skills` / marketplace → use; (b) missing → install (`npx skills add
-<author/repo>` or `claude plugin install <plugin>@<marketplace>`); (c) fallback → clone to a temp dir and
-read its `SKILL.md` directly. No referenced skill is ever silently skipped.
+(a) present in `~/.claude/skills` / marketplace → use; (b) missing → **ASK the user** (one
+`AskUserQuestion` batch: install or skip per item) and install only what is chosen (`npx skills add
+<author/repo>` or `claude plugin install <plugin>@<marketplace>`) — never install silently; (c) fallback
+→ clone to a temp dir and read its `SKILL.md` directly. No referenced skill is ever silently skipped:
+skips are explicit and announced.
 
 Run `node .claude/skills/impeccable/scripts/context.mjs`; on `NO_PRODUCT_MD`, generate a minimal
 `PRODUCT.md`/`DESIGN.md` from the project's design doc so impeccable never stalls in its `init` flow.
@@ -55,7 +58,7 @@ flatness hypotheses). **PASS = the artifact exists**, or "skipped — greenfield
 
 **Agent:** `design-reference-research`.
 
-1. Load `agent-browser`; open `https://dribbble.com/shots/popular/web-design` (2026 popular) and **2–3
+1. Load `agent-browser`; open `https://dribbble.com/shots/popular/web-design` (current popular) and **2–3
    real domain competitors**; screenshot relevant surfaces.
 2. Run `ui-ux-pro-max`'s `search.py` (Bash, deterministic) as **vocabulary**: name precisely what you see
    (style, palette, font-pair) instead of vague adjectives like "clean and modern".
@@ -72,10 +75,21 @@ nothing for the verdict to judge "alive" against.
 
 ---
 
+## Step 2c — `context-pack` — discover ONCE
+
+**Agent:** `design-context-pack`. Reads the target source ONCE and writes
+`.design-review/context-pack.md`: component map with **file:line**, tokens-in-use vs hardcoded, key
+excerpts, `SHARED-FOUND` findings from audit-first, cached artifacts (screenshots, guideline caches).
+The 4 lenses judge this pack instead of each re-scanning the whole surface (~80% rediscovery overlap
+killed). **PASS = `context-pack.md` exists.**
+
+---
+
 ## Step 3 — DIAGNOSIS: CORE skills, REAL and ROUTED invocation **[GATE · in order]**
 
 Each lens is an agent that **loads the real SKILL.md via the Skill tool ROUTED to its command/mode** and
-is passed *the target + `.design-review/references.md` + the project tokens*. Invoking bare (no args)
+is passed *`.design-review/context-pack.md` + `.design-review/references.md` + the project tokens* (read
+source directly only to confirm a line the pack lacks; never re-report `SHARED-FOUND`). Invoking bare (no args)
 stalls the skill in its router/setup — always route. The orchestrator never summarises a skill. Findings
 accumulate (drop nothing) and cite `file:line`.
 

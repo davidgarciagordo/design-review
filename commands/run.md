@@ -1,5 +1,5 @@
 ---
-description: "Run the design-VITALITY pipeline on a target. Gated, imperative: auto-provision skills → audit-first → reference-research → 4 core lenses in order → ONE multi-select (the user's only decision) → apply → vitality verdict (alive/templated/flat) → loop. Cures flat, templated UI. Usage: /design-review:run <target>"
+description: "Run the design-VITALITY pipeline on a target. Gated, imperative: preflight (detect + ASK + install) → audit-first → reference-research → 4 core lenses in order → ONE multi-select (the user's only decision) → apply → vitality verdict (alive/templated/flat) → loop. Cures flat, templated UI. Usage: /design-review:run <target>"
 argument-hint: "<target — file path, route, component, story, or email>"
 ---
 
@@ -7,7 +7,7 @@ argument-hint: "<target — file path, route, component, story, or email>"
 
 **Target:** `$ARGUMENTS` (a file path, app route, component, Storybook story, or email).
 
-You are the **orchestrator**. Telos: **make this target ALIVE and unmistakably 2026** — judged against
+You are the **orchestrator**. Telos: **make this target ALIVE and unmistakably current** — judged against
 real references, ending in an explicit verdict. A target that passes every correctness check and still
 looks templated has **failed** (full telos in `SKILL.md`; this command is its executable spine).
 
@@ -21,7 +21,10 @@ Scope/brand questions fold into the step-4 interaction. Everything else is annou
 - Each lens agent **loads the real skill via the Skill tool** — EXCEPT `review-animations`, which
   is NEVER Skill-invocable (`disable-model-invocation: true`): it is applied by READING its
   SKILL.md + STANDARDS.md. Never paraphrase a skill in your own words — dispatch the agent that
-  loads it, and each agent follows its verified playbook in `references/skills/<name>.md`.
+  loads it, and each agent follows its verified playbook in
+  `${CLAUDE_PLUGIN_ROOT}/references/skills/<name>.md`. **Inject that resolved absolute playbook
+  path into every lens dispatch prompt** — the subagent's cwd is the project, so a bare relative
+  `references/skills/<name>.md` does not resolve from inside the agent.
 - Run all browser/live steps **sequentially** (one browser thread), never in parallel.
 - Work in an isolated branch/worktree.
 
@@ -59,12 +62,12 @@ decisions (scope, light-fix vs full redesign, brand) — resolve what a minimal 
 fold the rest into the step-4 multi-select instead of a separate interrogation.
 
 ## Step 1 — `audit-first` **[GATE · redesigns only]**
-If the target already exists, dispatch the **`design-audit-first`** agent: screenshot the current
+If the target already exists, dispatch the **`design-review:design-audit-first`** agent: screenshot the current
 state and write "what to keep" to `.design-review/audit-first.md`. **PASS = the artifact exists**, or
 "skipped — greenfield" stated explicitly.
 
 ## Step 2 — `reference-research` **[GATE · ALWAYS · #1 lever against flat]**
-Dispatch the **`design-reference-research`** agent. agent-browser over Dribbble 2026 popular +
+Dispatch the **`design-review:design-reference-research`** agent. agent-browser over current Dribbble popular +
 `refero` (real shipped products) + 2-3 domain competitors + **ui-ux-pro-max vocabulary via its
 search.py run deterministically (Bash — 84 styles / 161 palettes / 73 font-pairings)** + optionally
 a pre-extracted DESIGN.md from `VoltAgent/awesome-design-md` when a reference brand is in its free
@@ -80,23 +83,31 @@ Appended by the research agent to `references.md`: 4-6 hex token-plan (subordina
 tokens), 2+ typographic roles, **one signature element**, the "3 AI-default looks to avoid", and
 the UX-writing checklist. Authoring criterion, not a lens.
 
-## Step 3 — The 4 core lenses, REAL invocation **[GATE · in order]**
-Dispatch each lens agent in turn, passing target + `.design-review/references.md` (+
-`.design-review/audit-first.md` to the taste lens). Each loads its real skill per its playbook and
-returns findings (cite `file:line`). Accumulate; drop nothing. **PASS = all 4 lenses returned
-(line 1 `OK`/`KO`), merged into one `[skill]`-tagged list.**
+## Step 2c — `context-pack` — discover ONCE (token lever)
+Dispatch the **`design-review:design-context-pack`** agent: read the target source ONCE and write
+`.design-review/context-pack.md` (component map with **file:line**, tokens-in-use vs hardcoded,
+key excerpts, `SHARED-FOUND` findings from audit-first, cached artifacts). The 4 lenses judge this
+pack instead of each re-scanning the whole surface. **PASS = `context-pack.md` exists.**
 
-1. **`design-lens-impeccable`** → full 5-step setup, detect.mjs pre-pass, then routed
+## Step 3 — The 4 core lenses, REAL invocation **[GATE · in order]**
+Dispatch each lens agent in turn, passing `.design-review/context-pack.md` +
+`.design-review/references.md` (+ `.design-review/audit-first.md` to the taste lens) + its resolved
+playbook path (`${CLAUDE_PLUGIN_ROOT}/references/skills/<name>.md`). Each loads its real skill per
+its playbook and returns findings (cite `file:line`). Lenses are READ-ONLY, do not re-read source
+the pack already covers, and do not re-report `SHARED-FOUND`. Accumulate; drop nothing. **PASS =
+all 4 lenses returned (line 1 `OK`/`KO`), merged into one `[skill]`-tagged list.**
+
+1. **`design-review:design-lens-impeccable`** → full 5-step setup, detect.mjs pre-pass, then routed
    `audit` + `critique` (expects critique's dual-sub-agent fan-out or surfaces its DEGRADED banner).
-2. **`design-lens-taste`** → resolves the skill name, routes §11 + §14, forbids generation,
+2. **`design-review:design-lens-taste`** → resolves the skill name, routes §11 + §14, forbids generation,
    runs the 2 mechanical greps itself. **The anti-templated gate is constructed by the pipeline**
    from the skill's output. If the output could be any SaaS template, this gate **FAILS** — the
    target is rejected, not noted. Exit criterion: *"this could only be THIS product."*
-3. **`design-lens-motion`** → emil-design-eng with the question inline (+ file:line demanded);
+3. **`design-review:design-lens-motion`** → emil-design-eng with the question inline (+ file:line demanded);
    at least one signature motion moment on a rare/first-run surface (pipeline doctrine — Emil's
    framework vetoes motion on high-frequency interactions, both outputs are findings). If
    `review-animations` is installed, the lens runs it BY READING as the motion Block/Approve gate.
-4. **`design-lens-a11y`** → fetches BOTH Vercel guideline files (command.md has NO WCAG/contrast
+4. **`design-review:design-lens-a11y`** → fetches BOTH Vercel guideline files (command.md has NO WCAG/contrast
    checks; AGENTS.md carries APCA contrast + hit targets), caches, passes them with a no-re-fetch
    instruction. Never claims formal WCAG-AA from prompt alone. (Last lens — nets the motion just
    added.)
@@ -109,21 +120,21 @@ Merge all findings into one deduplicated list: P1 (broken/identity/a11y) · P2 (
 (`AskUserQuestion`, `multiSelect: true`) with P1 **and the anti-templated + signature-motion items
 pre-selected** — those are why the target was flat; they are not optional polish. Fold any pending
 owner-only decisions (scope/brand, failed installs) into this same batch. Apply only what's chosen.
-This is the owner's ONLY required interaction in the whole run.
+This is the owner's ONLY required interaction in the whole run. **No edits happen in this step** —
+all mutation belongs to step 5.
 
-**Applying the chosen fixes:** route each item to its owning skill command (impeccable's fix
+## Step 5 — APPLY (FIX) + informed re-pass
+**Apply the chosen fixes:** route each item to its owning skill command (impeccable's fix
 commands, emil's motion framework). When an applied change **creates or reshapes a component**,
 load the **`building-components`** skill (Vercel's composable/accessible component standard — see
 the manifest) as the authoring criterion for that component, the same way `frontend-design` is the
 authoring criterion for the plan.
-
-## Step 5 — Informed re-pass
-Re-run only the lenses the chosen fixes touch (layout → impeccable + live; motion → emil +
-verdict). impeccable's `polish` closes the fix pass (it consumes the critique snapshot as its
-backlog). Surface genuinely new findings briefly; don't re-litigate settled items.
+**Then the informed re-pass:** re-run only the lenses the chosen fixes touch (layout → impeccable +
+live; motion → emil + verdict). impeccable's `polish` closes the fix pass (it consumes the critique
+snapshot as its backlog). Surface genuinely new findings briefly; don't re-litigate settled items.
 
 ## Step 6 — `vitality-verdict` **[GATE]**
-Dispatch the **`design-vitality-verdict`** agent: render the real target live (light/dark/mobile
+Dispatch the **`design-review:design-vitality-verdict`** agent: render the real target live (light/dark/mobile
 via agent-browser — huashu's verify.py cannot do color-scheme), **diff against
 `.design-review/references.md`**, check house layer / density-bento / a fired motion moment /
 typographic point of view, run Core Web Vitals, and emit an explicit
@@ -147,4 +158,5 @@ report done on a `templated`/`flat` verdict**; surface it as a failed run.
 ## Closing report
 Return: the findings applied, the **final verdict** (`alive`/`templated`/`flat`) and the reference
 it was judged against, the closing screenshots (light/dark/mobile), Core Web Vitals, which
-components were auto-installed or skipped in step 0, and which add-ons ran or were skipped and why.
+components were installed (each after an explicit OK) or skipped in step 0, and which add-ons ran
+or were skipped and why.

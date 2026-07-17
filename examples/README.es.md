@@ -4,7 +4,7 @@
 
 > Ejemplos trabajados de forma concreta que muestran el pipeline con gates en acción: preflight, investigación de referencias, context-pack (discover-once), las 4 lentes core cargadas en modo READ-ONLY con la herramienta Skill, el gate anti-plantilla fallando y recuperándose, y un veredicto de vitalidad explícito.
 
-Estos son ejemplos realistas, no sintéticos. Cada uno muestra el target, qué pasos se ejecutaron (y cuáles se omitieron), qué encontró cada lente (terse), el checklist presentado, qué se aplicó y el veredicto de vitalidad final juzgado contra las referencias en vivo.
+Estos son **ejemplos trabajados ilustrativos** — redactados para mostrar fielmente la mecánica del pipeline, no transcripciones de ejecuciones reales. Cada uno muestra el target, qué pasos se ejecutaron (y cuáles se omitieron), qué encontró cada lente (terse), el checklist presentado, qué se aplicó y el veredicto de vitalidad final juzgado contra las referencias en vivo.
 
 ---
 
@@ -79,7 +79,7 @@ Cada lente core es de su autor original (ver *Atribución* en el README principa
 ✓ frontend-design       present (marketplace)
 ✗ refero                missing — install: Refero MCP (npx refero-mcp) o usar agent-browser por defecto
 ✗ huashu-design         missing — install: git clone https://github.com/alchaincyf/huashu-design ~/.claude/skills/huashu-design
-✓ agent-browser         present (Claude Code built-in)
+✓ agent-browser         present (~/.claude/skills — Vercel Labs CLI)
 ```
 
 [AskUserQuestion — un solo batch para todos los faltantes]:
@@ -112,7 +112,7 @@ El agente `design-audit-first` renderiza la página de ajustes actual (claro/osc
 
 ### Paso 2 — reference-research [GATE · siempre · la palanca #1 contra lo plano]
 
-El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (2026 popular), tres páginas de ajustes de competidores (Linear, dashboard Vercel, ajustes Notion) con `agent-browser`, **`refero`** (galería vía agent-browser sobre refero.design — MCP OMITIDO; productos reales publicados: Mercury, Vercel, Linear), y usa el **vocabulario de `ui-ux-pro-max`** para nombrar estilos/paletas/combinaciones tipográficas con precisión. Extrae 5 patrones concretos → escribe `.design-review/references.md`:
+El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (popular actual), tres páginas de ajustes de competidores (Linear, dashboard Vercel, ajustes Notion) con `agent-browser`, **`refero`** (galería vía agent-browser sobre refero.design — MCP OMITIDO; productos reales publicados: Mercury, Vercel, Linear), y usa el **vocabulario de `ui-ux-pro-max`** para nombrar estilos/paletas/combinaciones tipográficas con precisión. Extrae 5 patrones concretos → escribe `.design-review/references.md`:
 
 1. **[layout]** Dos columnas: nav lateral fijo + panel de contenido — Linear. Elimina los headings de sección repetitivos.
 2. **[densidad]** Bento asimétrico dentro de cada sección — filas de datos más compactas, headings más aireados — dashboard Vercel.
@@ -307,7 +307,7 @@ El agente `design-audit-first` renderiza las stories del Button (por defecto / h
 
 ### Paso 2 — reference-research [GATE · siempre · la palanca #1 contra lo plano]
 
-El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (2026 popular), tres botones primarios de competidores (Stripe Checkout, Linear, Vercel Deploy) con `agent-browser`, **`refero`** (galería vía agent-browser sobre refero.design — MCP OMITIDO; componentes reales publicados de Stripe, Linear, Vercel), y usa el **vocabulario de `ui-ux-pro-max`** para nombrar estilos de motion y semántica de color con precisión. Extrae 4 patrones → escribe `.design-review/references.md`:
+El agente `design-reference-research` abre `dribbble.com/shots/popular/web-design` (popular actual), tres botones primarios de competidores (Stripe Checkout, Linear, Vercel Deploy) con `agent-browser`, **`refero`** (galería vía agent-browser sobre refero.design — MCP OMITIDO; componentes reales publicados de Stripe, Linear, Vercel), y usa el **vocabulario de `ui-ux-pro-max`** para nombrar estilos de motion y semántica de color con precisión. Extrae 4 patrones → escribe `.design-review/references.md`:
 
 1. **[motion]** Pulsación micro-spring: `scale(0.96)` + colapso de sombra en 80ms `cubic-bezier(0.34, 1.56, 0.64, 1)` — Stripe.
 2. **[motion]** Ripple de marca al clic: una onda circular teal se expande desde el punto de clic y se desvanece en 350ms — shot de Dribbble #2.
