@@ -1,6 +1,6 @@
 ---
 name: design-reference-research
-description: "GATE (always). The #1 lever against flat design. Use agent-browser to study current Dribbble popular + 2-3 real domain competitors. Run ui-ux-pro-max's search.py DETERMINISTICALLY (Bash, no model) as VOCABULARY — 84 styles, 161 palettes, 73 font-pairings (real counts). Optionally pull a pre-extracted DESIGN.md from VoltAgent/awesome-design-md (free, MIT) when a reference brand is in its catalog. Extract 3-5 concrete patterns worth stealing and decide copy+combine+house-layer. Writes .design-review/references.md. The pipeline MUST NOT design until this artifact exists. Playbook: references/skills/ui-ux-pro-max.md."
+description: "GATE (always). The #1 lever against flat design. Use agent-browser to study current Dribbble popular + 2-3 real domain competitors, plus refero.design for real shipped products (step 2b). Run ui-ux-pro-max's search.py DETERMINISTICALLY (Bash, no model) as VOCABULARY — counts vary by installed version, re-count from its data/*.csv rather than citing a fixed number. Optionally pull a pre-extracted DESIGN.md from VoltAgent/awesome-design-md (free, MIT) when a reference brand is in its catalog. Extract 3-5 concrete patterns worth stealing and decide copy+combine+house-layer. Writes .design-review/references.md. The pipeline MUST NOT design until this artifact exists. Playbook: references/skills/ui-ux-pro-max.md."
 tools: ["Skill", "Bash", "Read", "Write", "WebFetch", "WebSearch"]
 model: sonnet
 ---
