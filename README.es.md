@@ -1,12 +1,12 @@
 [English](README.md) | **Español**
 
-# design-review
+# 🎨 design-review
 
 Las UIs generadas por IA pasan todos los checks y aun así se parecen a cualquier otra página hecha con IA. design-review convierte **"se ve genérico" en un veredicto suspenso y verificable por máquina**: un pipeline con gates para Claude Code que estudia referencias reales actuales, ejecuta 4 skills de diseño de terceros como lentes read-only, y se niega a darse por terminado hasta que el resultado, renderizado en vivo, se juzga **`alive`** — ni `templated`, ni `flat`.
 
 Compañero de [forge-methodology](https://github.com/davidgarciagordo/forge-methodology): Forge estructura *qué construir*; design-review hace que *cómo se ve* cobre vida.
 
-## Qué hay dentro
+## 🧩 Qué hay dentro
 
 | Pieza | Qué es |
 |---|---|
@@ -20,7 +20,7 @@ Compañero de [forge-methodology](https://github.com/davidgarciagordo/forge-meth
 | [`templates/`](templates/) | Plantillas de [findings-checklist](templates/findings-checklist.md) · [vitality-verdict](templates/vitality-verdict.md). |
 | [`references/pipeline.md`](references/pipeline.md) · [`references/attribution.md`](references/attribution.md) | Referencia paso a paso · quién escribió qué + matriz completa de instalación. |
 
-## Instalación y quick start
+## 📦 Instalación y quick start
 
 ```bash
 /plugin marketplace add davidgarciagordo/design-review
@@ -78,7 +78,7 @@ Vitality verdict:  templated → (loop) → alive
   bento density + teal identity layer + staggered entrance landed
 ```
 
-## El pipeline
+## ⚙️ El pipeline
 
 Los gates no se pueden saltar ni reordenar. Cada fase deja un artefacto en `.design-review/`:
 
@@ -95,7 +95,7 @@ Los gates no se pueden saltar ni reordenar. Cada fase deja un artefacto en `.des
 
 **Hook de enforcement:** un hook `PostToolUse` comprueba `verdict.json` cada vez que se escribe un fichero de UI — `warn` (por defecto), `block` (exit 2), u `off` vía `DESIGN_REVIEW_GATE`.
 
-## ¿Por qué no basta con pedirle al modelo que "revise el diseño"?
+## ❓ ¿Por qué no basta con pedirle al modelo que "revise el diseño"?
 
 Porque las skills de terceros que realmente cargan el juicio de diseño fallan de formas concretas y verificadas cuando se usan de forma ingenua. Los [7 playbooks](references/skills/) se comprobaron línea a línea contra el source de cada skill en un commit pineado; el pipeline existe para prevenir estos modos de fallo:
 
@@ -108,14 +108,14 @@ Porque las skills de terceros que realmente cargan el juicio de diseño fallan d
 
 Dos modos de fallo más que ninguna skill cubre tienen sus propios gates: **diseñar de memoria** (el paso 2 fuerza research de referencias en vivo antes de diseñar nada) y **declarar terminado desde el código** (el paso 7 renderiza el target real en un navegador antes de cualquier veredicto).
 
-## Requisitos — la versión honesta
+## 🔍 Requisitos — la versión honesta
 
 - **Claude Code.** Las piezas ejecutables (ruteo vía Skill tool, agentes, `AskUserQuestion`, el hook) son features de Claude Code. Fuera de Claude Code puedes seguir [`SKILL.md`](SKILL.md) + [`references/pipeline.md`](references/pipeline.md) a mano como metodología, pero nada de esto se ejecuta solo en otro sitio.
 - **Las 4 skills core son de terceros y NO vienen incluidas** — [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). El paso 0 detecta lo que falta y **pregunta ítem a ítem antes de instalar** — nunca instala en silencio, y tampoco omite en silencio: una skill core saltada hace fallar su lente de forma ruidosa (`Unknown skill` / degradación anunciada), no produce calladamente una review más floja. Comandos de instalación: [references/attribution.md](references/attribution.md); `node scripts/preflight.mjs` muestra qué hay presente en tu entorno.
 - **`agent-browser` es cuasi-requerido — y debe ser el de Vercel Labs.** Es la [CLI de automatización de navegador de Vercel Labs](https://github.com/vercel-labs/agent-browser), construida y optimizada para browsing dirigido por agentes (`npx -y skills@latest add vercel-labs/agent-browser`) — **no un built-in de Claude Code, y no intercambiable por una herramienta genérica de automatización de navegador**. Los dos gates de navegador (reference-research y el veredicto final) dependen de ella — sin ella el veredicto es **solo provisional**: no se puede afirmar `alive` de un diseño que nadie ha renderizado.
 - **Acceso a red** (research de Dribbble/competidores, fetch de las guidelines de Vercel), `node` para los scripts del repo, `python3` solo si usas `ui-ux-pro-max`.
 
-## Mini-glosario
+## 📖 Mini-glosario
 
 - **`alive` / `templated` / `flat`** — los tres valores del veredicto. `alive` = los patrones referenciados aterrizaron y el resultado solo podría ser este producto; `templated` = correcto pero intercambiable con cualquier template SaaS; `flat` = sin vida incluso antes de considerar la identidad.
 - **house layer** — el re-vestido de los patrones tomados de las referencias con la identidad y tokens propios del proyecto, para que la combinación se lea como *este* producto, no como las referencias pegadas.
@@ -123,19 +123,19 @@ Dos modos de fallo más que ninguna skill cubre tienen sus propios gates: **dise
 - **dials** — los 3 mandos de la skill de taste (`DESIGN_VARIANCE` / `MOTION_INTENSITY` / `VISUAL_DENSITY`), pre-fijados desde `references.md` en vez de preguntados conversacionalmente.
 - **context-pack** — el artefacto discover-once: árbol de componentes, tokens en uso, mapa `file:line`, capturas, hallazgos ya conocidos. Las lentes juzgan este pack en vez de re-escanear cada una toda la superficie.
 
-## Limitaciones y costes
+## ⚠️ Limitaciones y costes
 
 - **Una ejecución completa es pesada**: 8+ despachos de agentes, navegación en vivo, capturas, hasta 3 loops de veredicto. Para una lente sobre un fichero, invoca esa skill directamente (ver [ejemplos](examples/README.es.md#un-prompt-para-todas-o-una-lente-core-por-separado)).
 - **Necesita red**: el research de referencias y los fetches de guidelines de a11y son en vivo; sin conexión, el paso 2 se degrada y el veredicto solo puede ser provisional.
 - **Los dashboards relajan las reglas de landing**: el surface routing mantiene el listón anti-plantilla en todas partes, pero la rúbrica específica de landing de la skill de taste (hero/eyebrow/marquee) no aplica a UI de producto densa — espera hallazgos de taste más suaves ahí, por diseño.
 - **La heurística de fichero-de-UI del hook es conservadora pero sigue siendo una heurística** — usa `DESIGN_REVIEW_GATE=off` en ediciones que no tocan diseño.
 
-## Atribución
+## 🙏 Atribución
 
 Orquesta skills de terceros — las carga, nunca las parafrasea. Core (obligatorias, de terceros — ver [Requisitos](#requisitos--la-versión-honesta)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). Add-ons conectados: `ui-ux-pro-max`, `refero`, `frontend-design` (plugin oficial de Anthropic — criterio del plan), `building-components` (estándar de Vercel — criterio de autoría de componentes en el apply), [`agent-browser`](https://github.com/vercel-labs/agent-browser) (Vercel Labs — EL tester: render vivo para research y el veredicto final; optimizado para browsing dirigido por agentes, nunca un sustituto genérico), `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Detalle completo: [references/attribution.md](references/attribution.md).
 
 Alternativa: clónalo en `~/.claude/skills/design-review` para cargarlo como plugin local sin marketplace.
 
-## Licencia
+## ⚖️ Licencia
 
 MIT — ver [LICENSE](./LICENSE).
