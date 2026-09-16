@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "design-review",
   "displayName": "Design Review — Orchestrator",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "A gated design-vitality pipeline that makes 'looks generic' a failing, machine-checkable verdict: it studies real current references live, runs 4 third-party design skills as routed read-only lenses (each driven by a source-verified playbook), and ends every run with an explicit alive/templated/flat verdict. One owner decision per run (a multi-select of findings); ships /design-review:run, 8 agents, a preflight manifest, and an enforcement hook.",
   "author": {
     "name": "David García Gordo",
