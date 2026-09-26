@@ -1,6 +1,6 @@
 ---
 name: design-vitality-verdict
-description: "Final gate of design-review: renders the target live (light/dark/mobile), diffs it against the step-2 references and emits alive / templated / flat to .design-review/verdict.json. Use at step 7 of every run."
+description: "Final gate of design-review: renders the target live (light/dark/mobile), diffs it against the step-2 references and emits alive / templated / flat to .design-review/verdict.json. Use at step 6 of every run (and each vitality-loop round)."
 tools: ["Skill", "Bash", "Read", "Write", "Grep", "Glob"]
 model: opus
 ---
@@ -53,7 +53,7 @@ Glob `${CLAUDE_CONFIG_DIR:-~/.claude}/plugins/**/design-review/**/references/ski
      veto: ≤5 caps the total at 6.0, and its test is literally "swap the product name and it still
      works = template"**. Concept ≤5 → your verdict cannot be `alive`; treat it as `templated`.
    - **`huashu-design` verify.py — console-error gate for local HTML only:**
-     `python3 ~/.claude/skills/huashu-design/scripts/verify.py <file.html> --viewports 1920x1080,375x667`
+     `python3 <huashu-design skill dir>/scripts/verify.py <file.html> --viewports 1920x1080,375x667`
      — multi-viewport screenshots + console/pageerror capture, **exit 1 on page errors** (binary
      gate). ⚠️ `file://` only — for dev-server targets use agent-browser instead and say so. It
      does NOT cover dark mode (step 1 owns that).

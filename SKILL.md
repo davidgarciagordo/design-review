@@ -3,7 +3,7 @@ name: design-review
 description: "Design-vitality orchestrator: runs the design skills as routed read-only lenses after live reference research, asks one multi-select of findings, applies them and ends with an alive/templated/flat verdict. Use when asked to improve a UI design, make it less flat or templated, or run a design review; explicit entrypoint /design-review:run <target>."
 ---
 
-# design-review — UNIFIED ORCHESTRATOR (v2.3)
+# design-review — UNIFIED ORCHESTRATOR
 
 Canonical domain-agnostic methodology: [`davidgarciagordo/design-review`](https://github.com/davidgarciagordo/design-review).
 Project instantiations reference this file and override where project identity differs.
@@ -28,7 +28,7 @@ The question is **not** *"does this design have defects?"* (that loop's ceiling 
 ## Requires (read before using)
 
 This skill **orchestrates 4 third-party skills — none ship with Claude Code by default**. A missing core
-skill fails its lens with `Unknown skill` (confirmed in testing — no silent degrade):
+skill fails its lens with `Unknown skill` — nothing degrades silently:
 
 | Skill | Author | Install |
 |---|---|---|
@@ -96,6 +96,7 @@ Manifest summary (`tier`: **core** gate · **wired** integrated · **addon** opt
 | `refero` | wired | real-product reference (gallery + DESIGN.md tokens) | Refero MCP (opt-in); default = agent-browser over refero.design |
 | `huashu-design` | addon | asset-integrity + Playwright verify + non-landing builder | `git clone https://github.com/alchaincyf/huashu-design ~/.claude/skills/huashu-design` |
 | `agent-browser` | wired | live reference + live verdict | `npx -y skills@latest add vercel-labs/agent-browser` (**Vercel Labs' agent-browser** — https://github.com/vercel-labs/agent-browser, optimized for agent-driven browsing; NOT built into Claude Code, NOT a generic browser-automation substitute; without it the verdict is provisional) |
+| `building-components` | wired | component authoring criterion in step 5 when a fix creates/reshapes a component | `npx -y skills@latest add vercel/components.build --skill building-components` |
 
 > `review-animations` and `refero` raw tokens **degrade gracefully** — never break the pipeline on their
 > absence; announce the degraded lens and continue.
@@ -235,7 +236,7 @@ the Skill tool ROUTED to its command/mode** and returns findings citing `file:li
   motion moment**. If `review-animations` is present, it runs here (by reading) as the **motion
   Block/Approve gate** (feeds the verdict).
 - **3d · `design-review:design-lens-a11y`** → WebFetch guidelines → cache → `web-design-guidelines` (AA). Runs **last**
-  so it nets the motion emil just added.
+  so it nets the motion the motion lens just proposed.
 - **3e · `ui-ux-pro-max` (UX guidelines)** → extra UX lens (wired, not gate). Opt-in add-ons
   (`huashu-design`, `web-accessibility`) run here.
 
@@ -293,10 +294,10 @@ for skills and install commands.
 
 - **Skills loaded and ROUTED via the Skill tool, never paraphrased or invoked bare.** Writing
   "impeccable would say…" or invoking with no `args` = the bug; stop and route to a command.
-- **Terse output — enforce on EVERY dispatched agent.** Append to every lens/agent prompt: *"Output
-  TERSE: line 1 = `OK` (clean) or `KO` + ≤8-word why; then findings one line each `P# [skill] file:line —
-  problem → fix`. NO prose, no preamble, no restating the skill, no summary tables, no Before/After
-  essays."* Verbose agent reports are the #1 output-token waste.
+- **Terse output on every dispatched agent.** Append to every lens/agent prompt: *"Line 1 = `OK`
+  (clean) or `KO` + a short reason; then one finding per line: `P# [skill] file:line — problem → fix`.
+  The orchestrator merges these lines mechanically, so return only them."* Verbose agent reports are
+  the largest output-token cost of a run.
 - **Discover once, judge many.** Context-pack (2c) before the lenses; pass it to each; "don't re-read
   source, don't re-report shared findings." The #1 input-token lever.
 - Project-specific design law (brand tokens, identity, density rules) lives in the project's own design

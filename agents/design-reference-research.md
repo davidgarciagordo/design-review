@@ -34,7 +34,7 @@ tagged patterns + dials + the bar; otherwise stop and say so.
    `refero.design` with agent-browser and screenshot. Refero tokens are reference only — never copy
    their hex; re-translate to the house layer. If absent, say so and lean on the competitors above.
 2c. **Pre-extracted design languages (optional, free):** if a competitor/reference brand is in the
-   catalog of `VoltAgent/awesome-design-md` (GitHub, MIT — 73 DESIGN.md files: Vercel, Raycast,
+   catalog of `VoltAgent/awesome-design-md` (GitHub, MIT — a catalog of brand DESIGN.md files: Vercel, Raycast,
    Attio, Nike, Tesla…), fetch its DESIGN.md
    (`https://raw.githubusercontent.com/VoltAgent/awesome-design-md/main/...`) instead of manually
    extracting that brand's language from screenshots — it is the same artifact, pre-cooked. Cite it

@@ -53,7 +53,7 @@ radii/shadows, no house layer, evenly-flat density, decorative/absent motion).
 return verdict `TEMPLATED` with the 2-3 specific moves (from the references) needed to make it
 singular, not a list of minor nits.
 
-## Scope — dashboards are OUT OF SCOPE for landing rules (not merely "advisory")
+## Scope — landing rules do not apply to dashboards
 
 The skill declares dashboards/tables/wizards out of scope (§13) and routes product-UI to
 Fluent/Carbon/Polaris. On dashboards, admin panels, and authenticated product screens: apply ONLY

@@ -110,7 +110,7 @@ all 4 lenses returned (line 1 `OK`/`KO`), merged into one `[skill]`-tagged list.
 4. **`design-review:design-lens-a11y`** → fetches BOTH Vercel guideline files (command.md has NO WCAG/contrast
    checks; AGENTS.md carries APCA contrast + hit targets), caches, passes them with a no-re-fetch
    instruction. Never claims formal WCAG-AA from prompt alone. (Last lens — nets the motion just
-   added.)
+   proposed.)
 5. *(wired)* **ui-ux-pro-max UX pass** — `search.py --domain ux` deterministically; opt-in
    `huashu-design` Step-10 review / `web-accessibility` here.
 

@@ -35,7 +35,7 @@ pre-lens checklist.
 
 ## Invoke (as verifier in the verdict)
 ```bash
-python3 ~/.claude/skills/huashu-design/scripts/verify.py <file.html> [--viewports 1920x1080,375x667] [--slides N] [--output dir]
+python3 <huashu-design skill dir>/scripts/verify.py <file.html> [--viewports 1920x1080,375x667] [--slides N] [--output dir]
 ```
 Chromium headless over `file://` (verify.py:46,67): viewport + full-page screenshots @2x, console
 errors/warnings + pageerror capture, **exit code 1 on page errors** (verify.py:119) → binary gate.

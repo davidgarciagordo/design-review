@@ -1,6 +1,6 @@
 ---
 name: design-context-pack
-description: "Step 3 of design-review: reads the target once and writes .design-review/context-pack.md (component tree, tokens in use, file:line map, screenshots, known findings) so the 4 lenses judge the pack instead of re-scanning. Read-only."
+description: "Step 2c of design-review: reads the target once and writes .design-review/context-pack.md (component tree, tokens in use, file:line map, screenshots, known findings) so the 4 lenses judge the pack instead of re-scanning. Read-only."
 tools: ["Read", "Write", "Bash", "Grep", "Glob"]
 model: sonnet
 ---
@@ -35,5 +35,5 @@ Sections: `# Target` · `## Component map (file:line)` · `## Tokens in use / ha
 Keep excerpts minimal — this file is read by 4+ agents, so every wasted line is paid 4×.
 
 ## Return (TERSE — token-frugal)
-Line 1: `OK` + map size (e.g. "OK · 1 file, 18 POIs, 9 shared-found") or `KO` + ≤8-word why.
-Then nothing else (the artifact is the deliverable). No prose, no recap.
+Line 1: `OK` + map size (e.g. "OK · 1 file, 18 POIs, 9 shared-found") or `KO` + a short reason.
+Return only that line — the artifact is the deliverable.

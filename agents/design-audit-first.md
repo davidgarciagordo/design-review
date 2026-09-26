@@ -28,7 +28,7 @@ edits a line (a redesign that skips this destroys hard-won equity).
 
 ## Output
 Write `.design-review/audit-first.md` with three sections: **Baseline** (screenshot paths), **Keep**
-(equity, with `file:line`), **Attack** (flatness hypotheses). Return a 5-line summary.
+(equity, with `file:line`), **Attack** (flatness hypotheses). Return a short summary: the screenshot paths and the top keep/attack items.
 
 ## Rules
 - This is a **gate for redesigns**. For greenfield (nothing exists yet), state "skipped — greenfield"

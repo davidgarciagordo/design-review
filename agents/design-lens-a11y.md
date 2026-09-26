@@ -28,7 +28,7 @@ substance lives in the same repo's AGENTS.md. Fetch BOTH.
 
 1. **Load the skill with concrete input, one invocation:** Skill tool,
    `skill: "web-design-guidelines"`, passing the **`target`** + both cached guideline files + the
-   changes the prior lenses applied (new motion, new colors, new structure — exactly where a11y
+   changes the prior lenses proposed (new motion, new colors, new structure — exactly where a11y
    regresses), and state explicitly: *"guidelines already fetched at the paths given — do not
    re-fetch."* (Its SKILL.md says fetch-fresh-each-review; without that sentence it re-fetches, and
    without a target it asks the user which files to review.)

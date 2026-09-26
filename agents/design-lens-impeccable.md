@@ -31,7 +31,7 @@ a stall. Always route to a command.
    (marketing/landing).
 5. If the project has no tokens/brand: run `scripts/palette.mjs` for a color seed.
 
-**Free deterministic pre-pass:** run `node <skill-dir>/scripts/detect.mjs --json` — 45 rules, no
+**Free deterministic pre-pass:** run `node <skill-dir>/scripts/detect.mjs --json` — rule-based, no
 LLM, no network. Exit 0 = clean, **exit 2 = findings (not an error)**. Fold its hits into your
 findings before spending model tokens.
 
@@ -47,8 +47,8 @@ findings before spending model tokens.
 2. **Pass it the inputs:** the target; `.design-review/references.md` (step 2) — hierarchy, IA and
    density are judged against those references, not a generic ideal; the project's design system
    and tokens.
-3. Let audit + critique run. Apply only the small obvious fixes they own; everything else
-   accumulates as findings for the multi-select in step 4.
+3. Let audit + critique run. Record every fix they propose — small ones included — as a finding
+   for the step-4 multi-select; this lens does not edit the target (step 5 applies the chosen items).
 
 ## Phase mapping (verified against the skill's own docs)
 
