@@ -15,7 +15,7 @@ Compañero de [forge-methodology](https://github.com/davidgarciagordo/forge-meth
 | [`agents/`](agents/) | 8 agentes: audit-first, reference-research, context-pack, las 4 lentes, vitality-verdict. |
 | [`references/skills/`](references/skills/) | **Los 7 playbooks verificados** — uno por skill orquestada, comprobados contra el source real de cada skill en un commit pineado: [impeccable](references/skills/impeccable.md) · [taste-skill](references/skills/taste-skill.md) · [emil-design-eng](references/skills/emil-design-eng.md) · [review-animations](references/skills/review-animations.md) · [web-design-guidelines](references/skills/web-design-guidelines.md) · [ui-ux-pro-max](references/skills/ui-ux-pro-max.md) · [huashu-design](references/skills/huashu-design.md). Invocación exacta, gotchas y correcciones a afirmaciones falsas habituales sobre cada skill. |
 | [`examples/`](examples/README.es.md) | Dos ejecuciones ilustrativas completas (una página de ajustes, un botón de design system) con los artefactos y outputs reales de cada paso. |
-| [`hooks/design-review-gate.js`](hooks/design-review-gate.js) | Enforcement PostToolUse: una escritura de UI sin veredicto `alive` avisa (por defecto), bloquea, o se apaga — `DESIGN_REVIEW_GATE=warn\|block\|off`. |
+| [`hooks/design-review-gate.js`](hooks/design-review-gate.js) | Enforcement PostToolUse: una escritura de UI sin veredicto `alive` avisa (por defecto), da feedback bloqueante post-escritura, o se apaga — `DESIGN_REVIEW_GATE=warn\|block\|off`. |
 | [`scripts/preflight.mjs`](scripts/preflight.mjs) | El manifiesto de componentes + detector (también caza "plugin en disco pero deshabilitado esta sesión"). |
 | [`templates/`](templates/) | Plantillas de [findings-checklist](templates/findings-checklist.md) · [vitality-verdict](templates/vitality-verdict.md). |
 | [`references/pipeline.md`](references/pipeline.md) · [`references/attribution.md`](references/attribution.md) | Referencia paso a paso · quién escribió qué + matriz completa de instalación. |
@@ -24,7 +24,7 @@ Compañero de [forge-methodology](https://github.com/davidgarciagordo/forge-meth
 
 ```bash
 /plugin marketplace add davidgarciagordo/design-review
-/plugin install design-review
+/plugin install design-review@design-review
 ```
 
 O toda la suite (este + token-economy, forge-methodology, working-methods, automations) desde [un único catálogo](https://github.com/davidgarciagordo/claude-plugins):
@@ -35,8 +35,8 @@ O toda la suite (este + token-economy, forge-methodology, working-methods, autom
 ```
 
 > **Nota honesta:** el comando `/design-review:run`, los 8 agents y el hook de enforcement solo
-> existen en tu sesión cuando el plugin está **instalado y habilitado**
-> (`/plugin install design-review@davidgarciagordo-plugins`). Leer este repo sin instalarlo te da
+> existen en tu sesión cuando el plugin está **instalado y habilitado** — vale cualquiera de las dos vías
+> (`design-review@design-review` standalone, o `design-review@davidgarciagordo-plugins` desde el hub). Leer este repo sin instalarlo te da
 > la metodología como prosa — ningún gate se ejecuta.
 
 Después, apúntalo a un target:
@@ -93,7 +93,7 @@ Los gates no se pueden saltar ni reordenar. Cada fase deja un artefacto en `.des
 | 6 | apply + re-pass informado | orquestador → el fix command dueño de cada hallazgo | el diff | una pasada, solo después del ask |
 | 7 | vitality-verdict — render en vivo (claro/oscuro/móvil), diff vs referencias | `design-vitality-verdict` | `verdict.json` | **GATE** — `alive`, o vuelve al 3 (≤3 rondas) |
 
-**Hook de enforcement:** un hook `PostToolUse` comprueba `verdict.json` cada vez que se escribe un fichero de UI — `warn` (por defecto), `block` (exit 2), u `off` vía `DESIGN_REVIEW_GATE`.
+**Hook de enforcement:** un hook `PostToolUse` comprueba `verdict.json` cada vez que se escribe un fichero de UI — `warn` (por defecto, una vez por fichero y sesión), `block` (feedback bloqueante post-escritura vía exit 2 — no puede impedir la escritura, que ya ha ocurrido), u `off` vía `DESIGN_REVIEW_GATE`. Calla mientras hay una ejecución en curso, así el propio paso de apply del pipeline no se marca.
 
 ## ❓ ¿Por qué no basta con pedirle al modelo que "revise el diseño"?
 
@@ -111,7 +111,7 @@ Dos modos de fallo más que ninguna skill cubre tienen sus propios gates: **dise
 ## 🔍 Requisitos — la versión honesta
 
 - **Claude Code.** Las piezas ejecutables (ruteo vía Skill tool, agentes, `AskUserQuestion`, el hook) son features de Claude Code. Fuera de Claude Code puedes seguir [`SKILL.md`](SKILL.md) + [`references/pipeline.md`](references/pipeline.md) a mano como metodología, pero nada de esto se ejecuta solo en otro sitio.
-- **Las 4 skills core son de terceros y NO vienen incluidas** — [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). El paso 0 detecta lo que falta y **pregunta ítem a ítem antes de instalar** — nunca instala en silencio, y tampoco omite en silencio: una skill core saltada hace fallar su lente de forma ruidosa (`Unknown skill` / degradación anunciada), no produce calladamente una review más floja. Comandos de instalación: [references/attribution.md](references/attribution.md); `node scripts/preflight.mjs` muestra qué hay presente en tu entorno.
+- **Las 4 skills core son de terceros y NO vienen incluidas** — [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/agent-skills) (Vercel — paquete de la skill; sus reglas vienen de [web-interface-guidelines](https://github.com/vercel-labs/web-interface-guidelines)). El paso 0 detecta lo que falta y **pregunta ítem a ítem antes de instalar** — nunca instala en silencio, y tampoco omite en silencio: una skill core saltada hace fallar su lente de forma ruidosa (`Unknown skill` / degradación anunciada), no produce calladamente una review más floja. Comandos de instalación: [references/attribution.md](references/attribution.md); `node scripts/preflight.mjs` muestra qué hay presente en tu entorno.
 - **`agent-browser` es cuasi-requerido — y debe ser el de Vercel Labs.** Es la [CLI de automatización de navegador de Vercel Labs](https://github.com/vercel-labs/agent-browser), construida y optimizada para browsing dirigido por agentes (`npx -y skills@latest add vercel-labs/agent-browser`) — **no un built-in de Claude Code, y no intercambiable por una herramienta genérica de automatización de navegador**. Los dos gates de navegador (reference-research y el veredicto final) dependen de ella — sin ella el veredicto es **solo provisional**: no se puede afirmar `alive` de un diseño que nadie ha renderizado.
 - **Acceso a red** (research de Dribbble/competidores, fetch de las guidelines de Vercel), `node` para los scripts del repo, `python3` solo si usas `ui-ux-pro-max`.
 
@@ -132,9 +132,9 @@ Dos modos de fallo más que ninguna skill cubre tienen sus propios gates: **dise
 
 ## 🙏 Atribución
 
-Orquesta skills de terceros — las carga, nunca las parafrasea. Core (obligatorias, de terceros — ver [Requisitos](#requisitos--la-versión-honesta)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). Add-ons conectados: `ui-ux-pro-max`, `refero`, `frontend-design` (plugin oficial de Anthropic — criterio del plan), `building-components` (estándar de Vercel — criterio de autoría de componentes en el apply), [`agent-browser`](https://github.com/vercel-labs/agent-browser) (Vercel Labs — EL tester: render vivo para research y el veredicto final; optimizado para browsing dirigido por agentes, nunca un sustituto genérico), `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Detalle completo: [references/attribution.md](references/attribution.md).
+Orquesta skills de terceros — las carga, nunca las parafrasea. Core (obligatorias, de terceros — ver [Requisitos](#-requisitos--la-versión-honesta)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/agent-skills) (Vercel — paquete de la skill; sus reglas vienen de [web-interface-guidelines](https://github.com/vercel-labs/web-interface-guidelines)). Add-ons conectados: `ui-ux-pro-max`, `refero`, `frontend-design` (plugin oficial de Anthropic — criterio del plan), `building-components` (estándar de Vercel — criterio de autoría de componentes en el apply), [`agent-browser`](https://github.com/vercel-labs/agent-browser) (Vercel Labs — EL tester: render vivo para research y el veredicto final; optimizado para browsing dirigido por agentes, nunca un sustituto genérico), `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Detalle completo: [references/attribution.md](references/attribution.md).
 
-Alternativa: clónalo en `~/.claude/skills/design-review` para cargarlo como plugin local sin marketplace.
+Alternativa, sin marketplace: clona el repo y ejecuta `claude --plugin-dir <clon>`, o `/plugin marketplace add <ruta-local>` e instala desde ahí. (Clonarlo en un directorio de skills carga solo `SKILL.md` como skill suelta — sin agents, comando ni hook.)
 
 ## ⚖️ Licencia
 

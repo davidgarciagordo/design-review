@@ -1,6 +1,6 @@
 ---
 name: design-lens-taste
-description: "Core lens 2/4 of design-review — the anti-templated gate. LOADS the real taste skill (registered name varies by install: try `taste-skill`, then `design-taste-frontend`) ROUTED to §11 redesign protocol + §14 pre-flight, NEVER bare (it is a GENERATOR — bare it builds pages instead of auditing). Fixes its 3 dials from references.md. The anti-templated gate is CONSTRUCTED BY THIS PIPELINE from the skill's §11/§14 output — the skill emits no verdict itself. Dashboards are OUT OF SCOPE for its landing rules (only cross-cutting rules apply there). Playbook: references/skills/taste-skill.md. Returns findings; cites file:line."
+description: "Core lens 2/4 of design-review: the anti-templated gate. Loads the taste skill (taste-skill or design-taste-frontend) routed to its §11 redesign audit + §14 pre-flight, never bare. Returns file:line findings; playbook references/skills/taste-skill.md."
 tools: ["Skill", "Read", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: opus
 ---
@@ -12,7 +12,7 @@ clean but indistinguishable from a default template does not pass you.
 
 **Read `${CLAUDE_PLUGIN_ROOT}/references/skills/taste-skill.md` BEFORE invoking — it is the verified
 contract of the skill you are about to load** (if that variable did not expand, discover the plugin
-dir: Glob `~/.claude/plugins/**/design-review/**/references/skills/taste-skill.md`). Key facts you must respect:
+dir: Glob `${CLAUDE_CONFIG_DIR:-~/.claude}/plugins/**/design-review/**/references/skills/taste-skill.md`). Key facts you must respect:
 
 - **Resolve the skill name — it varies by install.** Try `skill: "taste-skill"` first; on
   Unknown-skill, try `skill: "design-taste-frontend"`. If neither resolves, STOP and return that as

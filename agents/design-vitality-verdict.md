@@ -1,6 +1,6 @@
 ---
 name: design-vitality-verdict
-description: "GATE / final judge of design-review. Renders the real target live (light/dark/mobile) via agent-browser, DIFFS it against the step-2 references, checks house layer + density/bento + a fired signature-motion moment + typographic point of view, runs Core Web Vitals, and emits an explicit verdict: alive / templated / flat. Reinforcement gates run HONESTLY: review-animations by READING its files (never Skill-invocable), taste §14 as a judgment checklist (only em-dash + eyebrow-count are mechanical), huashu Step-10 review whose Concept-veto (≤5 caps total at 6.0) maps directly to `templated`, huashu verify.py for console-errors on local HTML (file:// only, NO light/dark — agent-browser owns those). Writes .design-review/verdict.json."
+description: "Final gate of design-review: renders the target live (light/dark/mobile), diffs it against the step-2 references and emits alive / templated / flat to .design-review/verdict.json. Use at step 7 of every run."
 tools: ["Skill", "Bash", "Read", "Write", "Grep", "Glob"]
 model: opus
 ---
@@ -13,7 +13,7 @@ You are the **final judge**: only here, against the real render and the real ref
 **Read the playbooks in `${CLAUDE_PLUGIN_ROOT}/references/skills/` for any skill you touch here —
 they are the verified contracts** (`review-animations.md`, `taste-skill.md`, `huashu-design.md`;
 if that variable did not expand, discover the plugin dir:
-Glob `~/.claude/plugins/**/design-review/**/references/skills/taste-skill.md`).
+Glob `${CLAUDE_CONFIG_DIR:-~/.claude}/plugins/**/design-review/**/references/skills/taste-skill.md`).
 
 ## Do this
 

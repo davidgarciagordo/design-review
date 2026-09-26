@@ -1,6 +1,6 @@
 ---
 name: design-review
-description: "UNIFIED ORCHESTRATOR for design skills — runs ALL design skills in order, ROUTING each to its correct command/mode, ACCUMULATES suggestions into one prioritized list, ASKS the user (multi-select, P1 pre-marked), APPLIES the chosen ones via the owning fix command. Vitality telos: audit-first (redesigns) → reference-research GATE (current Dribbble popular + competitors + ui-ux-pro-max vocabulary) → 4 CORE skills REALLY invoked via the Skill tool and ROUTED (impeccable→design-taste-frontend→emil-design-eng→web-design-guidelines) → explicit vitality-verdict (alive/templated/flat) → loop. Bootstrap: detects missing referenced skills → ASKS per item → installs only the chosen ones (never silently). Trigger: 'improve design', 'make this alive / less flat', 'design review'; explicit command: '/design-review:run <target>'."
+description: "Design-vitality orchestrator: runs the design skills as routed read-only lenses after live reference research, asks one multi-select of findings, applies them and ends with an alive/templated/flat verdict. Use when asked to improve a UI design, make it less flat or templated, or run a design review; explicit entrypoint /design-review:run <target>."
 ---
 
 # design-review — UNIFIED ORCHESTRATOR (v2.3)
@@ -117,7 +117,7 @@ Manifest summary (`tier`: **core** gate · **wired** integrated · **addon** opt
 
 ### Design intelligence (wired, not add-ons)
 
-- **`ui-ux-pro-max`** — 84 styles, 161 palettes, font-pairings, 99 UX guidelines, charts. Wired in:
+- **`ui-ux-pro-max`** — styles, palettes, font-pairings, UX guidelines, charts (counts vary by version — re-count from `data/*.csv`). Wired in:
   **3a-pre baseline** (`search.py --design-system/--domain/--stack` → style archetype + UX rules +
   anti-patterns; raw palettes/fonts are **reference only** — project tokens win) · **step 2** vocabulary
   (name styles/palettes/font-pairings precisely) · **3e** UX-guidelines lens · **step 5** fix

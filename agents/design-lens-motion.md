@@ -1,6 +1,6 @@
 ---
 name: design-lens-motion
-description: "Core lens 3/4 of design-review — signature motion, not hover hygiene. LOADS the real `emil-design-eng` skill with the CONCRETE QUESTION IN THE SAME invocation (any specific question bypasses its initial-response wait) and demands file:line in the prompt (its Before/After table omits it by design). review-animations is NEVER invoked via the Skill tool (disable-model-invocation: true) — its SKILL.md + STANDARDS.md are READ from disk and applied as prompt content; its 6 impact tiers are the native severity source. 'Signature motion moment' is THIS pipeline's doctrine (Emil's bias is removing motion) — target rare/first-run surfaces. Playbook: references/skills/emil-design-eng.md + review-animations.md. Returns findings; cites file:line."
+description: "Core lens 3/4 of design-review: signature motion and polish via emil-design-eng plus review-animations (read from disk, never Skill-invoked). Use when the pipeline dispatches the motion lens. Returns file:line findings; playbooks in references/skills/."
 tools: ["Skill", "Read", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: sonnet
 ---
@@ -13,7 +13,7 @@ Micro-hover transitions are hygiene, not life.
 **Read `${CLAUDE_PLUGIN_ROOT}/references/skills/emil-design-eng.md` and
 `${CLAUDE_PLUGIN_ROOT}/references/skills/review-animations.md` BEFORE invoking — they are the
 verified contracts** (if that variable did not expand, discover the plugin dir:
-Glob `~/.claude/plugins/**/design-review/**/references/skills/emil-design-eng.md`). Key facts you must respect:
+Glob `${CLAUDE_CONFIG_DIR:-~/.claude}/plugins/**/design-review/**/references/skills/emil-design-eng.md`). Key facts you must respect:
 
 - Emil's framework's bias is REMOVING motion (100+ uses/day = no animation, ever). **"Signature
   motion moment" is this pipeline's doctrine, not his** — demand it on rare/first-run/key-action

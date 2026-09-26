@@ -10,13 +10,18 @@
  * Mode via env DESIGN_REVIEW_GATE:
  *   - "off"   → silent (disabled)
  *   - "warn"  → advisory: surfaces a reminder to the agent (non-blocking)   [default]
- *   - "block" → blocks (exit 2): the agent must run /design-review:run to verdict "alive"
+ *   - "block" → post-write blocking feedback (exit 2 + stderr). It CANNOT prevent the write: on
+ *               PostToolUse the Write/Edit has already happened; the agent is told to run
+ *               /design-review:run until the verdict is "alive".
  *
  * Reads .design-review/verdict.json (written by the design-vitality-verdict agent). A verdict of
  * "alive" newer than the edited file → pass. Anything else → warn/block.
+ * Silent while a run is in progress (references.md newer than verdict.json), so the pipeline's own
+ * apply step gets no feedback against itself. `warn` fires once per file per session.
  */
 'use strict';
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 const MODE = (process.env.DESIGN_REVIEW_GATE || 'warn').toLowerCase();
@@ -54,6 +59,42 @@ function findRoot(start) {
   return start;
 }
 
+// A run is in progress when step 2 wrote references.md and no verdict at least as new exists yet.
+function runInProgress(root) {
+  const dir = path.join(root, '.design-review');
+  let refsMtime = 0;
+  try {
+    refsMtime = fs.statSync(path.join(dir, 'references.md')).mtimeMs;
+  } catch {
+    return false;
+  }
+  try {
+    return fs.statSync(path.join(dir, 'verdict.json')).mtimeMs < refsMtime;
+  } catch {
+    return true;
+  }
+}
+
+// Returns true the first time a file is seen in this session; records it.
+function firstSeenThisSession(sessionId, file) {
+  if (!sessionId) return true;
+  const safe = String(sessionId).replace(/[^A-Za-z0-9_-]/g, '');
+  const store = path.join(os.tmpdir(), `design-review-gate-${safe}.json`);
+  let seen = [];
+  try {
+    seen = JSON.parse(fs.readFileSync(store, 'utf8'));
+  } catch {
+    /* first write this session */
+  }
+  if (seen.includes(file)) return false;
+  try {
+    fs.writeFileSync(store, JSON.stringify([...seen, file]));
+  } catch {
+    /* dedupe is best-effort */
+  }
+  return true;
+}
+
 function readStdin() {
   try {
     return fs.readFileSync(0, 'utf8');
@@ -79,6 +120,7 @@ function main() {
 
   const cwd = payload.cwd || process.cwd();
   const root = findRoot(path.isAbsolute(file) ? path.dirname(file) : cwd);
+  if (runInProgress(root)) process.exit(0);
   const verdictPath = path.join(root, '.design-review', 'verdict.json');
 
   let verdict = null;
@@ -102,24 +144,21 @@ function main() {
   }
 
   const state = !verdict
-    ? 'design-review has NOT been run on this surface (no .design-review/verdict.json).'
-    : `the latest design-review verdict is "${verdict.verdict}", not "alive"` +
-      (verdict.reason ? ` — ${verdict.reason}.` : '.');
+    ? 'no .design-review/verdict.json yet'
+    : `verdict is "${verdict.verdict}", not "alive"`;
 
   const msg =
-    `[design-review-gate] UI file changed: ${file}\n` +
-    `${state}\n` +
-    `Telos: a front-end change isn't done when it's merely correct — it must be ALIVE and current, ` +
-    `not flat/templated. Run "/design-review:run ${file}" and iterate until the verdict is "alive" ` +
-    `(reference-research + the 4 core skills + vitality loop). Override per-edit with ` +
-    `DESIGN_REVIEW_GATE=off if this isn't a design-bearing change.`;
+    `[design-review-gate] UI file changed: ${file} (${state}). ` +
+    `Run "/design-review:run ${file}" until the verdict is "alive", or set DESIGN_REVIEW_GATE=off ` +
+    `if this edit is not design-bearing.`;
 
   if (MODE === 'block') {
     process.stderr.write(msg + '\n');
-    process.exit(2); // PostToolUse: exit 2 feeds stderr back to the agent as a blocking signal.
+    process.exit(2); // PostToolUse: stderr is fed back to the agent; the write already happened.
   }
 
-  // warn (default): non-blocking, but surface to the agent via additionalContext.
+  // warn (default): non-blocking, surfaced once per file per session via additionalContext.
+  if (!firstSeenThisSession(payload.session_id, file)) process.exit(0);
   process.stdout.write(
     JSON.stringify({
       hookSpecificOutput: {
@@ -131,4 +170,6 @@ function main() {
   process.exit(0);
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = { isUiFile, runInProgress };

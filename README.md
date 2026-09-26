@@ -15,7 +15,7 @@ Companion to [forge-methodology](https://github.com/davidgarciagordo/forge-metho
 | [`agents/`](agents/) | 8 agents: audit-first, reference-research, context-pack, the 4 lenses, vitality-verdict. |
 | [`references/skills/`](references/skills/) | **The 7 verified playbooks** — one per orchestrated skill, checked against each skill's real source at a pinned commit: [impeccable](references/skills/impeccable.md) · [taste-skill](references/skills/taste-skill.md) · [emil-design-eng](references/skills/emil-design-eng.md) · [review-animations](references/skills/review-animations.md) · [web-design-guidelines](references/skills/web-design-guidelines.md) · [ui-ux-pro-max](references/skills/ui-ux-pro-max.md) · [huashu-design](references/skills/huashu-design.md). Exact invocation, gotchas, and corrections to common false claims about each skill. |
 | [`examples/`](examples/README.md) | Two full illustrative runs (a settings page, a design-system button) showing every step's real artifacts and outputs. |
-| [`hooks/design-review-gate.js`](hooks/design-review-gate.js) | PostToolUse enforcement: a UI write without an `alive` verdict warns (default), blocks, or stays off — `DESIGN_REVIEW_GATE=warn\|block\|off`. |
+| [`hooks/design-review-gate.js`](hooks/design-review-gate.js) | PostToolUse enforcement: a UI write without an `alive` verdict warns (default), sends post-write blocking feedback, or stays off — `DESIGN_REVIEW_GATE=warn\|block\|off`. |
 | [`scripts/preflight.mjs`](scripts/preflight.mjs) | The component manifest + detector (also catches "plugin on disk but disabled this session"). |
 | [`templates/`](templates/) | [findings-checklist](templates/findings-checklist.md) · [vitality-verdict](templates/vitality-verdict.md) shapes. |
 | [`references/pipeline.md`](references/pipeline.md) · [`references/attribution.md`](references/attribution.md) | Step-by-step reference · who wrote what + full install matrix. |
@@ -24,7 +24,7 @@ Companion to [forge-methodology](https://github.com/davidgarciagordo/forge-metho
 
 ```bash
 /plugin marketplace add davidgarciagordo/design-review
-/plugin install design-review
+/plugin install design-review@design-review
 ```
 
 Or the whole suite (this + token-economy, forge-methodology, working-methods, automations) from [one catalog](https://github.com/davidgarciagordo/claude-plugins):
@@ -35,8 +35,8 @@ Or the whole suite (this + token-economy, forge-methodology, working-methods, au
 ```
 
 > **Honest note:** the `/design-review:run` command, the 8 agents, and the enforcement hook only
-> exist in your session once the plugin is **installed and enabled**
-> (`/plugin install design-review@davidgarciagordo-plugins`). Reading this repo without installing
+> exist in your session once the plugin is **installed and enabled** — either path works
+> (`design-review@design-review` standalone, or `design-review@davidgarciagordo-plugins` from the hub). Reading this repo without installing
 > gives you the methodology as prose — no gate runs.
 
 Then point it at a target:
@@ -93,7 +93,7 @@ Gates cannot be skipped or reordered. Every phase leaves an artifact under `.des
 | 6 | apply + informed re-pass | orchestrator → each finding's owning fix command | the diff | one pass, only after the ask |
 | 7 | vitality-verdict — live render (light/dark/mobile), diff vs references | `design-vitality-verdict` | `verdict.json` | **GATE** — `alive`, or loop back to 3 (≤3 rounds) |
 
-**Enforcement hook:** a `PostToolUse` hook checks `verdict.json` whenever a UI file is written — `warn` (default), `block` (exit 2), or `off` via `DESIGN_REVIEW_GATE`.
+**Enforcement hook:** a `PostToolUse` hook checks `verdict.json` whenever a UI file is written — `warn` (default, once per file per session), `block` (post-write blocking feedback via exit 2 — it cannot prevent the write, which has already happened), or `off` via `DESIGN_REVIEW_GATE`. It stays silent while a run is in progress, so the pipeline's own apply step is not flagged.
 
 ## ❓ Why not just ask the model to "review the design"?
 
@@ -111,7 +111,7 @@ Two more failure modes no single skill covers get their own gates: **designing f
 ## 🔍 Requirements — the honest version
 
 - **Claude Code.** The executable pieces (Skill-tool routing, agents, `AskUserQuestion`, the hook) are Claude Code features. Outside Claude Code you can follow [`SKILL.md`](SKILL.md) + [`references/pipeline.md`](references/pipeline.md) manually as a methodology, but nothing here runs itself elsewhere.
-- **The 4 core skills are third-party and NOT bundled** — [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). Step 0 detects what's missing and **asks per item before installing** — it never installs silently, and it never skips silently either: a skipped core skill fails its lens loudly (`Unknown skill` / an announced degrade), it does not quietly produce a weaker review. Install commands: [references/attribution.md](references/attribution.md); `node scripts/preflight.mjs` shows what's present in your environment.
+- **The 4 core skills are third-party and NOT bundled** — [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/agent-skills) (Vercel — skill package; its rules come from [web-interface-guidelines](https://github.com/vercel-labs/web-interface-guidelines)). Step 0 detects what's missing and **asks per item before installing** — it never installs silently, and it never skips silently either: a skipped core skill fails its lens loudly (`Unknown skill` / an announced degrade), it does not quietly produce a weaker review. Install commands: [references/attribution.md](references/attribution.md); `node scripts/preflight.mjs` shows what's present in your environment.
 - **`agent-browser` is quasi-required — and it must be Vercel Labs' one.** It is [Vercel Labs' browser-automation CLI](https://github.com/vercel-labs/agent-browser), purpose-built and optimized for agent-driven browsing (`npx -y skills@latest add vercel-labs/agent-browser`) — **not a Claude Code built-in, and not interchangeable with a generic browser-automation tool**. Both browser gates (reference-research and the final verdict) depend on it — without it the verdict is **provisional only**: `alive` cannot be claimed for a design no one rendered.
 - **Network access** (Dribbble/competitor research, Vercel guideline fetches), `node` for the repo scripts, `python3` only if you use `ui-ux-pro-max`.
 
@@ -132,9 +132,9 @@ Two more failure modes no single skill covers get their own gates: **designing f
 
 ## 🙏 Attribution
 
-Orchestrates skills authored by others — loads them, never paraphrases. Core (mandatory, third-party — see [Requirements](#requirements--the-honest-version)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/web-interface-guidelines) (Vercel). Wired add-ons: `ui-ux-pro-max`, `refero`, `frontend-design` (official Anthropic plugin — plan criterion), `building-components` (Vercel standard — component-authoring criterion in the apply pass), [`agent-browser`](https://github.com/vercel-labs/agent-browser) (Vercel Labs — THE tester: live render for research and the final verdict; optimized for agent-driven browsing, never a generic substitute), `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Full detail: [references/attribution.md](references/attribution.md).
+Orchestrates skills authored by others — loads them, never paraphrases. Core (mandatory, third-party — see [Requirements](#-requirements--the-honest-version)): [`impeccable`](https://github.com/pbakaus/impeccable) (Paul Bakaus), [`design-taste-frontend`](https://github.com/Leonxlnx/taste-skill) (Leonxlnx), [`emil-design-eng`](https://github.com/emilkowalski/skills) (Emil Kowalski), [`web-design-guidelines`](https://github.com/vercel-labs/agent-skills) (Vercel — skill package; its rules come from [web-interface-guidelines](https://github.com/vercel-labs/web-interface-guidelines)). Wired add-ons: `ui-ux-pro-max`, `refero`, `frontend-design` (official Anthropic plugin — plan criterion), `building-components` (Vercel standard — component-authoring criterion in the apply pass), [`agent-browser`](https://github.com/vercel-labs/agent-browser) (Vercel Labs — THE tester: live render for research and the final verdict; optimized for agent-driven browsing, never a generic substitute), `review-animations`, `huashu-design`, `web-accessibility`, `seo`. Full detail: [references/attribution.md](references/attribution.md).
 
-Alternative: clone into `~/.claude/skills/design-review` to load as a local plugin without a marketplace.
+Alternative, without a marketplace: clone the repo and run `claude --plugin-dir <clone>`, or `/plugin marketplace add <local-path>` and install from it. (Cloning into a skills directory loads only `SKILL.md` as a plain skill — no agents, command or hook.)
 
 ## ⚖️ License
 

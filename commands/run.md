@@ -69,7 +69,7 @@ state and write "what to keep" to `.design-review/audit-first.md`. **PASS = the 
 ## Step 2 — `reference-research` **[GATE · ALWAYS · #1 lever against flat]**
 Dispatch the **`design-review:design-reference-research`** agent. agent-browser over current Dribbble popular +
 `refero` (real shipped products) + 2-3 domain competitors + **ui-ux-pro-max vocabulary via its
-search.py run deterministically (Bash — 84 styles / 161 palettes / 73 font-pairings)** + optionally
+search.py run deterministically (Bash; catalog counts vary by version — re-count from `data/*.csv`)** + optionally
 a pre-extracted DESIGN.md from `VoltAgent/awesome-design-md` when a reference brand is in its free
 catalog (steal patterns, never clone the brand). Extract **3-5 concrete patterns** → write the
 **copy + combine + house-layer** decision AND the 3 taste dials to `.design-review/references.md`.

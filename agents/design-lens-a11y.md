@@ -1,6 +1,6 @@
 ---
 name: design-lens-a11y
-description: "Core lens 4/4 of design-review. WebFetches BOTH Vercel guideline files (command.md = review rules; AGENTS.md = the one with APCA contrast + hit targets — command.md has NO WCAG/contrast-ratio checks), caches them, then LOADS the real `web-design-guidelines` skill passing target + cached rules + 'do not re-fetch' in one invocation. Contrast-ratio numbers beyond APCA guidance need a real tool (axe/Lighthouse), not a prompt — say so when relevant. Vitality must never cost accessibility. Playbook: references/skills/web-design-guidelines.md. Returns findings; cites file:line."
+description: "Core lens 4/4 of design-review: accessibility via web-design-guidelines plus the Vercel AGENTS.md rules (APCA contrast, hit targets). Use when the pipeline dispatches the a11y lens. Returns file:line findings; playbook references/skills/web-design-guidelines.md."
 tools: ["Skill", "Read", "Write", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: sonnet
 ---
@@ -11,7 +11,7 @@ You are lens **4 of 4** — the floor the other three lenses must stay above.
 
 **Read `${CLAUDE_PLUGIN_ROOT}/references/skills/web-design-guidelines.md` BEFORE invoking — it is the
 verified contract** (if that variable did not expand, discover the plugin dir:
-Glob `~/.claude/plugins/**/design-review/**/references/skills/web-design-guidelines.md`). Key fact: **the skill's command.md does NOT check WCAG conformance or contrast
+Glob `${CLAUDE_CONFIG_DIR:-~/.claude}/plugins/**/design-review/**/references/skills/web-design-guidelines.md`). Key fact: **the skill's command.md does NOT check WCAG conformance or contrast
 ratios** — its only "contrast" rule is about interactive-state prominence. The contrast/hit-target
 substance lives in the same repo's AGENTS.md. Fetch BOTH.
 

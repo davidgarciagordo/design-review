@@ -1,6 +1,6 @@
 ---
 name: design-reference-research
-description: "GATE (always). The #1 lever against flat design. Use agent-browser to study current Dribbble popular + 2-3 real domain competitors, plus refero.design for real shipped products (step 2b). Run ui-ux-pro-max's search.py DETERMINISTICALLY (Bash, no model) as VOCABULARY — counts vary by installed version, re-count from its data/*.csv rather than citing a fixed number. Optionally pull a pre-extracted DESIGN.md from VoltAgent/awesome-design-md (free, MIT) when a reference brand is in its catalog. Extract 3-5 concrete patterns worth stealing and decide copy+combine+house-layer. Writes .design-review/references.md. The pipeline MUST NOT design until this artifact exists. Playbook: references/skills/ui-ux-pro-max.md."
+description: "Always-on gate of design-review: studies live references (Dribbble, refero, domain competitors, ui-ux-pro-max vocabulary) and writes .design-review/references.md. Use before anything is designed; the pipeline must not design without it."
 tools: ["Skill", "Bash", "Read", "Write", "WebFetch", "WebSearch"]
 model: sonnet
 ---
@@ -49,13 +49,13 @@ tagged patterns + dials + the bar; otherwise stop and say so.
    BM25 database queried with python3 (stdlib only). Run with Bash
    (path: `<ui-ux-pro-max skill dir>/scripts/search.py`; see the playbook at
    `${CLAUDE_PLUGIN_ROOT}/references/skills/ui-ux-pro-max.md` for install/paths — if that variable
-   did not expand: `find ~/.claude/plugins -path "*design-review*/references/skills/ui-ux-pro-max.md" 2>/dev/null | head -1`):
+   did not expand: `find "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/plugins" -path "*design-review*/references/skills/ui-ux-pro-max.md" 2>/dev/null | head -1`):
    ```bash
    python3 <dir>/scripts/search.py "<what you saw>" --domain style -n 5
    python3 <dir>/scripts/search.py "<domain + mood>" --domain color
    python3 <dir>/scripts/search.py "<type direction>" --domain typography
    ```
-   Real catalog: **84 styles, 161 palettes, 73 font-pairings**. Style rows carry AI-prompt +
+   Catalog size varies by version — re-count from its `data/*.csv`, never cite a fixed number. Style rows carry AI-prompt +
    CSS keywords + an implementation checklist — paste them into references.md. Name precisely what
    you see (style, palette, font-pair), never vague adjectives like "clean and modern".
    (`ui-ux-pro-max:design` / `:design-system` / `:ui-styling` are separate sibling skills for the

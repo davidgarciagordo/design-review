@@ -16,13 +16,14 @@
  * A component absent here is NOT an error — it degrades the matching lens, which
  * the orchestrator must announce.
  */
-'use strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
 
 const HOME = os.homedir();
+// Claude Code config dir: honours CLAUDE_CONFIG_DIR, defaults to ~/.claude.
+const CLAUDE_DIR = process.env.CLAUDE_CONFIG_DIR || path.join(HOME, '.claude');
 const CWD = process.cwd();
 
 /**
@@ -82,7 +83,7 @@ export const MANIFEST = [
   {
     id: 'ui-ux-pro-max',
     tier: 'wired',
-    role: 'design-intelligence DB: 84 styles / 161 palettes / 73 font-pairings / 99 UX rules / charts (BM25 search.py, deterministic — run with Bash, no model)',
+    role: 'design-intelligence DB: styles / palettes / font-pairings / UX rules / charts — counts vary by version, re-count from data/*.csv (BM25 search.py, deterministic — run with Bash, no model)',
     phase: '3a-pre baseline + 2 reference vocabulary + 3e UX lens + 5 generation',
     kind: 'plugin',
     pluginKey: 'ui-ux-pro-max@ui-ux-pro-max-skill',
@@ -162,7 +163,8 @@ export const MANIFEST = [
 // catalog of 73 pre-extracted DESIGN.md brand design languages, used on demand by the
 // reference-research agent as an optional source. Steal patterns, never clone the brand.
 
-function expand(p) {
+export function expand(p) {
+  if (p === '~/.claude' || p.startsWith('~/.claude/')) return path.join(CLAUDE_DIR, p.slice('~/.claude/'.length));
   return p.startsWith('~/') ? path.join(HOME, p.slice(2)) : path.resolve(CWD, p);
 }
 
@@ -282,7 +284,7 @@ const SETTINGS_SCOPES = [
   { scope: 'managed', path: '/etc/claude-code/managed-settings.json' }, // Linux/WSL
   { scope: 'local', path: path.join(CWD, '.claude', 'settings.local.json') },
   { scope: 'project', path: path.join(CWD, '.claude', 'settings.json') },
-  { scope: 'user', path: path.join(HOME, '.claude', 'settings.json') },
+  { scope: 'user', path: path.join(CLAUDE_DIR, 'settings.json') },
 ];
 
 function readJSON(p) {
@@ -354,7 +356,7 @@ const outdated = present.filter((r) => r.contract && r.contract.state !== 'ok');
 const ENABLEMENT_NOTE =
   'Note: enablement is only verified for plugin-kind components with a known `enabledPlugins` key ' +
   '(currently: ui-ux-pro-max), checked against settings.local.json / settings.json (project) and ' +
-  '~/.claude/settings.json (user), plus the two common managed-settings.json OS paths — not every ' +
+  '$CLAUDE_CONFIG_DIR (or ~/.claude)/settings.json (user), plus the two common managed-settings.json OS paths — not every ' +
   'possible scope or override mechanism. Loose skills under ~/.claude/skills/<name> (impeccable, ' +
   'taste-skill, emil-design-eng, web-design-guidelines) have no separate per-skill enable flag, so ' +
   '"present" is the best signal this script can give for them. If a lens still throws `Unknown skill` ' +

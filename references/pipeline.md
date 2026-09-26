@@ -125,7 +125,7 @@ headings, meaningful `alt`, reduced-motion honored by the new signature motion. 
 failure is P1.** Fix routing: `impeccable harden`/`clarify` or direct corrections.
 
 ### 3e — `ui-ux-pro-max` UX guidelines (wired intelligence)
-Extra UX lens — its 99 UX guidelines catch structural/interaction issues the others missed. Tag findings
+Extra UX lens — its UX guidelines catch structural/interaction issues the others missed. Tag findings
 `[ui-ux-pro-max]`. Fix routing: `:design` / `:ui-styling` / `:design-system` namespaces.
 
 > **Add-ons (skippable, opt-in), run here if installed/relevant:** `huashu-design` (second anti-slop

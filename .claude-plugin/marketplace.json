@@ -1,6 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
-  "version": "2.0.0",
   "name": "design-review",
   "description": "Design Review — a design-VITALITY pipeline that cures flat, templated UI. Agents + the /design-review:run command + a gate hook. Install standalone or from the claude-code-setup-optimizer hub.",
   "owner": {
@@ -17,7 +16,10 @@
       "name": "forge-methodology",
       "displayName": "Forja / Forge",
       "description": "Sister repo: domain-agnostic human↔AI methodology.",
-      "source": { "source": "github", "repo": "davidgarciagordo/forge-methodology" }
+      "source": {
+        "source": "github",
+        "repo": "davidgarciagordo/forge-methodology"
+      }
     }
   ]
 }
