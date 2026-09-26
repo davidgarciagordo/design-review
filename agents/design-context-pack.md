@@ -1,6 +1,6 @@
 ---
 name: design-context-pack
-description: "Step 2c of design-review: reads the target once and writes .design-review/context-pack.md (component tree, tokens in use, file:line map, screenshots, known findings) so the 4 lenses judge the pack instead of re-scanning. Read-only."
+description: "Spawned by design-review (context-pack step); not for direct use."
 tools: ["Read", "Write", "Bash", "Grep", "Glob"]
 model: sonnet
 ---

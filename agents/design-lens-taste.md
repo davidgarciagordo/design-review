@@ -1,6 +1,6 @@
 ---
 name: design-lens-taste
-description: "Core lens 2/4 of design-review: the anti-templated gate. Loads the taste skill (taste-skill or design-taste-frontend) routed to its §11 redesign audit + §14 pre-flight, never bare. Returns file:line findings; playbook references/skills/taste-skill.md."
+description: "Spawned by design-review (taste lens); not for direct use."
 tools: ["Skill", "Read", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: opus
 ---

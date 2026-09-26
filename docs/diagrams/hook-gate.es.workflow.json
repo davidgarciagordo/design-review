@@ -1,0 +1,179 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Hook design-review-gate (PostToolUse)",
+    "output": "hook-gate.es.html",
+    "animation": "none",
+    "visual_preset": "classic",
+    "quality_profile": "standard"
+  },
+  "lanes": [
+    {
+      "id": "check",
+      "label": "Comprobaciones, en orden"
+    },
+    {
+      "id": "silent",
+      "label": "Silencioso (exit 0)"
+    },
+    {
+      "id": "signal",
+      "label": "Señal al agente"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "W",
+      "lane": "check",
+      "col": 0,
+      "type": "frontend",
+      "label": "Write / Edit hecho",
+      "sublabel": "el fichero ya está escrito",
+      "width": 220
+    },
+    {
+      "id": "U",
+      "lane": "check",
+      "col": 1,
+      "type": "security",
+      "label": "¿Fichero de UI?",
+      "sublabel": "tsx, vue, css, components/",
+      "width": 220
+    },
+    {
+      "id": "R",
+      "lane": "check",
+      "col": 2,
+      "type": "security",
+      "label": "¿Run en curso?",
+      "sublabel": "references.md más nuevo que el veredicto",
+      "width": 270
+    },
+    {
+      "id": "V",
+      "lane": "check",
+      "col": 3,
+      "type": "security",
+      "label": "¿Veredicto alive más nuevo?",
+      "sublabel": ".design-review/verdict.json",
+      "width": 260
+    },
+    {
+      "id": "M",
+      "lane": "check",
+      "col": 4,
+      "type": "security",
+      "label": "DESIGN_REVIEW_GATE",
+      "sublabel": "warn (por defecto) o block",
+      "width": 250
+    },
+    {
+      "id": "S1",
+      "lane": "silent",
+      "col": 1,
+      "type": "backend",
+      "label": "Skip",
+      "sublabel": "no es UI, o el modo está off",
+      "width": 220
+    },
+    {
+      "id": "S2",
+      "lane": "silent",
+      "col": 2,
+      "type": "backend",
+      "label": "Skip",
+      "sublabel": "el pipeline está aplicando fixes",
+      "width": 260
+    },
+    {
+      "id": "S3",
+      "lane": "silent",
+      "col": 3,
+      "type": "backend",
+      "label": "Pass",
+      "sublabel": "la superficie ya está alive",
+      "width": 240
+    },
+    {
+      "id": "WN",
+      "lane": "signal",
+      "col": 4,
+      "type": "backend",
+      "label": "warn: additionalContext",
+      "sublabel": "una vez por fichero y sesión",
+      "width": 250
+    },
+    {
+      "id": "BK",
+      "lane": "signal",
+      "col": 5,
+      "type": "backend",
+      "label": "block: exit 2 + stderr",
+      "sublabel": "feedback, no puede deshacer la escritura",
+      "width": 280
+    }
+  ],
+  "edges": [
+    {
+      "from": "W",
+      "to": "U",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "U",
+      "to": "R",
+      "label": "sí",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "R",
+      "to": "V",
+      "label": "no",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "V",
+      "to": "M",
+      "label": "no",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "U",
+      "to": "S1",
+      "label": "no",
+      "role": "branch",
+      "variant": "dashed"
+    },
+    {
+      "from": "R",
+      "to": "S2",
+      "label": "sí",
+      "role": "branch",
+      "variant": "dashed"
+    },
+    {
+      "from": "V",
+      "to": "S3",
+      "label": "sí",
+      "role": "branch",
+      "variant": "dashed"
+    },
+    {
+      "from": "M",
+      "to": "WN",
+      "label": "warn",
+      "role": "main"
+    },
+    {
+      "from": "M",
+      "to": "BK",
+      "label": "block",
+      "role": "main"
+    }
+  ]
+}

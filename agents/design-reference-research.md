@@ -1,6 +1,6 @@
 ---
 name: design-reference-research
-description: "Always-on gate of design-review: studies live references (Dribbble, refero, domain competitors, ui-ux-pro-max vocabulary) and writes .design-review/references.md. Use before anything is designed; the pipeline must not design without it."
+description: "Spawned by design-review (reference-research step); not for direct use."
 tools: ["Skill", "Bash", "Read", "Write", "WebFetch", "WebSearch"]
 model: sonnet
 ---

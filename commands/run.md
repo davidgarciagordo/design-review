@@ -1,5 +1,6 @@
 ---
-description: "Run the design-VITALITY pipeline on a target. Gated, imperative: preflight (detect + ASK + install) → audit-first → reference-research → 4 core lenses in order → ONE multi-select (the user's only decision) → apply → vitality verdict (alive/templated/flat) → loop. Cures flat, templated UI. Usage: /design-review:run <target>"
+description: "Run the design-review vitality pipeline on a target (file, route, component, story or email)."
+disable-model-invocation: true
 argument-hint: "<target — file path, route, component, story, or email>"
 ---
 

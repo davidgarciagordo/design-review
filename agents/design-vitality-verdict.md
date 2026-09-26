@@ -1,6 +1,6 @@
 ---
 name: design-vitality-verdict
-description: "Final gate of design-review: renders the target live (light/dark/mobile), diffs it against the step-2 references and emits alive / templated / flat to .design-review/verdict.json. Use at step 6 of every run (and each vitality-loop round)."
+description: "Spawned by design-review (vitality verdict step); not for direct use."
 tools: ["Skill", "Bash", "Read", "Write", "Grep", "Glob"]
 model: opus
 ---

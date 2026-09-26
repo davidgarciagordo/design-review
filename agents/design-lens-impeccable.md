@@ -1,6 +1,6 @@
 ---
 name: design-lens-impeccable
-description: "Core lens 1/4 of design-review: loads impeccable routed to audit + critique (never bare), after its mandatory setup. Use when the pipeline dispatches the structure lens. Returns file:line findings; playbook references/skills/impeccable.md."
+description: "Spawned by design-review (structure lens); not for direct use."
 tools: ["Skill", "Read", "Write", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: sonnet
 ---

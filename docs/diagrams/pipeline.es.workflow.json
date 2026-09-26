@@ -1,0 +1,215 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Pipeline de design-review — pasos 0-7",
+    "output": "pipeline.es.html",
+    "animation": "none",
+    "visual_preset": "classic",
+    "quality_profile": "standard"
+  },
+  "lanes": [
+    {
+      "id": "prep",
+      "label": "Preparar (0-3)"
+    },
+    {
+      "id": "diag",
+      "label": "Diagnosticar, read-only (4)"
+    },
+    {
+      "id": "apply",
+      "label": "Decidir y aplicar (5-6)"
+    },
+    {
+      "id": "verdict",
+      "label": "Gate del veredicto (7)"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "P0",
+      "lane": "prep",
+      "col": 0,
+      "type": "backend",
+      "label": "0 Preflight",
+      "sublabel": "detectar, ASK, instalar o saltar",
+      "width": 230
+    },
+    {
+      "id": "P1",
+      "lane": "prep",
+      "col": 1,
+      "type": "security",
+      "label": "1 audit-first",
+      "sublabel": "rediseños: qué conservar",
+      "width": 220
+    },
+    {
+      "id": "P2",
+      "lane": "prep",
+      "col": 2,
+      "type": "external",
+      "label": "2 reference-research",
+      "sublabel": "Dribbble, refero, competidores en vivo",
+      "width": 270
+    },
+    {
+      "id": "P3",
+      "lane": "prep",
+      "col": 3,
+      "type": "database",
+      "label": "3 context-pack",
+      "sublabel": "descubre el target una sola vez",
+      "width": 240
+    },
+    {
+      "id": "L1",
+      "lane": "diag",
+      "col": 0,
+      "type": "backend",
+      "label": "impeccable",
+      "sublabel": "estructura, jerarquía, tokens",
+      "width": 230
+    },
+    {
+      "id": "L2",
+      "lane": "diag",
+      "col": 1,
+      "type": "backend",
+      "label": "taste skill",
+      "sublabel": "gate anti-templated",
+      "width": 220
+    },
+    {
+      "id": "L3",
+      "lane": "diag",
+      "col": 2,
+      "type": "backend",
+      "label": "emil-design-eng",
+      "sublabel": "motion con firma propia",
+      "width": 220
+    },
+    {
+      "id": "L4",
+      "lane": "diag",
+      "col": 3,
+      "type": "backend",
+      "label": "web-design-guidelines",
+      "sublabel": "accesibilidad",
+      "width": 240
+    },
+    {
+      "id": "A5",
+      "lane": "apply",
+      "col": 1,
+      "type": "frontend",
+      "label": "5 Un multi-select",
+      "sublabel": "el owner elige hallazgos P1/P2/P3",
+      "width": 270
+    },
+    {
+      "id": "A6",
+      "lane": "apply",
+      "col": 2,
+      "type": "backend",
+      "label": "6 Aplica los fixes marcados",
+      "sublabel": "comando dueño del fix, una pasada",
+      "width": 270
+    },
+    {
+      "id": "V7",
+      "lane": "verdict",
+      "col": 2,
+      "type": "security",
+      "label": "7 Veredicto de vitalidad",
+      "sublabel": "render en vivo vs referencias",
+      "width": 260
+    },
+    {
+      "id": "OK",
+      "lane": "verdict",
+      "col": 3,
+      "type": "frontend",
+      "label": "alive: hecho",
+      "sublabel": "verdict.json escrito",
+      "width": 210
+    }
+  ],
+  "edges": [
+    {
+      "from": "P0",
+      "to": "P1",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "P1",
+      "to": "P2",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "P2",
+      "to": "P3",
+      "label": "references.md",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "P3",
+      "to": "L1",
+      "label": "mismo pack a las 4",
+      "role": "main"
+    },
+    {
+      "from": "L1",
+      "to": "L2",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "L2",
+      "to": "L3",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "L3",
+      "to": "L4",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "L4",
+      "to": "A5",
+      "label": "lista fusionada, sin duplicados",
+      "role": "main"
+    },
+    {
+      "from": "A5",
+      "to": "A6",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "A6",
+      "to": "V7",
+      "role": "main"
+    },
+    {
+      "from": "V7",
+      "to": "OK",
+      "label": "alive",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "V7",
+      "to": "P3",
+      "label": "templated / flat, máx. 3 rondas",
+      "role": "return",
+      "variant": "dashed"
+    }
+  ]
+}

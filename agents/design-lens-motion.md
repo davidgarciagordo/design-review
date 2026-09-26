@@ -1,6 +1,6 @@
 ---
 name: design-lens-motion
-description: "Core lens 3/4 of design-review: signature motion and polish via emil-design-eng plus review-animations (read from disk, never Skill-invoked). Use when the pipeline dispatches the motion lens. Returns file:line findings; playbooks in references/skills/."
+description: "Spawned by design-review (motion lens); not for direct use."
 tools: ["Skill", "Read", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: sonnet
 ---

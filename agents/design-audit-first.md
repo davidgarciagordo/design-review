@@ -1,6 +1,6 @@
 ---
 name: design-audit-first
-description: "GATE (redesigns only). Before any change to an existing UI surface, render it, screenshot the current state, and write 'what to keep' (the equity already working). Use as the first step of the design-review pipeline on existing targets. Skip for greenfield."
+description: "Spawned by design-review (audit-first step); not for direct use."
 tools: ["Skill", "Bash", "Read", "Write", "Grep", "Glob"]
 model: sonnet
 ---

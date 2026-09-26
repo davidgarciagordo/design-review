@@ -1,6 +1,6 @@
 ---
 name: design-lens-a11y
-description: "Core lens 4/4 of design-review: accessibility via web-design-guidelines plus the Vercel AGENTS.md rules (APCA contrast, hit targets). Use when the pipeline dispatches the a11y lens. Returns file:line findings; playbook references/skills/web-design-guidelines.md."
+description: "Spawned by design-review (a11y lens); not for direct use."
 tools: ["Skill", "Read", "Write", "Bash", "Grep", "Glob", "WebFetch", "WebSearch"]
 model: sonnet
 ---
