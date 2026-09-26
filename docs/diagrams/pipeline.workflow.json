@@ -1,0 +1,215 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "design-review pipeline — steps 0-7",
+    "output": "pipeline.html",
+    "animation": "none",
+    "visual_preset": "classic",
+    "quality_profile": "standard"
+  },
+  "lanes": [
+    {
+      "id": "prep",
+      "label": "Prepare (0-3)"
+    },
+    {
+      "id": "diag",
+      "label": "Diagnose, read-only (4)"
+    },
+    {
+      "id": "apply",
+      "label": "Decide & apply (5-6)"
+    },
+    {
+      "id": "verdict",
+      "label": "Verdict gate (7)"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "P0",
+      "lane": "prep",
+      "col": 0,
+      "type": "backend",
+      "label": "0 Preflight",
+      "sublabel": "detect, ASK, install or skip",
+      "width": 210
+    },
+    {
+      "id": "P1",
+      "lane": "prep",
+      "col": 1,
+      "type": "security",
+      "label": "1 audit-first",
+      "sublabel": "redesigns: what to keep",
+      "width": 200
+    },
+    {
+      "id": "P2",
+      "lane": "prep",
+      "col": 2,
+      "type": "external",
+      "label": "2 reference-research",
+      "sublabel": "live Dribbble, refero, competitors",
+      "width": 240
+    },
+    {
+      "id": "P3",
+      "lane": "prep",
+      "col": 3,
+      "type": "database",
+      "label": "3 context-pack",
+      "sublabel": "discover the target once",
+      "width": 200
+    },
+    {
+      "id": "L1",
+      "lane": "diag",
+      "col": 0,
+      "type": "backend",
+      "label": "impeccable",
+      "sublabel": "structure, hierarchy, tokens",
+      "width": 210
+    },
+    {
+      "id": "L2",
+      "lane": "diag",
+      "col": 1,
+      "type": "backend",
+      "label": "taste skill",
+      "sublabel": "anti-templated gate",
+      "width": 200
+    },
+    {
+      "id": "L3",
+      "lane": "diag",
+      "col": 2,
+      "type": "backend",
+      "label": "emil-design-eng",
+      "sublabel": "signature motion",
+      "width": 200
+    },
+    {
+      "id": "L4",
+      "lane": "diag",
+      "col": 3,
+      "type": "backend",
+      "label": "web-design-guidelines",
+      "sublabel": "accessibility",
+      "width": 220
+    },
+    {
+      "id": "A5",
+      "lane": "apply",
+      "col": 1,
+      "type": "frontend",
+      "label": "5 One multi-select",
+      "sublabel": "owner picks P1/P2/P3 findings",
+      "width": 240
+    },
+    {
+      "id": "A6",
+      "lane": "apply",
+      "col": 2,
+      "type": "backend",
+      "label": "6 Apply picked fixes",
+      "sublabel": "owning fix command, one pass",
+      "width": 240
+    },
+    {
+      "id": "V7",
+      "lane": "verdict",
+      "col": 2,
+      "type": "security",
+      "label": "7 Vitality verdict",
+      "sublabel": "live render vs references",
+      "width": 230
+    },
+    {
+      "id": "OK",
+      "lane": "verdict",
+      "col": 3,
+      "type": "frontend",
+      "label": "alive: done",
+      "sublabel": "verdict.json written",
+      "width": 200
+    }
+  ],
+  "edges": [
+    {
+      "from": "P0",
+      "to": "P1",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "P1",
+      "to": "P2",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "P2",
+      "to": "P3",
+      "label": "references.md",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "P3",
+      "to": "L1",
+      "label": "same pack to all 4",
+      "role": "main"
+    },
+    {
+      "from": "L1",
+      "to": "L2",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "L2",
+      "to": "L3",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "L3",
+      "to": "L4",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "L4",
+      "to": "A5",
+      "label": "merged, deduped list",
+      "role": "main"
+    },
+    {
+      "from": "A5",
+      "to": "A6",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "A6",
+      "to": "V7",
+      "role": "main"
+    },
+    {
+      "from": "V7",
+      "to": "OK",
+      "label": "alive",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "V7",
+      "to": "P3",
+      "label": "templated / flat, max 3 rounds",
+      "role": "return",
+      "variant": "dashed"
+    }
+  ]
+}

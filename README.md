@@ -93,7 +93,15 @@ Gates cannot be skipped or reordered. Every phase leaves an artifact under `.des
 | 6 | apply + informed re-pass | orchestrator → each finding's owning fix command | the diff | one pass, only after the ask |
 | 7 | vitality-verdict — live render (light/dark/mobile), diff vs references | `design-vitality-verdict` | `verdict.json` | **GATE** — `alive`, or loop back to 3 (≤3 rounds) |
 
+[![design-review pipeline](docs/diagrams/pipeline.png)](docs/diagrams/pipeline.html)
+
+*Interactive version: [docs/diagrams/pipeline.html](docs/diagrams/pipeline.html) (open locally for zoom and path tracing).*
+
 **Enforcement hook:** a `PostToolUse` hook checks `verdict.json` whenever a UI file is written — `warn` (default, once per file per session), `block` (post-write blocking feedback via exit 2 — it cannot prevent the write, which has already happened), or `off` via `DESIGN_REVIEW_GATE`. It stays silent while a run is in progress, so the pipeline's own apply step is not flagged.
+
+[![design-review-gate hook](docs/diagrams/hook-gate.png)](docs/diagrams/hook-gate.html)
+
+*Interactive version: [docs/diagrams/hook-gate.html](docs/diagrams/hook-gate.html) (open locally for zoom and path tracing).*
 
 ## ❓ Why not just ask the model to "review the design"?
 

@@ -1,0 +1,179 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "design-review-gate hook (PostToolUse)",
+    "output": "hook-gate.html",
+    "animation": "none",
+    "visual_preset": "classic",
+    "quality_profile": "standard"
+  },
+  "lanes": [
+    {
+      "id": "check",
+      "label": "Checks, in order"
+    },
+    {
+      "id": "silent",
+      "label": "Silent (exit 0)"
+    },
+    {
+      "id": "signal",
+      "label": "Signal to the agent"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "W",
+      "lane": "check",
+      "col": 0,
+      "type": "frontend",
+      "label": "Write / Edit done",
+      "sublabel": "the file is already written",
+      "width": 200
+    },
+    {
+      "id": "U",
+      "lane": "check",
+      "col": 1,
+      "type": "security",
+      "label": "UI file?",
+      "sublabel": "tsx, vue, css, components/",
+      "width": 200
+    },
+    {
+      "id": "R",
+      "lane": "check",
+      "col": 2,
+      "type": "security",
+      "label": "Run in progress?",
+      "sublabel": "references.md newer than verdict",
+      "width": 230
+    },
+    {
+      "id": "V",
+      "lane": "check",
+      "col": 3,
+      "type": "security",
+      "label": "alive verdict newer?",
+      "sublabel": ".design-review/verdict.json",
+      "width": 220
+    },
+    {
+      "id": "M",
+      "lane": "check",
+      "col": 4,
+      "type": "security",
+      "label": "DESIGN_REVIEW_GATE",
+      "sublabel": "warn (default) or block",
+      "width": 230
+    },
+    {
+      "id": "S1",
+      "lane": "silent",
+      "col": 1,
+      "type": "backend",
+      "label": "Skip",
+      "sublabel": "not UI, or mode is off",
+      "width": 200
+    },
+    {
+      "id": "S2",
+      "lane": "silent",
+      "col": 2,
+      "type": "backend",
+      "label": "Skip",
+      "sublabel": "pipeline is applying fixes",
+      "width": 230
+    },
+    {
+      "id": "S3",
+      "lane": "silent",
+      "col": 3,
+      "type": "backend",
+      "label": "Pass",
+      "sublabel": "surface already alive",
+      "width": 220
+    },
+    {
+      "id": "WN",
+      "lane": "signal",
+      "col": 4,
+      "type": "backend",
+      "label": "warn: additionalContext",
+      "sublabel": "once per file per session",
+      "width": 230
+    },
+    {
+      "id": "BK",
+      "lane": "signal",
+      "col": 5,
+      "type": "backend",
+      "label": "block: exit 2 + stderr",
+      "sublabel": "feedback, cannot undo the write",
+      "width": 240
+    }
+  ],
+  "edges": [
+    {
+      "from": "W",
+      "to": "U",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "U",
+      "to": "R",
+      "label": "yes",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "R",
+      "to": "V",
+      "label": "no",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "V",
+      "to": "M",
+      "label": "no",
+      "role": "main",
+      "route": "straight"
+    },
+    {
+      "from": "U",
+      "to": "S1",
+      "label": "no",
+      "role": "branch",
+      "variant": "dashed"
+    },
+    {
+      "from": "R",
+      "to": "S2",
+      "label": "yes",
+      "role": "branch",
+      "variant": "dashed"
+    },
+    {
+      "from": "V",
+      "to": "S3",
+      "label": "yes",
+      "role": "branch",
+      "variant": "dashed"
+    },
+    {
+      "from": "M",
+      "to": "WN",
+      "label": "warn",
+      "role": "main"
+    },
+    {
+      "from": "M",
+      "to": "BK",
+      "label": "block",
+      "role": "main"
+    }
+  ]
+}
