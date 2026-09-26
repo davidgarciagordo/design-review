@@ -295,7 +295,7 @@ for skills and install commands.
 - **Skills loaded and ROUTED via the Skill tool, never paraphrased or invoked bare.** Writing
   "impeccable would say…" or invoking with no `args` = the bug; stop and route to a command.
 - **Terse output on every dispatched agent.** Append to every lens/agent prompt: *"Line 1 = `OK`
-  (clean) or `KO` + a short reason; then one finding per line: `P# [skill] file:line — problem → fix`.
+  (clean) or `KO` + ≤8-word reason; then one finding per line: `P# [skill] file:line — problem → fix`.
   The orchestrator merges these lines mechanically, so return only them."* Verbose agent reports are
   the largest output-token cost of a run.
 - **Discover once, judge many.** Context-pack (2c) before the lenses; pass it to each; "don't re-read

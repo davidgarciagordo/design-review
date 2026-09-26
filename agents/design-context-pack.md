@@ -35,5 +35,5 @@ Sections: `# Target` · `## Component map (file:line)` · `## Tokens in use / ha
 Keep excerpts minimal — this file is read by 4+ agents, so every wasted line is paid 4×.
 
 ## Return (TERSE — token-frugal)
-Line 1: `OK` + map size (e.g. "OK · 1 file, 18 POIs, 9 shared-found") or `KO` + a short reason.
+Line 1: `OK` + map size (e.g. "OK · 1 file, 18 POIs, 9 shared-found") or `KO` + ≤8-word reason.
 Return only that line — the artifact is the deliverable.
