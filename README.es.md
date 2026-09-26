@@ -93,15 +93,15 @@ Los gates no se pueden saltar ni reordenar. Cada fase deja un artefacto en `.des
 | 6 | apply + re-pass informado | orquestador → el fix command dueño de cada hallazgo | el diff | una pasada, solo después del ask |
 | 7 | vitality-verdict — render en vivo (claro/oscuro/móvil), diff vs referencias | `design-vitality-verdict` | `verdict.json` | **GATE** — `alive`, o vuelve al 3 (≤3 rondas) |
 
-[![Pipeline de design-review](docs/diagrams/pipeline.png)](docs/diagrams/pipeline.html)
+[![Pipeline de design-review](docs/diagrams/pipeline.es.png)](docs/diagrams/pipeline.es.html)
 
-*Versión interactiva: [docs/diagrams/pipeline.html](docs/diagrams/pipeline.html) (ábrela en local para zoom y trazado de caminos).*
+*Versión interactiva: [docs/diagrams/pipeline.es.html](docs/diagrams/pipeline.es.html) (ábrela en local para zoom y trazado de caminos).*
 
 **Hook de enforcement:** un hook `PostToolUse` comprueba `verdict.json` cada vez que se escribe un fichero de UI — `warn` (por defecto, una vez por fichero y sesión), `block` (feedback bloqueante post-escritura vía exit 2 — no puede impedir la escritura, que ya ha ocurrido), u `off` vía `DESIGN_REVIEW_GATE`. Calla mientras hay una ejecución en curso, así el propio paso de apply del pipeline no se marca.
 
-[![Hook design-review-gate](docs/diagrams/hook-gate.png)](docs/diagrams/hook-gate.html)
+[![Hook design-review-gate](docs/diagrams/hook-gate.es.png)](docs/diagrams/hook-gate.es.html)
 
-*Versión interactiva: [docs/diagrams/hook-gate.html](docs/diagrams/hook-gate.html) (ábrela en local para zoom y trazado de caminos).*
+*Versión interactiva: [docs/diagrams/hook-gate.es.html](docs/diagrams/hook-gate.es.html) (ábrela en local para zoom y trazado de caminos).*
 
 ## ❓ ¿Por qué no basta con pedirle al modelo que "revise el diseño"?
 
